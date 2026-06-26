@@ -440,7 +440,7 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
 <script>
 // ⚠️ غيّر الرابط ده بعد ما تعمل Deploy في Apps Script (Web App URL بتاعك)
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8jkRLXQm31iRMpCmdf-MKN6zLoeJhMcvNmGHgAwXo2rw7qvJgRD2g1ry42_BVjdkfLQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/PUT_YOUR_DEPLOYMENT_ID_HERE/exec";
 
 const PERSONNEL = {
   M: {
@@ -542,16 +542,38 @@ function renderNameGrid(gridId, shift, role, stateKey) {
 
 function previewYubikey(el) {
   const v = el.value.trim();
-  document.getElementById('yubikeyHint').textContent =
-    (/^\d+$/.test(v) && v.length > 0) ? '→ Will format to: me' + v + '@meti.ai' : '';
+  const h = document.getElementById('yubikeyHint');
+  if (v.includes('@')) { h.textContent = ''; h.style.color = ''; return; }
+  if (/^\d+$/.test(v) && v.length > 0) {
+    if (v.length < 6) {
+      h.textContent = `⚠️ Yubikey number must be 6 digits (${v.length}/6)`;
+      h.style.color = 'var(--red)';
+    } else if (v.length === 6) {
+      h.textContent = '→ Will format to: me' + v + '@meti.ai';
+      h.style.color = 'var(--blue)';
+    } else {
+      h.textContent = `⚠️ Yubikey number must be exactly 6 digits (${v.length}/6)`;
+      h.style.color = 'var(--red)';
+    }
+  } else {
+    h.textContent = '';
+    h.style.color = '';
+  }
 }
 function formatYubikey(el) {
   const v = el.value.trim();
+  const h = document.getElementById('yubikeyHint');
   if (/^\d+$/.test(v) && v.length > 0) {
+    if (v.length !== 6) {
+      h.textContent = `⚠️ Yubikey number must be exactly 6 digits (${v.length}/6)`;
+      h.style.color = 'var(--red)';
+      state.yubikey = '';
+      return;
+    }
     el.value = 'me' + v + '@meti.ai';
-    const h = document.getElementById('yubikeyHint');
     h.textContent = '✓ Formatted!';
-    setTimeout(() => h.textContent = '', 2500);
+    h.style.color = 'var(--green)';
+    setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2500);
   }
   state.yubikey = el.value;
 }
@@ -637,6 +659,11 @@ function updateOtherReason(val) {
 })();
 
 function validate() {
+  const yubikeyVal = document.getElementById('yubikey').value.trim();
+  if (/^\d+$/.test(yubikeyVal) && yubikeyVal.length !== 6) {
+    showToast('⚠️ Yubikey number must be exactly 6 digits', 'error');
+    return false;
+  }
   const fields = [
     ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],
     ['qtcShift','QTC Shift'],['qtcName','QTC Name'],['qtcAttendance','QTC Attendance'],
