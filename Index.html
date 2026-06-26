@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MEEG Spot Check</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #0d1b4b;
+  --blue:        #00b4a6;
+  --blue-light:  #00e5c8;
+  --blue-pale:   #e0faf7;
+  --blue-glow:   rgba(0,180,166,.18);
+
+  --green:       #27ae60;
+  --red:         #e03838;
+  --purple:      #5c2d91;
+  --orange:      #e67e22;
+  --white:       #ffffff;
+  --gray-bg:     #edf5f4;
+  --gray-border: #b2ddd9;
+  --text-dark:   #0d1b4b;
+  --text-mid:    #2a4a6b;
+
+  --font:        Arial, Helvetica, sans-serif;
+  --fz:          20px;
+  --fw:          bold;
+  --radius:      12px;
+  --shadow:      0 4px 20px rgba(13,27,75,.10);
+  --shadow-lift: 0 12px 36px rgba(13,27,75,.20);
+  --trans:       .22s cubic-bezier(.4,0,.2,1);
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--fz);
+  font-weight: var(--fw);
+  background: var(--gray-bg);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; transform: translateY(-10px); }
+  to   { opacity: 1; max-height: 3000px; transform: translateY(0); }
+}
+@keyframes pulseTeal {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,180,166,.5); }
+  50%      { box-shadow: 0 0 0 8px rgba(0,180,166,0); }
+}
+@keyframes pulseGreen {
+  0%,100% { box-shadow: 0 0 0 0 rgba(39,174,96,.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(39,174,96,0); }
+}
+@keyframes pulseOrange {
+  0%,100% { box-shadow: 0 0 0 0 rgba(230,126,34,.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(230,126,34,0); }
+}
+@keyframes spinner { to { transform: rotate(360deg); } }
+.fade-in { animation: fadeInUp .5s ease both; }
+
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  padding: 0 36px;
+  height: 80px;
+  display: flex; align-items: center; gap: 20px;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 3px 18px rgba(0,0,0,.30);
+}
+.logo-wrap {
+  display: flex; align-items: center; justify-content: center;
+  height: 58px; flex-shrink: 0;
+}
+.logo-svg { height: 52px; width: auto; display: block; }
+.header-divider { width: 1px; height: 36px; background: rgba(255,255,255,.25); }
+.header-text h1 { color: var(--white); font-size: 22px; font-weight: var(--fw); letter-spacing: .4px; line-height: 1.1; }
+.header-text .sub { color: var(--blue-light); font-size: 13px; font-weight: normal; letter-spacing: .5px; margin-top: 1px; }
+.clock { margin-left: auto; color: rgba(255,255,255,.70); font-size: 13px; font-weight: normal; text-align: right; letter-spacing: .3px; }
+
+/* ── LAYOUT ── */
+.container { max-width: 920px; margin: 38px auto 70px; padding: 0 20px; animation: fadeInUp .55s .08s ease both; }
+
+.card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); border: 1.5px solid rgba(0,180,166,.15); padding: 26px 28px; margin-bottom: 22px; }
+.card-title { font-size: 13px; color: var(--blue); text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--blue-pale); display: flex; align-items: center; gap: 8px; }
+.card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: linear-gradient(180deg, var(--blue-light), var(--blue)); border-radius: 4px; flex-shrink: 0; }
+
+label { display: block; font-size: var(--fz); font-weight: var(--fw); color: var(--text-dark); margin-bottom: 8px; }
+input[type="text"], input[type="url"], select {
+  width: 100%; padding: 13px 16px;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw);
+  border: 2px solid var(--gray-border); border-radius: var(--radius);
+  outline: none; transition: border-color var(--trans), box-shadow var(--trans);
+  background: #f6fffe; color: var(--text-dark);
+}
+input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+
+/* ── TILES ── */
+.tile-group { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile {
+  flex: 1 1 90px; min-width: 88px; padding: 14px 16px;
+  background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
+  text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
+  user-select: none;
+}
+.tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--blue); color: var(--blue); }
+.tile.active { background: var(--navy); color: var(--white); border-color: var(--navy); animation: pulseTeal .6s ease; }
+
+/* ── ATTENDANCE ── */
+.attend-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.attend-btn {
+  flex: 1 1 140px; padding: 16px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  background: var(--blue-pale); text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  transition: all var(--trans); user-select: none;
+}
+.attend-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.attend-btn.active-present    { background: var(--green);  color: var(--white); border-color: var(--green);  animation: pulseGreen .6s ease; }
+.attend-btn.active-notpresent { background: var(--orange); color: var(--white); border-color: var(--orange); animation: pulseOrange .6s ease; }
+.attend-btn.active-absent     { background: var(--red);    color: var(--white); border-color: var(--red); }
+
+/* ── NAME CARDS ── */
+.name-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+.name-card {
+  padding: 12px 10px; background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
+  text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: 16px; font-weight: var(--fw); color: var(--navy); line-height: 1.35;
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
+  user-select: none;
+}
+.name-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
+.name-card.active { background: var(--green); color: var(--white); border-color: var(--green); animation: pulseGreen .6s ease; }
+
+/* ── MODALITY ── */
+.modality-tile {
+  flex: 1 1 130px; min-width: 130px; padding: 14px 18px;
+  background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
+  text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
+  user-select: none;
+}
+.modality-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--purple); }
+.modality-tile.active { background: var(--purple); color: var(--white); border-color: var(--purple); }
+
+/* ── STAGE ── */
+.stage-group { display: flex; gap: 12px; }
+.stage-tile {
+  flex: 1; padding: 14px; background: var(--blue-pale); border: 2px solid var(--gray-border);
+  border-radius: var(--radius); text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  transition: all var(--trans);
+}
+.stage-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
+.stage-tile.active { background: var(--blue); color: var(--white); border-color: var(--blue); animation: pulseTeal .5s ease; }
+
+/* ── VIOLATION ── */
+.violation-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.vio-btn {
+  flex: 1 1 140px; padding: 16px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  background: var(--blue-pale); text-align: center; cursor: pointer;
+  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  transition: all var(--trans);
+}
+.vio-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.vio-btn.active-ok  { background: var(--green); color: var(--white); border-color: var(--green); }
+.vio-btn.active-vio { background: var(--red);   color: var(--white); border-color: var(--red); }
+
+.vio-types-wrap { overflow: hidden; animation: slideDown .38s ease both; }
+.vio-types-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 10px; margin-top: 18px; }
+.vio-type-chip {
+  padding: 12px 14px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  background: #f0fffe; cursor: pointer;
+  font-family: var(--font); font-size: 15px; font-weight: var(--fw); color: var(--text-dark);
+  transition: all var(--trans); display: flex; align-items: flex-start; gap: 9px; line-height: 1.4;
+}
+.vio-type-chip:hover { border-color: var(--red); transform: translateY(-2px); }
+.vio-type-chip.active { background: var(--red); color: var(--white); border-color: var(--red); }
+.vio-type-chip .chk {
+  width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; margin-top: 2px;
+}
+
+/* ── MISC ── */
+.task-id-badge {
+  display: inline-block; background: var(--blue-pale); border: 2px solid var(--gray-border);
+  border-radius: var(--radius); padding: 12px 18px;
+  font-size: 18px; font-weight: var(--fw); color: var(--text-mid); min-width: 200px; letter-spacing: .5px;
+}
+.task-id-badge.found { background: #e6f9ee; border-color: var(--green); color: var(--green); }
+
+.smart-hint { font-size: 14px; color: var(--blue); font-weight: bold; margin-top: 6px; min-height: 20px; }
+
+.submit-btn {
+  width: 100%; padding: 18px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  color: var(--white); border: none; border-radius: var(--radius);
+  font-family: var(--font); font-size: 22px; font-weight: var(--fw);
+  cursor: pointer; letter-spacing: .5px; transition: all var(--trans);
+  box-shadow: 0 4px 18px rgba(0,180,166,.35);
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,180,166,.45); filter: brightness(1.08); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { background: #9fb3c8; cursor: not-allowed; transform: none; box-shadow: none; filter: none; }
+.submit-btn .spinner {
+  display: inline-block; width: 22px; height: 22px;
+  border: 3px solid rgba(255,255,255,.4); border-top-color: white;
+  border-radius: 50%; animation: spinner .7s linear infinite; vertical-align: middle; margin-right: 10px;
+}
+
+.toast {
+  position: fixed; bottom: 32px; right: 32px; padding: 18px 26px;
+  border-radius: var(--radius); font-family: var(--font); font-size: 18px; font-weight: var(--fw);
+  color: var(--white); box-shadow: 0 8px 30px rgba(0,0,0,.2);
+  z-index: 9999; opacity: 0; transform: translateY(20px); transition: all .35s ease; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+
+.hidden { display: none !important; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media(max-width:600px) { .row2 { grid-template-columns: 1fr; } }
+.field-wrap { margin-bottom: 20px; }
+.field-wrap:last-child { margin-bottom: 0; }
+.no-shift-msg { color: #9fb3c8; font-size: 17px; padding: 14px 0; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="flagGrad" x1="0" y1="0" x2="0" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"  stop-color="#00e5c8"/>
+          <stop offset="50%" stop-color="#00b4a6"/>
+          <stop offset="100%" stop-color="#2a4a6b"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(20,15)">
+        <polygon points="0,0  60,0  50,12  0,12"  fill="url(#flagGrad)"/>
+        <polygon points="0,16 50,16 40,28 0,28"  fill="url(#flagGrad)"/>
+        <polygon points="0,32 40,32 30,44 0,44"  fill="url(#flagGrad)"/>
+        <polygon points="0,48 30,48 20,60 0,60"  fill="url(#flagGrad)"/>
+        <polygon points="34,44 40,44 34,52" fill="#00e5c8"/>
+      </g>
+      <g transform="translate(95,0)" font-family="Arial, Helvetica, sans-serif">
+        <text x="0" y="42" font-size="34" font-weight="800" fill="#ffffff" letter-spacing="1">MEEG</text>
+        <text x="2" y="60" font-size="12" font-weight="700" fill="#00e5c8" letter-spacing="3">METI COMPANY</text>
+      </g>
+    </svg>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>Spot Check</h1>
+    <div class="sub">Quality Control Form</div>
+  </div>
+  <div class="clock" id="live-time"></div>
+</header>
+
+<div class="container">
+<form id="spotForm" onsubmit="return false;">
+
+  <!-- Shift -->
+  <div class="card fade-in">
+    <div class="card-title">Shift</div>
+    <div class="tile-group" id="shiftGroup">
+      <div class="tile" data-val="M"  onclick="selectTile('shiftGroup','shift',this)">M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('shiftGroup','shift',this)">N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('shiftGroup','shift',this)">ON</div>
+    </div>
+  </div>
+
+  <!-- Unit -->
+  <div class="card fade-in">
+    <div class="card-title">Unit</div>
+    <div class="tile-group" id="unitGroup">
+      <div class="tile" data-val="NC Room 106"    onclick="selectTile('unitGroup','unit',this)">NC Room 106</div>
+      <div class="tile" data-val="NC Room 102"    onclick="selectTile('unitGroup','unit',this)">NC Room 102</div>
+      <div class="tile" data-val="NC Room 108"    onclick="selectTile('unitGroup','unit',this)">NC Room 108</div>
+      <div class="tile" data-val="2ND Floor (ST)" onclick="selectTile('unitGroup','unit',this)">2ND Floor (ST)</div>
+      <div class="tile" data-val="4TH Floor (ST)" onclick="selectTile('unitGroup','unit',this)">4TH Floor (ST)</div>
+    </div>
+  </div>
+
+  <!-- PC No. -->
+  <div class="card fade-in">
+    <div class="card-title">PC No.</div>
+    <div class="field-wrap">
+      <label for="pcNoInput">PC Number</label>
+      <input type="text" id="pcNoInput" placeholder="Enter PC number (e.g. 42)…"
+             oninput="previewPcNo(this)" onblur="formatPcNo(this)"/>
+      <div class="smart-hint" id="pcNoHint"></div>
+    </div>
+  </div>
+
+  <!-- Labeler Name -->
+  <div class="card fade-in">
+    <div class="card-title">Labeler Name</div>
+    <div class="field-wrap">
+      <label for="labelerName">Full Name</label>
+      <input type="text" id="labelerName" placeholder="Enter labeler's name…" oninput="setField('labelerName',this.value)"/>
+    </div>
+  </div>
+
+  <!-- QTC Shift -->
+  <div class="card fade-in">
+    <div class="card-title">QTC Shift</div>
+    <div class="tile-group" id="qtcShiftGroup">
+      <div class="tile" data-val="M"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">ON</div>
+    </div>
+  </div>
+
+  <!-- QTC Name -->
+  <div class="card fade-in">
+    <div class="card-title">QTC Name</div>
+    <div class="name-grid" id="qtcNames">
+      <div class="no-shift-msg">← Select a QTC Shift first</div>
+    </div>
+  </div>
+
+  <!-- QTC Attendance -->
+  <div class="card fade-in">
+    <div class="card-title">QTC Attendance</div>
+    <div class="attend-group">
+      <div class="attend-btn" id="attendPresent"    onclick="setAttendance('Present')">✅ Present</div>
+      <div class="attend-btn" id="attendNotPresent" onclick="setAttendance('Not Present')">⚠️ Not Present</div>
+      <div class="attend-btn" id="attendAbsent"     onclick="setAttendance('Absent')">❌ Absent</div>
+    </div>
+  </div>
+
+  <!-- Yubikey -->
+  <div class="card fade-in">
+    <div class="card-title">Yubikey</div>
+    <div class="field-wrap">
+      <label for="yubikey">Yubikey / Email</label>
+      <input type="text" id="yubikey" placeholder="Type numbers or full email…"
+             onblur="formatYubikey(this)" oninput="previewYubikey(this)"/>
+      <div class="smart-hint" id="yubikeyHint"></div>
+    </div>
+  </div>
+
+  <!-- Task Link -->
+  <div class="card fade-in">
+    <div class="card-title">Task Link</div>
+    <div class="field-wrap">
+      <label for="taskLink">Paste Task URL</label>
+      <input type="url" id="taskLink" placeholder="https://labeling.robot.car/#/tasks/do/…/id/…"
+             oninput="parseTaskLink(this.value)"/>
+    </div>
+    <div class="row2" style="margin-top:18px;">
+      <div>
+        <label>Extracted Task ID</label>
+        <div class="task-id-badge" id="taskIdBadge">—</div>
+      </div>
+      <div>
+        <label>Stage (auto-detected)</label>
+        <div class="stage-group" id="stageGroup">
+          <div class="stage-tile" data-val="FP" onclick="selectStage(this)">FP</div>
+          <div class="stage-tile" data-val="QA" onclick="selectStage(this)">QA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Queue Name -->
+  <div class="card fade-in">
+    <div class="card-title">Queue Name</div>
+    <div class="field-wrap">
+      <label for="queueName">Select Queue</label>
+      <select id="queueName" onchange="setField('queueName',this.value)">
+        <option value="">— Select —</option>
+        <option value="sc3_full_scene_highway_mapless_filtered_3d_lanes">sc3_full_scene_highway_mapless_filtered_3d_lanes</option>
+        <option value="sc3_full_scene_highway_lanes_first_lidar_labeling">sc3_full_scene_highway_lanes_first_lidar_labeling</option>
+        <option value="sc3_full_scene_highway_lidar_only_labeling">sc3_full_scene_highway_lidar_only_labeling</option>
+        <option value="sc3_full_scene_lane_lidar_parallel_labeling">sc3_full_scene_lane_lidar_parallel_labeling</option>
+        <option value="gs_sc3_full_scene_mapless_3d_only">gs_sc3_full_scene_mapless_3d_only</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Modality -->
+  <div class="card fade-in">
+    <div class="card-title">Modality</div>
+    <div class="tile-group" id="modalityGroup">
+      <div class="modality-tile" data-val="Lidar"    onclick="selectModality(this)">Lidar</div>
+      <div class="modality-tile" data-val="Lane Line" onclick="selectModality(this)">Lane Line</div>
+    </div>
+  </div>
+
+  <!-- QT Shift -->
+  <div class="card fade-in">
+    <div class="card-title">QT Shift</div>
+    <div class="tile-group" id="qtShiftGroup">
+      <div class="tile" data-val="M"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">ON</div>
+    </div>
+  </div>
+
+  <!-- QT Name -->
+  <div class="card fade-in">
+    <div class="card-title">QT Name</div>
+    <div class="name-grid" id="qtNames">
+      <div class="no-shift-msg">← Select a QT Shift first</div>
+    </div>
+  </div>
+
+  <!-- Violation -->
+  <div class="card fade-in">
+    <div class="card-title">Violation</div>
+    <div class="violation-group">
+      <div class="vio-btn" id="vioNoBtn"  onclick="setViolation('No Violation')">✅ No Violation</div>
+      <div class="vio-btn" id="vioYesBtn" onclick="setViolation('Violation')">❌ Violation</div>
+    </div>
+    <div id="vioTypesWrap" class="hidden">
+      <div class="vio-types-wrap">
+        <div class="vio-types-grid" id="vioTypesGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Spot Check</button>
+
+</form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ⚠️ غيّر الرابط ده بعد ما تعمل Deploy في Apps Script (Web App URL بتاعك)
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8jkRLXQm31iRMpCmdf-MKN6zLoeJhMcvNmGHgAwXo2rw7qvJgRD2g1ry42_BVjdkfLQ/exec";
+
+const PERSONNEL = {
+  M: {
+    qtc: ["Amr Salah","Hagar Fawzy","Roqia Wael","Eman Gamal","Kirollos Ibrahem","Rawan Elmahdy","Shimaa Nasser","Aya Mamdouh","Sara Atef","Nada Wagih","Nadien Mohey","Aya Yousry","Rahma Sayed","Hossam Hassan","Mira Samir","Asmaa Mohamed","Nesma Mustafa","Hagar Atef","Ahmed Adel","Asmaa Medhat","Moataz Ahmed","Wafaa Fathy","Omnia Mohamed","Eslam Ali","Asmaa Khaled","Donia El Said","Mayada Adel","Reem Samir","Abduallah Sahban"],
+    qt:  ["Abdelmonsef","Yasmeen Nasser","Abdelrahman Refaat","Adel Ashraf","Youssef Abass","Hassan Mohamed","Bassant Magdy","Ahmed Taha","Mohamed Khaled","Mohamed Abdel Azim"]
+  },
+  N: {
+    qtc: ["Mahmoud Khaled","Ibrahim Mohamed Ibrahim","Kerolos Emil Shawky","Hussein Ali","Ahmed Nagy","Ali Suliman","Mostafa Helal","Osama Ashraf","Marwan Mohamed","Tony Emad","Hesham Hassan","Mahmoud Adel","Abdelrahman Omar","Abdelrahman Tarek Abdo","Mark Ashraf","Ahmed Ashraf","Awad Wagdy","Yousef Ramdan"],
+    qt:  ["Mohamed Salem","Yousef Ahmed Eliwa","Amr Essam","Hazem Nader","Mohamed Sayed","Mohamed Kamal","Shehab Ayman","Eslam Salah","Abdelrahman Ahmed"]
+  },
+  ON: {
+    qtc: ["El Noby","Ahmed Nagia","Abdalla Barbary","Mohamed Zakaria","Samer Neseim","Eyad Mohamed","Mohamed Nasr","Shreif Hossam","Mahmoud Khaled Hussien","Yousef Fathy","Yousef Mohamed Saad","Ahmed Samir Mohamed","Mostafa Mahmoud Mohamed","Mahmoud Ahmed Salama","Medhat Mohamed Fathy","Mohamed Fathy","Amr khaled sobhy","Ahmed Sobhy","Hossam Taha","Shehab Alaa","Yousef Saber"],
+    qt:  ["Seif Waled","Hesham Nasser","Islam Yasser","Mohamed ELSayed Emam","Mohamed Ibrahim Mohamed","Eslam Khaled","Mahmoud Mousa","Mostfa Atito"]
+  }
+};
+
+const VIOLATION_TYPES = [
+  "VRU size attribute","Missed objects","Excessed objects","Posture",
+  "Missed Sign Attribute","Objects out of labeling zone shouldn't be labelled (static obstacle, ....etc)",
+  "Missed Artifacts","Excessed Artifacts","Size Estimation","Wrong Size",
+  "Wrong Sign Attribute","Excessed pixels","Missed pixels","Wrong classification",
+  "Wrong Attribute","Wrong TVA","Didn't toggle off auto grounding",
+  "Labeled a zone that shouldn't be labeled","Wrong Zone Size","Wrong Boundary Location",
+  "More than one keyframe from non-moving objects","Wrong orientation","Wrong box position",
+  "Missed Relationship","Excessed Attribute","Missed attribute",
+  "Labeled Objects that should be labeled as a Zone","label objects out of 150 m",
+  "wrong front side","Wrong Lane Boundary","Wrong Lane",
+  "Made the Off-Ramp/On-Ramp incorrectly","Error in creating the lane",
+  "Wrong Road Edge","Didn't toggle light background (Start and end)",
+  "Made the merge lane incorrectly","Other"
+];
+
+const state = {
+  shift:'', unit:'', pcNo:'', labelerName:'',
+  qtcShift:'', qtcName:'', qtcAttendance:'',
+  yubikey:'', taskLink:'', stage:'', queueName:'', modality:'',
+  taskId:'', qtShift:'', qtName:'',
+  violation:'', violationTypes:[]
+};
+function setField(k, v) { state[k] = v; }
+
+function selectTile(groupId, stateKey, el, refreshGrid) {
+  document.querySelectorAll('#' + groupId + ' .tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  state[stateKey] = el.dataset.val;
+  if (refreshGrid === 'qtcNames') renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
+  if (refreshGrid === 'qtNames')  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
+}
+
+function selectModality(el) {
+  document.querySelectorAll('#modalityGroup .modality-tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  state.modality = el.dataset.val;
+}
+
+function previewPcNo(el) {
+  const v = el.value.trim();
+  document.getElementById('pcNoHint').textContent =
+    (/^\d+$/.test(v) && v.length > 0) ? '→ Will format to: C-' + v : '';
+}
+function formatPcNo(el) {
+  const v = el.value.trim();
+  if (/^\d+$/.test(v) && v.length > 0) {
+    el.value = 'C-' + v;
+    const h = document.getElementById('pcNoHint');
+    h.textContent = '✓ Formatted!';
+    setTimeout(() => h.textContent = '', 2500);
+  }
+  state.pcNo = el.value;
+}
+
+function setAttendance(val) {
+  state.qtcAttendance = val;
+  document.getElementById('attendPresent').classList.remove('active-present','active-notpresent','active-absent');
+  document.getElementById('attendNotPresent').classList.remove('active-present','active-notpresent','active-absent');
+  document.getElementById('attendAbsent').classList.remove('active-present','active-notpresent','active-absent');
+  if (val === 'Present')     document.getElementById('attendPresent').classList.add('active-present');
+  if (val === 'Not Present') document.getElementById('attendNotPresent').classList.add('active-notpresent');
+  if (val === 'Absent')      document.getElementById('attendAbsent').classList.add('active-absent');
+}
+
+function renderNameGrid(gridId, shift, role, stateKey) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  const people = PERSONNEL[shift] ? PERSONNEL[shift][role] : null;
+  if (!people) { grid.innerHTML = '<div class="no-shift-msg">No data for this shift.</div>'; return; }
+  people.forEach(name => {
+    const card = document.createElement('div');
+    card.className = 'name-card';
+    card.textContent = name;
+    card.onclick = function () {
+      grid.querySelectorAll('.name-card').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      state[stateKey] = name;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function previewYubikey(el) {
+  const v = el.value.trim();
+  document.getElementById('yubikeyHint').textContent =
+    (/^\d+$/.test(v) && v.length > 0) ? '→ Will format to: me' + v + '@meti.ai' : '';
+}
+function formatYubikey(el) {
+  const v = el.value.trim();
+  if (/^\d+$/.test(v) && v.length > 0) {
+    el.value = 'me' + v + '@meti.ai';
+    const h = document.getElementById('yubikeyHint');
+    h.textContent = '✓ Formatted!';
+    setTimeout(() => h.textContent = '', 2500);
+  }
+  state.yubikey = el.value;
+}
+
+function parseTaskLink(url) {
+  state.taskLink = url;
+  const badge = document.getElementById('taskIdBadge');
+  let taskId = '';
+  const patterns = [/\/id\/(\d+)/i, /task[_-]?id[=\/]([A-Za-z0-9_-]+)/i, /[?&]id=(\d+)/i, /\/(\d{6,})(?:[/?#]|$)/];
+  for (const re of patterns) { const m = url.match(re); if (m) { taskId = m[1]; break; } }
+  state.taskId = taskId;
+  badge.textContent = taskId || '—';
+  badge.classList.toggle('found', !!taskId);
+  if (url.toUpperCase().includes('QA')) autoSelectStage('QA');
+  else if (url.length > 8) autoSelectStage('FP');
+}
+function autoSelectStage(val) {
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.toggle('active', t.dataset.val === val));
+  state.stage = val;
+}
+function selectStage(el) {
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); state.stage = el.dataset.val;
+}
+
+function setViolation(val) {
+  state.violation = val;
+  document.getElementById('vioNoBtn').classList.remove('active-ok','active-vio');
+  document.getElementById('vioYesBtn').classList.remove('active-ok','active-vio');
+  if (val === 'No Violation') {
+    document.getElementById('vioNoBtn').classList.add('active-ok');
+    document.getElementById('vioTypesWrap').classList.add('hidden');
+    state.violationTypes = [];
+  } else {
+    document.getElementById('vioYesBtn').classList.add('active-vio');
+    document.getElementById('vioTypesWrap').classList.remove('hidden');
+    buildVioTypes();
+  }
+}
+function buildVioTypes() {
+  const grid = document.getElementById('vioTypesGrid');
+  if (grid.children.length > 0) return;
+  VIOLATION_TYPES.forEach(vt => {
+    const chip = document.createElement('div');
+    chip.className = 'vio-type-chip'; chip.dataset.val = vt;
+    if (vt === 'Other') {
+      chip.innerHTML = '<span class="chk">✓</span>Other';
+      chip.onclick = function () {
+        this.classList.toggle('active');
+        const on = this.classList.contains('active');
+        const ow = document.getElementById('otherReasonWrap');
+        state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
+        if (on) { ow.classList.remove('hidden'); state.violationTypes.push('Other'); }
+        else { ow.classList.add('hidden'); document.getElementById('otherReasonInput').value = ''; }
+      };
+    } else {
+      chip.innerHTML = '<span class="chk">✓</span>' + vt;
+      chip.onclick = function () {
+        this.classList.toggle('active');
+        if (this.classList.contains('active')) { if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt); }
+        else state.violationTypes = state.violationTypes.filter(v => v !== vt);
+      };
+    }
+    grid.appendChild(chip);
+  });
+  const ow = document.createElement('div');
+  ow.id = 'otherReasonWrap'; ow.className = 'hidden'; ow.style.marginTop = '14px';
+  ow.innerHTML = '<label for="otherReasonInput" style="margin-bottom:6px;color:var(--red);">Describe the violation:</label><input type="text" id="otherReasonInput" placeholder="Type the reason here…" oninput="updateOtherReason(this.value)" style="border-color:var(--red);"/>';
+  grid.parentElement.appendChild(ow);
+}
+function updateOtherReason(val) {
+  state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
+  state.violationTypes.push(val ? 'Other: ' + val : 'Other');
+}
+
+(function () {
+  const el = document.getElementById('live-time');
+  const tick = () => el.textContent = new Date().toLocaleString('en-EG', {
+    timeZone: 'Africa/Cairo', weekday: 'short', year: 'numeric',
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+  tick(); setInterval(tick, 1000);
+})();
+
+function validate() {
+  const fields = [
+    ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],
+    ['qtcShift','QTC Shift'],['qtcName','QTC Name'],['qtcAttendance','QTC Attendance'],
+    ['yubikey','Yubikey'],['taskLink','Task Link'],['stage','Stage'],
+    ['queueName','Queue Name'],['modality','Modality'],
+    ['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
+  ];
+  for (const [k, label] of fields) {
+    if (!state[k]) { showToast('Please complete: ' + label, 'error'); return false; }
+  }
+  if (state.violation === 'Violation' && state.violationTypes.length === 0) {
+    showToast('Please select at least one violation type.', 'error'); return false;
+  }
+  return true;
+}
+
+function submitForm() {
+  if (!validate()) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  state.labelerName = document.getElementById('labelerName').value.trim();
+  state.yubikey     = document.getElementById('yubikey').value.trim();
+  state.taskLink    = document.getElementById('taskLink').value.trim();
+  state.queueName   = document.getElementById('queueName').value;
+  formatPcNo(document.getElementById('pcNoInput'));
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(state)
+  })
+    .then(r => r.json())
+    .then(res => {
+      btn.disabled = false; btn.innerHTML = 'Submit Spot Check';
+      if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 2200); }
+      else showToast('❌ ' + res.message, 'error');
+    })
+    .catch(err => {
+      btn.disabled = false; btn.innerHTML = 'Submit Spot Check';
+      showToast('❌ Error: ' + err.message, 'error');
+    });
+}
+
+function resetForm() {
+  Object.keys(state).forEach(k => { state[k] = k === 'violationTypes' ? [] : ''; });
+  document.querySelectorAll('.tile.active,.name-card.active,.stage-tile.active,.modality-tile.active')
+    .forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.vio-btn').forEach(el => el.classList.remove('active-ok','active-vio'));
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id =>
+    document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
+  document.getElementById('qtcNames').innerHTML = '<div class="no-shift-msg">← Select a QTC Shift first</div>';
+  document.getElementById('qtNames').innerHTML  = '<div class="no-shift-msg">← Select a QT Shift first</div>';
+  document.getElementById('vioTypesGrid').innerHTML = '';
+  const ow = document.getElementById('otherReasonWrap');
+  if (ow) ow.remove();
+  document.getElementById('vioTypesWrap').classList.add('hidden');
+  ['labelerName','yubikey','taskLink','pcNoInput'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('yubikeyHint').textContent = '';
+  document.getElementById('pcNoHint').textContent = '';
+  document.getElementById('queueName').value = '';
+  const badge = document.getElementById('taskIdBadge');
+  badge.textContent = '—'; badge.classList.remove('found');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 3800);
+}
+</script>
+</body>
+</html>
