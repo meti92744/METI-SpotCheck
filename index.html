@@ -372,13 +372,8 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Queue Name -->
-  <div class="card fade-in">
-    <div class="card-title">Queue Name</div>
-    <div class="field-wrap">
-      <label for="queueName">Select Queue</label>
+    <div class="field-wrap" style="margin-top:18px;">
+      <label for="queueName">Queue Name</label>
       <select id="queueName" onchange="setField('queueName',this.value); clearQueueAutoHint();">
         <option value="">— Select —</option>
         <option value="sc3_full_scene_highway_mapless_filtered_3d_lanes">sc3_full_scene_highway_mapless_filtered_3d_lanes</option>
