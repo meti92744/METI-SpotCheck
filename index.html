@@ -287,8 +287,8 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
       <div class="tile" data-val="NC Room 106"    onclick="selectTile('unitGroup','unit',this)">NC Room 106</div>
       <div class="tile" data-val="NC Room 102"    onclick="selectTile('unitGroup','unit',this)">NC Room 102</div>
       <div class="tile" data-val="NC Room 108"    onclick="selectTile('unitGroup','unit',this)">NC Room 108</div>
-      <div class="tile" data-val="2ND Floor (ST)" onclick="selectTile('unitGroup','unit',this)">2ND Floor (SF)</div>
-      <div class="tile" data-val="4TH Floor (ST)" onclick="selectTile('unitGroup','unit',this)">4TH Floor (SF)</div>
+      <div class="tile" data-val="2ND Floor (ST)" onclick="selectTile('unitGroup','unit',this)">2ND Floor (ST)</div>
+      <div class="tile" data-val="4TH Floor (ST)" onclick="selectTile('unitGroup','unit',this)">4TH Floor (ST)</div>
     </div>
   </div>
 
@@ -379,15 +379,15 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
     <div class="card-title">Queue Name</div>
     <div class="field-wrap">
       <label for="queueName">Select Queue</label>
-      <select id="queueName" onchange="setField('queueName',this.value)">
+      <select id="queueName" onchange="setField('queueName',this.value); clearQueueAutoHint();">
         <option value="">— Select —</option>
-        <option value="v4_sc3_full_scene_3d_lanes_parallel_labeling">v4_sc3_full_scene_3d_lanes_parallel_labeling</option>
         <option value="sc3_full_scene_highway_mapless_filtered_3d_lanes">sc3_full_scene_highway_mapless_filtered_3d_lanes</option>
         <option value="sc3_full_scene_highway_lanes_first_lidar_labeling">sc3_full_scene_highway_lanes_first_lidar_labeling</option>
         <option value="sc3_full_scene_highway_lidar_only_labeling">sc3_full_scene_highway_lidar_only_labeling</option>
         <option value="sc3_full_scene_lane_lidar_parallel_labeling">sc3_full_scene_lane_lidar_parallel_labeling</option>
         <option value="gs_sc3_full_scene_mapless_3d_only">gs_sc3_full_scene_mapless_3d_only</option>
       </select>
+      <div class="smart-hint" id="queueHint"></div>
     </div>
   </div>
 
@@ -441,7 +441,7 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
 <script>
 // ⚠️ غيّر الرابط ده بعد ما تعمل Deploy في Apps Script (Web App URL بتاعك)
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8jkRLXQm31iRMpCmdf-MKN6zLoeJhMcvNmGHgAwXo2rw7qvJgRD2g1ry42_BVjdkfLQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/PUT_YOUR_DEPLOYMENT_ID_HERE/exec";
 
 const PERSONNEL = {
   M: {
@@ -453,8 +453,8 @@ const PERSONNEL = {
     qt:  ["Mohamed Salem","Yousef Ahmed Eliwa","Amr Essam","Hazem Nader","Mohamed Sayed","Mohamed Kamal","Shehab Ayman","Eslam Salah","Abdelrahman Ahmed"]
   },
   ON: {
-    qtc: ["El Noby","Ahmed Nagia","Abdalla Barbary","Mohamed Zakaria","Samer Neseim","Eyad Mohamed","Shreif Hossam","Mahmoud Khaled","Yousef Fathy","Yousef Saad","Ahmed Samir","Mostafa Mahmoud","Mahmoud Salama","Medhat Mohamed Fathy","Mohamed Fathy","Abdelrahman Ibrahem","Ahmed Sobhy","Hossam Taha","Amr Wael","Yousef Saber","Karim Mohamed","Eslam Ashraf","Ahmed Taha","Hassan Ayman","Mohamed Hafez","Youssef Reda"],
-    qt:  ["Seif Waled","Hesham Nasser","Mohamed Nasr","Mohamed ELSayed Emam","Mohamed Ibrahim","Eslam Khaled","Mahmoud Mousa","Mostfa Atito"]
+    qtc: ["El Noby","Ahmed Nagia","Abdalla Barbary","Mohamed Zakaria","Samer Neseim","Eyad Mohamed","Mohamed Nasr","Shreif Hossam","Mahmoud Khaled Hussien","Yousef Fathy","Yousef Mohamed Saad","Ahmed Samir Mohamed","Mostafa Mahmoud Mohamed","Mahmoud Ahmed Salama","Medhat Mohamed Fathy","Mohamed Fathy","Amr khaled sobhy","Ahmed Sobhy","Hossam Taha","Shehab Alaa","Yousef Saber"],
+    qt:  ["Seif Waled","Hesham Nasser","Islam Yasser","Mohamed ELSayed Emam","Mohamed Ibrahim Mohamed","Eslam Khaled","Mahmoud Mousa","Mostfa Atito"]
   }
 };
 
@@ -590,6 +590,32 @@ function parseTaskLink(url) {
   badge.classList.toggle('found', !!taskId);
   if (url.toUpperCase().includes('QA')) autoSelectStage('QA');
   else if (url.length > 8) autoSelectStage('FP');
+
+  // استخراج اسم الكيو من اللينك بعد كلمة /queue/
+  const qm = url.match(/\/queue\/([^\/?#]+)/i);
+  if (qm) {
+    autoSelectQueue(decodeURIComponent(qm[1]));
+  }
+}
+
+function autoSelectQueue(queueName) {
+  const select = document.getElementById('queueName');
+  const hint = document.getElementById('queueHint');
+  let opt = Array.from(select.options).find(o => o.value === queueName);
+  if (!opt) {
+    opt = document.createElement('option');
+    opt.value = queueName;
+    opt.textContent = queueName;
+    select.appendChild(opt);
+  }
+  select.value = queueName;
+  state.queueName = queueName;
+  hint.textContent = '✓ Auto-detected from link: ' + queueName;
+  hint.style.color = 'var(--green)';
+}
+
+function clearQueueAutoHint() {
+  document.getElementById('queueHint').textContent = '';
 }
 function autoSelectStage(val) {
   document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.toggle('active', t.dataset.val === val));
@@ -726,6 +752,7 @@ function resetForm() {
   document.getElementById('yubikeyHint').textContent = '';
   document.getElementById('pcNoHint').textContent = '';
   document.getElementById('queueName').value = '';
+  document.getElementById('queueHint').textContent = '';
   const badge = document.getElementById('taskIdBadge');
   badge.textContent = '—'; badge.classList.remove('found');
 }
