@@ -23,14 +23,15 @@
   --gray-border: #b2ddd9;
   --text-dark:   #0d1b4b;
   --text-mid:    #2a4a6b;
+  --text-soft:   #6b8a9e;
 
   --font:        Arial, Helvetica, sans-serif;
-  --fz:          20px;
-  --fw:          bold;
+  --fz:          16px;
+  --fw:          700;
   --radius:      12px;
-  --shadow:      0 4px 20px rgba(13,27,75,.10);
-  --shadow-lift: 0 12px 36px rgba(13,27,75,.20);
-  --trans:       .22s cubic-bezier(.4,0,.2,1);
+  --shadow:      0 4px 20px rgba(13,27,75,.08);
+  --shadow-lift: 0 10px 28px rgba(13,27,75,.16);
+  --trans:       .2s cubic-bezier(.4,0,.2,1);
 }
 
 body {
@@ -40,61 +41,53 @@ body {
   background: var(--gray-bg);
   color: var(--text-dark);
   min-height: 100vh;
+  padding-bottom: 92px;
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideDown {
-  from { opacity: 0; max-height: 0; transform: translateY(-10px); }
-  to   { opacity: 1; max-height: 3000px; transform: translateY(0); }
-}
-@keyframes pulseTeal {
-  0%,100% { box-shadow: 0 0 0 0 rgba(0,180,166,.5); }
-  50%      { box-shadow: 0 0 0 8px rgba(0,180,166,0); }
-}
-@keyframes pulseGreen {
-  0%,100% { box-shadow: 0 0 0 0 rgba(39,174,96,.45); }
-  50%      { box-shadow: 0 0 0 8px rgba(39,174,96,0); }
-}
-@keyframes pulseOrange {
-  0%,100% { box-shadow: 0 0 0 0 rgba(230,126,34,.45); }
-  50%      { box-shadow: 0 0 0 8px rgba(230,126,34,0); }
-}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 3000px; } }
+@keyframes pulseTeal { 0%,100% { box-shadow: 0 0 0 0 rgba(0,180,166,.5); } 50% { box-shadow: 0 0 0 7px rgba(0,180,166,0); } }
+@keyframes pulseGreen { 0%,100% { box-shadow: 0 0 0 0 rgba(39,174,96,.45); } 50% { box-shadow: 0 0 0 7px rgba(39,174,96,0); } }
+@keyframes pulseOrange { 0%,100% { box-shadow: 0 0 0 0 rgba(230,126,34,.45); } 50% { box-shadow: 0 0 0 7px rgba(230,126,34,0); } }
 @keyframes spinner { to { transform: rotate(360deg); } }
-.fade-in { animation: fadeInUp .5s ease both; }
+@keyframes popIn { from { opacity:0; transform: scale(.5); } to { opacity:1; transform: scale(1); } }
+.fade-in { animation: fadeInUp .4s ease both; }
 
 /* ── HEADER ── */
 header {
   background: var(--navy);
-  padding: 0 36px;
-  height: 80px;
-  display: flex; align-items: center; gap: 20px;
+  padding: 0 28px;
+  height: 64px;
+  display: flex; align-items: center; gap: 16px;
   position: sticky; top: 0; z-index: 200;
-  box-shadow: 0 3px 18px rgba(0,0,0,.30);
+  box-shadow: 0 3px 16px rgba(0,0,0,.28);
 }
-.logo-wrap {
-  display: flex; align-items: center; justify-content: center;
-  height: 58px; flex-shrink: 0;
-}
-.logo-svg { height: 52px; width: auto; display: block; }
-.header-divider { width: 1px; height: 36px; background: rgba(255,255,255,.25); }
-.header-text h1 { color: var(--white); font-size: 22px; font-weight: var(--fw); letter-spacing: .4px; line-height: 1.1; }
-.header-text .sub { color: var(--blue-light); font-size: 13px; font-weight: normal; letter-spacing: .5px; margin-top: 1px; }
-.clock { margin-left: auto; color: rgba(255,255,255,.70); font-size: 13px; font-weight: normal; text-align: right; letter-spacing: .3px; }
+.logo-wrap { display: flex; align-items: center; height: 44px; flex-shrink: 0; }
+.logo-svg { height: 40px; width: auto; display: block; }
+.header-divider { width: 1px; height: 28px; background: rgba(255,255,255,.25); }
+.header-text h1 { color: var(--white); font-size: 17px; font-weight: 800; letter-spacing: .3px; line-height: 1.1; }
+.header-text .sub { color: var(--blue-light); font-size: 11px; font-weight: 500; letter-spacing: .4px; margin-top: 1px; }
+.clock { margin-left: auto; color: rgba(255,255,255,.65); font-size: 12px; font-weight: 400; }
 
 /* ── LAYOUT ── */
-.container { max-width: 920px; margin: 38px auto 70px; padding: 0 20px; animation: fadeInUp .55s .08s ease both; }
+.container { max-width: 760px; margin: 28px auto 30px; padding: 0 20px; animation: fadeInUp .4s ease both; }
 
-.card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); border: 1.5px solid rgba(0,180,166,.15); padding: 26px 28px; margin-bottom: 22px; }
-.card-title { font-size: 13px; color: var(--blue); text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--blue-pale); display: flex; align-items: center; gap: 8px; }
-.card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: linear-gradient(180deg, var(--blue-light), var(--blue)); border-radius: 4px; flex-shrink: 0; }
+.card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); border: 1.5px solid rgba(0,180,166,.13); padding: 20px 22px; margin-bottom: 16px; }
+.card-title {
+  font-size: 12px; color: var(--blue); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 14px; padding-bottom: 9px;
+  border-bottom: 2px solid var(--blue-pale); display: flex; align-items: center; gap: 7px;
+}
+.card-title::before { content: ''; display: inline-block; width: 4px; height: 15px; background: linear-gradient(180deg, var(--blue-light), var(--blue)); border-radius: 4px; flex-shrink: 0; }
+.check-dot {
+  margin-left: auto; width: 18px; height: 18px; border-radius: 50%; background: var(--green); color: var(--white);
+  font-size: 11px; display: none; align-items: center; justify-content: center; animation: popIn .25s ease both;
+}
+.check-dot.show { display: flex; }
 
-label { display: block; font-size: var(--fz); font-weight: var(--fw); color: var(--text-dark); margin-bottom: 8px; }
+label { display: block; font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 7px; }
 input[type="text"], input[type="url"], select {
-  width: 100%; padding: 13px 16px;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw);
+  width: 100%; padding: 11px 14px;
+  font-family: var(--font); font-size: 15px; font-weight: 600;
   border: 2px solid var(--gray-border); border-radius: var(--radius);
   outline: none; transition: border-color var(--trans), box-shadow var(--trans);
   background: #f6fffe; color: var(--text-dark);
@@ -102,136 +95,170 @@ input[type="text"], input[type="url"], select {
 input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
 
 /* ── TILES ── */
-.tile-group { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile-group { display: flex; flex-wrap: wrap; gap: 10px; }
 .tile {
-  flex: 1 1 90px; min-width: 88px; padding: 14px 16px;
+  flex: 1 1 90px; min-width: 88px; padding: 12px 14px;
   background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
   text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--navy);
   transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
   user-select: none;
 }
-.tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--blue); color: var(--blue); }
-.tile.active { background: var(--navy); color: var(--white); border-color: var(--navy); animation: pulseTeal .6s ease; }
+.tile .ico { display: block; font-size: 17px; margin-bottom: 2px; }
+.tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--blue); color: var(--blue); }
+.tile.active { background: var(--navy); color: var(--white); border-color: var(--navy); animation: pulseTeal .5s ease; }
 
 /* ── ATTENDANCE ── */
-.attend-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.attend-group { display: flex; gap: 10px; flex-wrap: wrap; }
 .attend-btn {
-  flex: 1 1 140px; padding: 16px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  flex: 1 1 130px; padding: 13px; border: 2px solid var(--gray-border); border-radius: var(--radius);
   background: var(--blue-pale); text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  font-family: var(--font); font-size: 14px; font-weight: 700; color: var(--navy);
   transition: all var(--trans); user-select: none;
 }
-.attend-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
-.attend-btn.active-present    { background: var(--green);  color: var(--white); border-color: var(--green);  animation: pulseGreen .6s ease; }
-.attend-btn.active-notpresent { background: var(--orange); color: var(--white); border-color: var(--orange); animation: pulseOrange .6s ease; }
+.attend-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+.attend-btn.active-present    { background: var(--green);  color: var(--white); border-color: var(--green);  animation: pulseGreen .5s ease; }
+.attend-btn.active-notpresent { background: var(--orange); color: var(--white); border-color: var(--orange); animation: pulseOrange .5s ease; }
 .attend-btn.active-absent     { background: var(--red);    color: var(--white); border-color: var(--red); }
 
 /* ── NAME CARDS ── */
-.name-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+.name-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
 .name-card {
-  padding: 12px 10px; background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
+  padding: 10px 8px; background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
   text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: 16px; font-weight: var(--fw); color: var(--navy); line-height: 1.35;
+  font-family: var(--font); font-size: 13.5px; font-weight: 700; color: var(--navy); line-height: 1.3;
   transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
   user-select: none;
 }
-.name-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
-.name-card.active { background: var(--green); color: var(--white); border-color: var(--green); animation: pulseGreen .6s ease; }
+.name-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
+.name-card.active { background: var(--green); color: var(--white); border-color: var(--green); animation: pulseGreen .5s ease; }
 
 /* ── MODALITY ── */
 .modality-tile {
-  flex: 1 1 130px; min-width: 130px; padding: 14px 18px;
+  flex: 1 1 120px; min-width: 120px; padding: 12px 16px;
   background: var(--blue-pale); border: 2px solid var(--gray-border); border-radius: var(--radius);
   text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--navy);
   transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans), background var(--trans), color var(--trans);
   user-select: none;
 }
-.modality-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--purple); }
+.modality-tile .ico { display: block; font-size: 17px; margin-bottom: 2px; }
+.modality-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--purple); }
 .modality-tile.active { background: var(--purple); color: var(--white); border-color: var(--purple); }
 
 /* ── STAGE ── */
-.stage-group { display: flex; gap: 12px; }
+.stage-group { display: flex; gap: 10px; }
 .stage-tile {
-  flex: 1; padding: 14px; background: var(--blue-pale); border: 2px solid var(--gray-border);
+  flex: 1; padding: 12px; background: var(--blue-pale); border: 2px solid var(--gray-border);
   border-radius: var(--radius); text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--navy);
   transition: all var(--trans);
 }
-.stage-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
-.stage-tile.active { background: var(--blue); color: var(--white); border-color: var(--blue); animation: pulseTeal .5s ease; }
+.stage-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); border-color: var(--blue); }
+.stage-tile.active { background: var(--blue); color: var(--white); border-color: var(--blue); animation: pulseTeal .45s ease; }
 
 /* ── VIOLATION ── */
-.violation-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.violation-group { display: flex; gap: 10px; flex-wrap: wrap; }
 .vio-btn {
-  flex: 1 1 140px; padding: 16px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  flex: 1 1 130px; padding: 13px; border: 2px solid var(--gray-border); border-radius: var(--radius);
   background: var(--blue-pale); text-align: center; cursor: pointer;
-  font-family: var(--font); font-size: var(--fz); font-weight: var(--fw); color: var(--navy);
+  font-family: var(--font); font-size: 14px; font-weight: 700; color: var(--navy);
   transition: all var(--trans);
 }
-.vio-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.vio-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
 .vio-btn.active-ok  { background: var(--green); color: var(--white); border-color: var(--green); }
 .vio-btn.active-vio { background: var(--red);   color: var(--white); border-color: var(--red); }
 
-.vio-types-wrap { overflow: hidden; animation: slideDown .38s ease both; }
-.vio-types-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 10px; margin-top: 18px; }
-.vio-type-chip {
-  padding: 12px 14px; border: 2px solid var(--gray-border); border-radius: var(--radius);
-  background: #f0fffe; cursor: pointer;
-  font-family: var(--font); font-size: 15px; font-weight: var(--fw); color: var(--text-dark);
-  transition: all var(--trans); display: flex; align-items: flex-start; gap: 9px; line-height: 1.4;
+.vio-types-wrap { overflow: hidden; animation: slideDown .35s ease both; margin-top: 16px; }
+.vio-category { margin-bottom: 14px; }
+.vio-category:last-child { margin-bottom: 0; }
+.vio-category-label {
+  font-size: 11px; font-weight: 800; color: var(--text-soft); text-transform: uppercase;
+  letter-spacing: .8px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
 }
-.vio-type-chip:hover { border-color: var(--red); transform: translateY(-2px); }
+.vio-types-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.vio-type-chip {
+  padding: 10px 12px; border: 2px solid var(--gray-border); border-radius: var(--radius);
+  background: #f0fffe; cursor: pointer;
+  font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-dark);
+  transition: all var(--trans); display: flex; align-items: flex-start; gap: 8px; line-height: 1.3;
+}
+.vio-type-chip:hover { border-color: var(--red); transform: translateY(-1px); }
 .vio-type-chip.active { background: var(--red); color: var(--white); border-color: var(--red); }
 .vio-type-chip .chk {
-  width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; margin-top: 2px;
+  width: 17px; height: 17px; border: 2px solid currentColor; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; margin-top: 1px;
 }
 
 /* ── MISC ── */
 .task-id-badge {
   display: inline-block; background: var(--blue-pale); border: 2px solid var(--gray-border);
-  border-radius: var(--radius); padding: 12px 18px;
-  font-size: 18px; font-weight: var(--fw); color: var(--text-mid); min-width: 200px; letter-spacing: .5px;
+  border-radius: var(--radius); padding: 11px 16px;
+  font-size: 15px; font-weight: 700; color: var(--text-mid); min-width: 160px; letter-spacing: .3px;
 }
 .task-id-badge.found { background: #e6f9ee; border-color: var(--green); color: var(--green); }
 
-.smart-hint { font-size: 14px; color: var(--blue); font-weight: bold; margin-top: 6px; min-height: 20px; }
+.smart-hint { font-size: 12.5px; color: var(--blue); font-weight: 700; margin-top: 6px; min-height: 17px; }
 
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:600px) { .row2 { grid-template-columns: 1fr; } }
+.field-wrap { margin-bottom: 16px; }
+.field-wrap:last-child { margin-bottom: 0; }
+.no-shift-msg { color: #9fb3c8; font-size: 14px; padding: 10px 0; font-style: italic; font-weight: 500; }
+
+/* ── FLASH DRIVE HISTORY ── */
+.history-box { display: flex; gap: 10px; margin-top: 12px; }
+.history-stat {
+  flex: 1; padding: 12px 10px; border-radius: var(--radius); text-align: center;
+  font-size: 12.5px; font-weight: 700; line-height: 1.3;
+}
+.history-stat .num { display: block; font-size: 24px; font-weight: 800; margin-bottom: 2px; }
+.history-stat.ok  { background: #e6f9ee; color: var(--green); }
+.history-stat.bad { background: #fdeaea; color: var(--red); }
+.history-stat.total { background: var(--blue-pale); color: var(--navy); }
+.history-loading { font-size: 13px; color: var(--text-soft); font-weight: 600; margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+.history-loading .mini-spinner {
+  width: 14px; height: 14px; border: 2px solid var(--gray-border); border-top-color: var(--blue);
+  border-radius: 50%; animation: spinner .7s linear infinite;
+}
+.history-empty { font-size: 13px; color: var(--text-soft); font-style: italic; margin-top: 10px; }
+
+/* ── SUBMIT ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 250;
+  background: var(--white); border-top: 1.5px solid var(--gray-border);
+  box-shadow: 0 -6px 24px rgba(13,27,75,.10);
+  padding: 12px 20px;
+}
+.bottom-nav-inner { max-width: 760px; margin: 0 auto; width: 100%; }
 .submit-btn {
-  width: 100%; padding: 18px;
+  width: 100%; padding: 16px;
   background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
   color: var(--white); border: none; border-radius: var(--radius);
-  font-family: var(--font); font-size: 22px; font-weight: var(--fw);
-  cursor: pointer; letter-spacing: .5px; transition: all var(--trans);
-  box-shadow: 0 4px 18px rgba(0,180,166,.35);
+  font-family: var(--font); font-size: 17px; font-weight: 800;
+  cursor: pointer; letter-spacing: .3px; transition: all var(--trans);
+  box-shadow: 0 4px 16px rgba(0,180,166,.32);
 }
-.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,180,166,.45); filter: brightness(1.08); }
-.submit-btn:active { transform: translateY(0); }
+.submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,180,166,.4); filter: brightness(1.07); }
 .submit-btn:disabled { background: #9fb3c8; cursor: not-allowed; transform: none; box-shadow: none; filter: none; }
 .submit-btn .spinner {
-  display: inline-block; width: 22px; height: 22px;
+  display: inline-block; width: 18px; height: 18px;
   border: 3px solid rgba(255,255,255,.4); border-top-color: white;
-  border-radius: 50%; animation: spinner .7s linear infinite; vertical-align: middle; margin-right: 10px;
+  border-radius: 50%; animation: spinner .7s linear infinite; vertical-align: middle; margin-right: 8px;
 }
 
 .toast {
-  position: fixed; bottom: 32px; right: 32px; padding: 18px 26px;
-  border-radius: var(--radius); font-family: var(--font); font-size: 18px; font-weight: var(--fw);
+  position: fixed; bottom: 96px; right: 24px; padding: 15px 22px;
+  border-radius: var(--radius); font-family: var(--font); font-size: 15px; font-weight: 700;
   color: var(--white); box-shadow: 0 8px 30px rgba(0,0,0,.2);
   z-index: 9999; opacity: 0; transform: translateY(20px); transition: all .35s ease; pointer-events: none;
+  max-width: 360px;
 }
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.success { background: var(--green); }
 .toast.error   { background: var(--red); }
 
 .hidden { display: none !important; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-@media(max-width:600px) { .row2 { grid-template-columns: 1fr; } }
-.field-wrap { margin-bottom: 20px; }
-.field-wrap:last-child { margin-bottom: 0; }
-.no-shift-msg { color: #9fb3c8; font-size: 17px; padding: 14px 0; font-style: italic; }
 </style>
 </head>
 <body>
@@ -272,17 +299,17 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- Shift -->
   <div class="card fade-in">
-    <div class="card-title">Shift</div>
+    <div class="card-title">Shift <span class="check-dot" id="chk-shift">✓</span></div>
     <div class="tile-group" id="shiftGroup">
-      <div class="tile" data-val="M"  onclick="selectTile('shiftGroup','shift',this)">M</div>
-      <div class="tile" data-val="N"  onclick="selectTile('shiftGroup','shift',this)">N</div>
-      <div class="tile" data-val="ON" onclick="selectTile('shiftGroup','shift',this)">ON</div>
+      <div class="tile" data-val="M"  onclick="selectTile('shiftGroup','shift',this)"><span class="ico">☀️</span>M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('shiftGroup','shift',this)"><span class="ico">🌙</span>N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('shiftGroup','shift',this)"><span class="ico">🌌</span>ON</div>
     </div>
   </div>
 
   <!-- Unit -->
   <div class="card fade-in">
-    <div class="card-title">Unit</div>
+    <div class="card-title">Unit <span class="check-dot" id="chk-unit">✓</span></div>
     <div class="tile-group" id="unitGroup">
       <div class="tile" data-val="NC Room 106"    onclick="selectTile('unitGroup','unit',this)">NC Room 106</div>
       <div class="tile" data-val="NC Room 102"    onclick="selectTile('unitGroup','unit',this)">NC Room 102</div>
@@ -294,7 +321,7 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- PC No. -->
   <div class="card fade-in">
-    <div class="card-title">PC No.</div>
+    <div class="card-title">PC No. <span class="check-dot" id="chk-pcNo">✓</span></div>
     <div class="field-wrap">
       <label for="pcNoInput">PC Number</label>
       <input type="text" id="pcNoInput" placeholder="Enter PC number (e.g. 42)…"
@@ -305,26 +332,26 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- Labeler Name -->
   <div class="card fade-in">
-    <div class="card-title">Labeler Name</div>
+    <div class="card-title">Labeler Name <span class="check-dot" id="chk-labelerName">✓</span></div>
     <div class="field-wrap">
       <label for="labelerName">Full Name</label>
-      <input type="text" id="labelerName" placeholder="Enter labeler's name…" oninput="setField('labelerName',this.value)"/>
+      <input type="text" id="labelerName" placeholder="Enter labeler's name…" oninput="onLabelerInput(this.value)"/>
     </div>
   </div>
 
   <!-- QTC Shift -->
   <div class="card fade-in">
-    <div class="card-title">QTC Shift</div>
+    <div class="card-title">QTC Shift <span class="check-dot" id="chk-qtcShift">✓</span></div>
     <div class="tile-group" id="qtcShiftGroup">
-      <div class="tile" data-val="M"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">M</div>
-      <div class="tile" data-val="N"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">N</div>
-      <div class="tile" data-val="ON" onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')">ON</div>
+      <div class="tile" data-val="M"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')"><span class="ico">☀️</span>M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')"><span class="ico">🌙</span>N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')"><span class="ico">🌌</span>ON</div>
     </div>
   </div>
 
   <!-- QTC Name -->
   <div class="card fade-in">
-    <div class="card-title">QTC Name</div>
+    <div class="card-title">QTC Name <span class="check-dot" id="chk-qtcName">✓</span></div>
     <div class="name-grid" id="qtcNames">
       <div class="no-shift-msg">← Select a QTC Shift first</div>
     </div>
@@ -332,7 +359,7 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- QTC Attendance -->
   <div class="card fade-in">
-    <div class="card-title">QTC Attendance</div>
+    <div class="card-title">QTC Attendance <span class="check-dot" id="chk-qtcAttendance">✓</span></div>
     <div class="attend-group">
       <div class="attend-btn" id="attendPresent"    onclick="setAttendance('Present')">✅ Present</div>
       <div class="attend-btn" id="attendNotPresent" onclick="setAttendance('Not Present')">⚠️ Not Present</div>
@@ -342,24 +369,35 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- Yubikey -->
   <div class="card fade-in">
-    <div class="card-title">Yubikey</div>
+    <div class="card-title">Yubikey <span class="check-dot" id="chk-yubikey">✓</span></div>
     <div class="field-wrap">
       <label for="yubikey">Yubikey / Email</label>
-      <input type="text" id="yubikey" placeholder="Type numbers or full email…"
+      <input type="text" id="yubikey" placeholder="Type 6-digit number or full email…"
              onblur="formatYubikey(this)" oninput="previewYubikey(this)"/>
       <div class="smart-hint" id="yubikeyHint"></div>
+    </div>
+
+    <!-- Flash Drive History -->
+    <div id="historyLoading" class="history-loading hidden">
+      <span class="mini-spinner"></span> Checking this flash drive's history…
+    </div>
+    <div id="historyEmpty" class="history-empty hidden">No previous spot checks found for this flash drive.</div>
+    <div id="historyBox" class="history-box hidden">
+      <div class="history-stat total"><span class="num" id="histTotal">0</span>Total Checks</div>
+      <div class="history-stat ok"><span class="num" id="histNoViolation">0</span>No Violation</div>
+      <div class="history-stat bad"><span class="num" id="histViolation">0</span>Violation</div>
     </div>
   </div>
 
   <!-- Task Link -->
   <div class="card fade-in">
-    <div class="card-title">Task Link</div>
+    <div class="card-title">Task Link <span class="check-dot" id="chk-taskLink">✓</span></div>
     <div class="field-wrap">
       <label for="taskLink">Paste Task URL</label>
       <input type="url" id="taskLink" placeholder="https://labeling.robot.car/#/tasks/do/…/id/…"
              oninput="parseTaskLink(this.value)"/>
     </div>
-    <div class="row2" style="margin-top:18px;">
+    <div class="row2" style="margin-top:16px;">
       <div>
         <label>Extracted Task ID</label>
         <div class="task-id-badge" id="taskIdBadge">—</div>
@@ -367,12 +405,12 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
       <div>
         <label>Stage (auto-detected)</label>
         <div class="stage-group" id="stageGroup">
-          <div class="stage-tile" data-val="FP" onclick="selectStage(this)">FP</div>
-          <div class="stage-tile" data-val="QA" onclick="selectStage(this)">QA</div>
+          <div class="stage-tile" data-val="FP" onclick="selectStage(this)">🆕 FP</div>
+          <div class="stage-tile" data-val="QA" onclick="selectStage(this)">🔍 QA</div>
         </div>
       </div>
     </div>
-    <div class="field-wrap" style="margin-top:18px;">
+    <div class="field-wrap" style="margin-top:16px;">
       <label for="queueName">Queue Name</label>
       <select id="queueName" onchange="setField('queueName',this.value); clearQueueAutoHint();">
         <option value="">— Select —</option>
@@ -388,26 +426,26 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- Modality -->
   <div class="card fade-in">
-    <div class="card-title">Modality</div>
+    <div class="card-title">Modality <span class="check-dot" id="chk-modality">✓</span></div>
     <div class="tile-group" id="modalityGroup">
-      <div class="modality-tile" data-val="Lidar"    onclick="selectModality(this)">Lidar</div>
-      <div class="modality-tile" data-val="Lane Line" onclick="selectModality(this)">Lane Line</div>
+      <div class="modality-tile" data-val="Lidar"     onclick="selectModality(this)"><span class="ico">🛰️</span>Lidar</div>
+      <div class="modality-tile" data-val="Lane Line" onclick="selectModality(this)"><span class="ico">🛣️</span>Lane Line</div>
     </div>
   </div>
 
   <!-- QT Shift -->
   <div class="card fade-in">
-    <div class="card-title">QT Shift</div>
+    <div class="card-title">QT Shift <span class="check-dot" id="chk-qtShift">✓</span></div>
     <div class="tile-group" id="qtShiftGroup">
-      <div class="tile" data-val="M"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">M</div>
-      <div class="tile" data-val="N"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">N</div>
-      <div class="tile" data-val="ON" onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')">ON</div>
+      <div class="tile" data-val="M"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')"><span class="ico">☀️</span>M</div>
+      <div class="tile" data-val="N"  onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')"><span class="ico">🌙</span>N</div>
+      <div class="tile" data-val="ON" onclick="selectTile('qtShiftGroup','qtShift',this,'qtNames')"><span class="ico">🌌</span>ON</div>
     </div>
   </div>
 
   <!-- QT Name -->
   <div class="card fade-in">
-    <div class="card-title">QT Name</div>
+    <div class="card-title">QT Name <span class="check-dot" id="chk-qtName">✓</span></div>
     <div class="name-grid" id="qtNames">
       <div class="no-shift-msg">← Select a QT Shift first</div>
     </div>
@@ -415,21 +453,23 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
   <!-- Violation -->
   <div class="card fade-in">
-    <div class="card-title">Violation</div>
+    <div class="card-title">Violation <span class="check-dot" id="chk-violation">✓</span></div>
     <div class="violation-group">
       <div class="vio-btn" id="vioNoBtn"  onclick="setViolation('No Violation')">✅ No Violation</div>
       <div class="vio-btn" id="vioYesBtn" onclick="setViolation('Violation')">❌ Violation</div>
     </div>
     <div id="vioTypesWrap" class="hidden">
-      <div class="vio-types-wrap">
-        <div class="vio-types-grid" id="vioTypesGrid"></div>
-      </div>
+      <div class="vio-types-wrap" id="vioTypesContainer"></div>
     </div>
   </div>
 
-  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Spot Check</button>
-
 </form>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Spot Check</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -453,21 +493,13 @@ const PERSONNEL = {
   }
 };
 
-const VIOLATION_TYPES = [
-  "VRU size attribute","Missed objects","Excessed objects","Posture",
-  "Missed Sign Attribute","Objects out of labeling zone shouldn't be labelled (static obstacle, ....etc)",
-  "Missed Artifacts","Excessed Artifacts","Size Estimation","Wrong Size",
-  "Wrong Sign Attribute","Excessed pixels","Missed pixels","Wrong classification",
-  "Wrong Attribute","Wrong TVA","Didn't toggle off auto grounding",
-  "Labeled a zone that shouldn't be labeled","Wrong Zone Size","Wrong Boundary Location",
-  "More than one keyframe from non-moving objects","Wrong orientation","Wrong box position",
-  "Missed Relationship","Excessed Attribute","Missed attribute",
-  "Labeled Objects that should be labeled as a Zone","label objects out of 150 m",
-  "wrong front side","Wrong Lane Boundary","Wrong Lane",
-  "Made the Off-Ramp/On-Ramp incorrectly","Error in creating the lane",
-  "Wrong Road Edge","Didn't toggle light background (Start and end)",
-  "Made the merge lane incorrectly","Other"
-];
+const VIOLATION_CATEGORIES = {
+  "Object & Attribute Errors": ["VRU size attribute","Missed objects","Excessed objects","Posture","Size Estimation","Wrong Size","Wrong classification","Wrong Attribute","Wrong TVA","Didn't toggle off auto grounding","More than one keyframe from non-moving objects","Wrong orientation","Wrong box position","Missed Relationship","Excessed Attribute","Missed attribute","Objects out of labeling zone shouldn't be labelled (static obstacle, ....etc)","Labeled a zone that shouldn't be labeled","Labeled Objects that should be labeled as a Zone","label objects out of 150 m","wrong front side"],
+  "Sign Errors": ["Missed Sign Attribute","Wrong Sign Attribute"],
+  "Pixel & Artifact Errors": ["Excessed pixels","Missed pixels","Missed Artifacts","Excessed Artifacts"],
+  "Lane & Zone Errors": ["Wrong Zone Size","Wrong Boundary Location","Wrong Lane Boundary","Wrong Lane","Made the Off-Ramp/On-Ramp incorrectly","Error in creating the lane","Wrong Road Edge","Didn't toggle light background (Start and end)","Made the merge lane incorrectly"],
+  "Other": ["Other"]
+};
 
 const state = {
   shift:'', unit:'', pcNo:'', labelerName:'',
@@ -476,12 +508,19 @@ const state = {
   taskId:'', qtShift:'', qtName:'',
   violation:'', violationTypes:[]
 };
+
 function setField(k, v) { state[k] = v; }
+
+function toggleCheck(id, ok) {
+  const el = document.getElementById('chk-' + id);
+  if (el) el.classList.toggle('show', !!ok);
+}
 
 function selectTile(groupId, stateKey, el, refreshGrid) {
   document.querySelectorAll('#' + groupId + ' .tile').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   state[stateKey] = el.dataset.val;
+  toggleCheck(stateKey, true);
   if (refreshGrid === 'qtcNames') renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (refreshGrid === 'qtNames')  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
 }
@@ -490,12 +529,19 @@ function selectModality(el) {
   document.querySelectorAll('#modalityGroup .modality-tile').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   state.modality = el.dataset.val;
+  toggleCheck('modality', true);
+}
+
+function onLabelerInput(v) {
+  state.labelerName = v;
+  toggleCheck('labelerName', v.trim().length > 0);
 }
 
 function previewPcNo(el) {
   const v = el.value.trim();
   document.getElementById('pcNoHint').textContent =
     (/^\d+$/.test(v) && v.length > 0) ? '→ Will format to: C-' + v : '';
+  toggleCheck('pcNo', v.length > 0);
 }
 function formatPcNo(el) {
   const v = el.value.trim();
@@ -503,19 +549,20 @@ function formatPcNo(el) {
     el.value = 'C-' + v;
     const h = document.getElementById('pcNoHint');
     h.textContent = '✓ Formatted!';
-    setTimeout(() => h.textContent = '', 2500);
+    setTimeout(() => h.textContent = '', 2200);
   }
   state.pcNo = el.value;
+  toggleCheck('pcNo', state.pcNo.length > 0);
 }
 
 function setAttendance(val) {
   state.qtcAttendance = val;
-  document.getElementById('attendPresent').classList.remove('active-present','active-notpresent','active-absent');
-  document.getElementById('attendNotPresent').classList.remove('active-present','active-notpresent','active-absent');
-  document.getElementById('attendAbsent').classList.remove('active-present','active-notpresent','active-absent');
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id =>
+    document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
   if (val === 'Present')     document.getElementById('attendPresent').classList.add('active-present');
   if (val === 'Not Present') document.getElementById('attendNotPresent').classList.add('active-notpresent');
   if (val === 'Absent')      document.getElementById('attendAbsent').classList.add('active-absent');
+  toggleCheck('qtcAttendance', true);
 }
 
 function renderNameGrid(gridId, shift, role, stateKey) {
@@ -531,6 +578,7 @@ function renderNameGrid(gridId, shift, role, stateKey) {
       grid.querySelectorAll('.name-card').forEach(c => c.classList.remove('active'));
       this.classList.add('active');
       state[stateKey] = name;
+      toggleCheck(stateKey, true);
     };
     grid.appendChild(card);
   });
@@ -539,7 +587,8 @@ function renderNameGrid(gridId, shift, role, stateKey) {
 function previewYubikey(el) {
   const v = el.value.trim();
   const h = document.getElementById('yubikeyHint');
-  if (v.includes('@')) { h.textContent = ''; h.style.color = ''; return; }
+  hideHistory();
+  if (v.includes('@')) { h.textContent = ''; h.style.color = ''; toggleCheck('yubikey', v.length > 0); return; }
   if (/^\d+$/.test(v) && v.length > 0) {
     if (v.length < 6) {
       h.textContent = `⚠️ Yubikey number must be 6 digits (${v.length}/6)`;
@@ -555,23 +604,57 @@ function previewYubikey(el) {
     h.textContent = '';
     h.style.color = '';
   }
+  toggleCheck('yubikey', false);
 }
 function formatYubikey(el) {
   const v = el.value.trim();
   const h = document.getElementById('yubikeyHint');
+  let finalValue = v;
   if (/^\d+$/.test(v) && v.length > 0) {
     if (v.length !== 6) {
       h.textContent = `⚠️ Yubikey number must be exactly 6 digits (${v.length}/6)`;
       h.style.color = 'var(--red)';
       state.yubikey = '';
+      toggleCheck('yubikey', false);
       return;
     }
-    el.value = 'me' + v + '@meti.ai';
+    finalValue = 'me' + v + '@meti.ai';
+    el.value = finalValue;
     h.textContent = '✓ Formatted!';
     h.style.color = 'var(--green)';
-    setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2500);
+    setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
   }
   state.yubikey = el.value;
+  toggleCheck('yubikey', state.yubikey.length > 0);
+  if (finalValue.includes('@')) fetchYubikeyHistory(finalValue);
+}
+
+/* ── FLASH DRIVE HISTORY (reads from the Sheet via Apps Script) ── */
+function hideHistory() {
+  document.getElementById('historyLoading').classList.add('hidden');
+  document.getElementById('historyEmpty').classList.add('hidden');
+  document.getElementById('historyBox').classList.add('hidden');
+}
+function fetchYubikeyHistory(yubikeyValue) {
+  hideHistory();
+  document.getElementById('historyLoading').classList.remove('hidden');
+  const url = APPS_SCRIPT_URL + '?action=stats&yubikey=' + encodeURIComponent(yubikeyValue);
+  fetch(url)
+    .then(r => r.json())
+    .then(res => {
+      document.getElementById('historyLoading').classList.add('hidden');
+      if (!res.success) { document.getElementById('historyEmpty').classList.remove('hidden'); return; }
+      if (res.total === 0) { document.getElementById('historyEmpty').classList.remove('hidden'); return; }
+      document.getElementById('histTotal').textContent = res.total;
+      document.getElementById('histNoViolation').textContent = res.noViolation;
+      document.getElementById('histViolation').textContent = res.violation;
+      document.getElementById('historyBox').classList.remove('hidden');
+    })
+    .catch(() => {
+      document.getElementById('historyLoading').classList.add('hidden');
+      document.getElementById('historyEmpty').textContent = "Couldn't load history (check Apps Script URL).";
+      document.getElementById('historyEmpty').classList.remove('hidden');
+    });
 }
 
 function parseTaskLink(url) {
@@ -586,11 +669,19 @@ function parseTaskLink(url) {
   if (url.toUpperCase().includes('QA')) autoSelectStage('QA');
   else if (url.length > 8) autoSelectStage('FP');
 
-  // استخراج اسم الكيو من اللينك بعد كلمة /queue/
   const qm = url.match(/\/queue\/([^\/?#]+)/i);
-  if (qm) {
-    autoSelectQueue(decodeURIComponent(qm[1]));
-  }
+  if (qm) autoSelectQueue(decodeURIComponent(qm[1]));
+
+  toggleCheck('taskLink', url.trim().length > 0);
+}
+
+function autoSelectStage(val) {
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.toggle('active', t.dataset.val === val));
+  state.stage = val;
+}
+function selectStage(el) {
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); state.stage = el.dataset.val;
 }
 
 function autoSelectQueue(queueName) {
@@ -608,18 +699,7 @@ function autoSelectQueue(queueName) {
   hint.textContent = '✓ Auto-detected from link: ' + queueName;
   hint.style.color = 'var(--green)';
 }
-
-function clearQueueAutoHint() {
-  document.getElementById('queueHint').textContent = '';
-}
-function autoSelectStage(val) {
-  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.toggle('active', t.dataset.val === val));
-  state.stage = val;
-}
-function selectStage(el) {
-  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active'); state.stage = el.dataset.val;
-}
+function clearQueueAutoHint() { document.getElementById('queueHint').textContent = ''; }
 
 function setViolation(val) {
   state.violation = val;
@@ -629,42 +709,59 @@ function setViolation(val) {
     document.getElementById('vioNoBtn').classList.add('active-ok');
     document.getElementById('vioTypesWrap').classList.add('hidden');
     state.violationTypes = [];
+    toggleCheck('violation', true);
   } else {
     document.getElementById('vioYesBtn').classList.add('active-vio');
     document.getElementById('vioTypesWrap').classList.remove('hidden');
     buildVioTypes();
+    toggleCheck('violation', state.violationTypes.length > 0);
   }
 }
+
 function buildVioTypes() {
-  const grid = document.getElementById('vioTypesGrid');
-  if (grid.children.length > 0) return;
-  VIOLATION_TYPES.forEach(vt => {
-    const chip = document.createElement('div');
-    chip.className = 'vio-type-chip'; chip.dataset.val = vt;
-    if (vt === 'Other') {
-      chip.innerHTML = '<span class="chk">✓</span>Other';
-      chip.onclick = function () {
-        this.classList.toggle('active');
-        const on = this.classList.contains('active');
-        const ow = document.getElementById('otherReasonWrap');
-        state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
-        if (on) { ow.classList.remove('hidden'); state.violationTypes.push('Other'); }
-        else { ow.classList.add('hidden'); document.getElementById('otherReasonInput').value = ''; }
-      };
-    } else {
-      chip.innerHTML = '<span class="chk">✓</span>' + vt;
-      chip.onclick = function () {
-        this.classList.toggle('active');
-        if (this.classList.contains('active')) { if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt); }
-        else state.violationTypes = state.violationTypes.filter(v => v !== vt);
-      };
-    }
-    grid.appendChild(chip);
+  const container = document.getElementById('vioTypesContainer');
+  if (container.children.length > 0) return;
+  Object.entries(VIOLATION_CATEGORIES).forEach(([cat, items]) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'vio-category';
+    const label = document.createElement('div');
+    label.className = 'vio-category-label';
+    label.textContent = cat;
+    wrap.appendChild(label);
+    const grid = document.createElement('div');
+    grid.className = 'vio-types-grid';
+    items.forEach(vt => {
+      const chip = document.createElement('div');
+      chip.className = 'vio-type-chip'; chip.dataset.val = vt;
+      if (vt === 'Other') {
+        chip.innerHTML = '<span class="chk">✓</span>Other';
+        chip.onclick = function () {
+          this.classList.toggle('active');
+          const on = this.classList.contains('active');
+          const ow = document.getElementById('otherReasonWrap');
+          state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
+          if (on) { ow.classList.remove('hidden'); state.violationTypes.push('Other'); }
+          else { ow.classList.add('hidden'); document.getElementById('otherReasonInput').value = ''; }
+          toggleCheck('violation', state.violationTypes.length > 0);
+        };
+      } else {
+        chip.innerHTML = '<span class="chk">✓</span>' + vt;
+        chip.onclick = function () {
+          this.classList.toggle('active');
+          if (this.classList.contains('active')) { if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt); }
+          else state.violationTypes = state.violationTypes.filter(v => v !== vt);
+          toggleCheck('violation', state.violationTypes.length > 0);
+        };
+      }
+      grid.appendChild(chip);
+    });
+    wrap.appendChild(grid);
+    container.appendChild(wrap);
   });
   const ow = document.createElement('div');
-  ow.id = 'otherReasonWrap'; ow.className = 'hidden'; ow.style.marginTop = '14px';
-  ow.innerHTML = '<label for="otherReasonInput" style="margin-bottom:6px;color:var(--red);">Describe the violation:</label><input type="text" id="otherReasonInput" placeholder="Type the reason here…" oninput="updateOtherReason(this.value)" style="border-color:var(--red);"/>';
-  grid.parentElement.appendChild(ow);
+  ow.id = 'otherReasonWrap'; ow.className = 'hidden field-wrap'; ow.style.marginTop = '14px';
+  ow.innerHTML = '<label for="otherReasonInput" style="color:var(--red);">Describe the violation:</label><input type="text" id="otherReasonInput" placeholder="Type the reason here…" oninput="updateOtherReason(this.value)" style="border-color:var(--red);"/>';
+  container.appendChild(ow);
 }
 function updateOtherReason(val) {
   state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
@@ -674,8 +771,7 @@ function updateOtherReason(val) {
 (function () {
   const el = document.getElementById('live-time');
   const tick = () => el.textContent = new Date().toLocaleString('en-EG', {
-    timeZone: 'Africa/Cairo', weekday: 'short', year: 'numeric',
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    timeZone: 'Africa/Cairo', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'
   });
   tick(); setInterval(tick, 1000);
 })();
@@ -721,7 +817,7 @@ function submitForm() {
     .then(r => r.json())
     .then(res => {
       btn.disabled = false; btn.innerHTML = 'Submit Spot Check';
-      if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 2200); }
+      if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 1800); }
       else showToast('❌ ' + res.message, 'error');
     })
     .catch(err => {
@@ -739,9 +835,7 @@ function resetForm() {
     document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
   document.getElementById('qtcNames').innerHTML = '<div class="no-shift-msg">← Select a QTC Shift first</div>';
   document.getElementById('qtNames').innerHTML  = '<div class="no-shift-msg">← Select a QT Shift first</div>';
-  document.getElementById('vioTypesGrid').innerHTML = '';
-  const ow = document.getElementById('otherReasonWrap');
-  if (ow) ow.remove();
+  document.getElementById('vioTypesContainer').innerHTML = '';
   document.getElementById('vioTypesWrap').classList.add('hidden');
   ['labelerName','yubikey','taskLink','pcNoInput'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('yubikeyHint').textContent = '';
@@ -750,13 +844,16 @@ function resetForm() {
   document.getElementById('queueHint').textContent = '';
   const badge = document.getElementById('taskIdBadge');
   badge.textContent = '—'; badge.classList.remove('found');
+  document.querySelectorAll('.check-dot').forEach(c => c.classList.remove('show'));
+  hideHistory();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + type + ' show';
   clearTimeout(window._tt);
-  window._tt = setTimeout(() => t.classList.remove('show'), 3800);
+  window._tt = setTimeout(() => t.classList.remove('show'), 3600);
 }
 </script>
 </body>
