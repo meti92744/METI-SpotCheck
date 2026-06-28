@@ -67,7 +67,37 @@ header {
 .header-divider { width: 1px; height: 28px; background: rgba(255,255,255,.25); }
 .header-text h1 { color: var(--white); font-size: 17px; font-weight: 800; letter-spacing: .3px; line-height: 1.1; }
 .header-text .sub { color: var(--blue-light); font-size: 11px; font-weight: 500; letter-spacing: .4px; margin-top: 1px; }
-.clock { margin-left: auto; color: rgba(255,255,255,.65); font-size: 12px; font-weight: 400; }
+
+/* ── CLOCK: instrument-cluster style with lane markings + driving car ── */
+@keyframes laneScroll  { to { background-position: -24px 0; } }
+@keyframes driveLoop   { 0%   { left: -10%; } 100% { left: 104%; } }
+
+.clock-cluster {
+  margin-left: auto;
+  background: #061224;
+  border-top: 2px solid var(--blue-light);
+  border-radius: 6px;
+  padding: 6px 14px 8px;
+  min-width: 118px;
+  flex-shrink: 0;
+}
+.clock-cluster .ct-row { display: flex; align-items: center; gap: 6px; }
+.clock-cluster .ct-row .ico { font-size: 12px; line-height: 1; }
+.clock-cluster .ct-time {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px; letter-spacing: 1px; color: var(--white); font-weight: 700;
+}
+.clock-cluster .ct-lane { position: relative; height: 10px; margin-top: 5px; overflow: hidden; }
+.clock-cluster .ct-lane .dashes {
+  position: absolute; left: 0; right: 0; top: 4px; height: 2px;
+  background: repeating-linear-gradient(90deg, rgba(0,229,200,.6) 0 8px, transparent 8px 14px);
+  animation: laneScroll .8s linear infinite;
+}
+.clock-cluster .ct-lane .mini-car {
+  position: absolute; top: -3px; left: -10%; width: 14px; height: 16px;
+  animation: driveLoop 2.6s linear infinite;
+}
+.clock-cluster .ct-lane .mini-car .rot { width: 100%; height: 100%; transform: rotate(90deg); }
 
 /* ── LAYOUT ── */
 .container { max-width: 760px; margin: 28px auto 30px; padding: 0 20px; animation: fadeInUp .4s ease both; }
@@ -231,6 +261,26 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
   padding: 12px 20px;
 }
 .bottom-nav-inner { max-width: 760px; margin: 0 auto; width: 100%; }
+
+/* Driving-car loading strip shown above the submit button while sending */
+@keyframes laneScrollFast  { to { background-position: -28px 0; } }
+@keyframes driveAcrossFast { 0%   { left: -10%; } 100% { left: 105%; } }
+
+.submit-road {
+  position: relative; height: 50px; background: var(--navy);
+  border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; margin-bottom: -1px;
+}
+.submit-road .dashes {
+  position: absolute; left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, rgba(0,229,200,.55) 0 14px, transparent 14px 26px);
+  animation: laneScrollFast .5s linear infinite;
+}
+.submit-road .big-car {
+  position: absolute; top: 5px; left: -10%; width: 24px; height: 38px;
+  animation: driveAcrossFast 1.1s linear infinite;
+}
+.submit-road .big-car .rot { width: 100%; height: 100%; transform: rotate(90deg); }
+
 .submit-btn {
   width: 100%; padding: 16px;
   background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
@@ -241,11 +291,6 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 }
 .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,180,166,.4); filter: brightness(1.07); }
 .submit-btn:disabled { background: #9fb3c8; cursor: not-allowed; transform: none; box-shadow: none; filter: none; }
-.submit-btn .spinner {
-  display: inline-block; width: 18px; height: 18px;
-  border: 3px solid rgba(255,255,255,.4); border-top-color: white;
-  border-radius: 50%; animation: spinner .7s linear infinite; vertical-align: middle; margin-right: 8px;
-}
 
 .toast {
   position: fixed; bottom: 96px; right: 24px; padding: 15px 22px;
@@ -291,7 +336,32 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
     <h1>Spot Check</h1>
     <div class="sub">Quality Control Form</div>
   </div>
-  <div class="clock" id="live-time"></div>
+
+  <!-- Instrument-cluster clock: road icon + digital time, with a tiny car
+       driving along the lane markings underneath -->
+  <div class="clock-cluster">
+    <div class="ct-row">
+      <span class="ico">🛣️</span>
+      <span class="ct-time" id="live-time">--:--:--</span>
+    </div>
+    <div class="ct-lane">
+      <div class="dashes"></div>
+      <div class="mini-car">
+        <div class="rot">
+          <svg viewBox="0 0 40 70" width="14" height="16">
+            <rect x="6" y="4" width="28" height="62" rx="10" fill="#ffffff" stroke="#16213e" stroke-width="3"/>
+            <rect x="15" y="0" width="10" height="6" rx="3" fill="#16213e"/>
+            <polygon points="11,16 29,16 25,25 15,25" fill="#16213e"/>
+            <polygon points="13,45 27,45 25,55 15,55" fill="#16213e"/>
+            <rect x="1" y="14" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="32" y="14" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="1" y="44" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="32" y="44" width="7" height="12" rx="2" fill="#16213e"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
 
 <div class="container">
@@ -469,6 +539,26 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
 <div class="bottom-nav">
   <div class="bottom-nav-inner">
+
+    <!-- Driving-car strip, shown only while the submission is in flight -->
+    <div class="submit-road hidden" id="submitRoad">
+      <div class="dashes"></div>
+      <div class="big-car">
+        <div class="rot">
+          <svg viewBox="0 0 40 70" width="24" height="38">
+            <rect x="6" y="4" width="28" height="62" rx="10" fill="#ffffff" stroke="#16213e" stroke-width="2"/>
+            <rect x="15" y="0" width="10" height="6" rx="3" fill="#16213e"/>
+            <polygon points="11,16 29,16 25,25 15,25" fill="#16213e" opacity="0.9"/>
+            <polygon points="13,45 27,45 25,55 15,55" fill="#16213e" opacity="0.9"/>
+            <rect x="1" y="14" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="32" y="14" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="1" y="44" width="7" height="12" rx="2" fill="#16213e"/>
+            <rect x="32" y="44" width="7" height="12" rx="2" fill="#16213e"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Spot Check</button>
   </div>
 </div>
@@ -477,7 +567,7 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color: 
 
 <script>
 // ⚠️ غيّر الرابط ده بعد ما تعمل Deploy في Apps Script (Web App URL بتاعك)
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNs0xNxSvEQa7EOGrAiud8JeQx_g0f56g6prxatn72DXGDZmAE0UnoFXESwz8uGNWadg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2j_mXc1nvjQtjZIxh8zkDh0quET9xN1dU0A8Jecz6lc0t9ggRaqlsL0Kbw2examxZgw/exec";
 
 const PERSONNEL = {
   M: {
@@ -490,7 +580,7 @@ const PERSONNEL = {
   },
   ON: {
     qtc: ["El Noby","Ahmed Nagia","Abdalla Barbary","Mohamed Zakaria","Samer Neseim","Eyad Mohamed","Ahmed Taha","Shreif Hossam","Mahmoud Khaled Hussien","Yousef Fathy","Yousef Saad","Ahmed Samir","Mostafa Mahmoud Mohamed","Mahmoud Salama","Medhat Mohamed Fathy","Mohamed Fathy","Eslam Ashraf","Ahmed Sobhy","Hossam Taha","Hassan Ayman","Yousef Saber","Youssef Reda","Mohamed Hafez","Amr Wael","Abdelrahman Ibrahem"],
-    qt:  ["Seif Waled","Hesham Nasser","Mohamed Nasr","Omar Sharawy","Mohamed ELSayed Emam","Mohamed Ibrahim","Bahi Hussein","Eslam Khaled","Mahmoud Mousa","Mostfa Atito"]
+    qt:  ["Seif Waled","Hesham Nasser","Mohamed Nasr","Mohamed ELSayed Emam","Mohamed Ibrahim","Bahi Hussein","Omar Sharawy","Eslam Khaled","Mahmoud Mousa","Mostfa Atito"]
   }
 };
 
@@ -769,11 +859,14 @@ function updateOtherReason(val) {
   state.violationTypes.push(val ? 'Other: ' + val : 'Other');
 }
 
+/* ── Instrument-cluster live clock (Africa/Cairo) ── */
 (function () {
   const el = document.getElementById('live-time');
-  const tick = () => el.textContent = new Date().toLocaleString('en-EG', {
-    timeZone: 'Africa/Cairo', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
+  const tick = () => {
+    el.textContent = new Date().toLocaleTimeString('en-GB', {
+      timeZone: 'Africa/Cairo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+  };
   tick(); setInterval(tick, 1000);
 })();
 
@@ -802,8 +895,12 @@ function validate() {
 function submitForm() {
   if (!validate()) return;
   const btn = document.getElementById('submitBtn');
+  const road = document.getElementById('submitRoad');
+
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  btn.textContent = 'Submitting…';
+  road.classList.remove('hidden');
+
   state.labelerName = document.getElementById('labelerName').value.trim();
   state.yubikey     = document.getElementById('yubikey').value.trim();
   state.taskLink    = document.getElementById('taskLink').value.trim();
@@ -817,12 +914,14 @@ function submitForm() {
   })
     .then(r => r.json())
     .then(res => {
-      btn.disabled = false; btn.innerHTML = 'Submit Spot Check';
+      btn.disabled = false; btn.textContent = 'Submit Spot Check';
+      road.classList.add('hidden');
       if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 1800); }
       else showToast('❌ ' + res.message, 'error');
     })
     .catch(err => {
-      btn.disabled = false; btn.innerHTML = 'Submit Spot Check';
+      btn.disabled = false; btn.textContent = 'Submit Spot Check';
+      road.classList.add('hidden');
       showToast('❌ Error: ' + err.message, 'error');
     });
 }
