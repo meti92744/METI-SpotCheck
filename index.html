@@ -1174,7 +1174,7 @@ function previewYubikey(el) {
     toggleCheck('yubikey', false);
   } else {
     // 6 أرقام تمام
-    h.textContent = '→ هيتحول لـ: me' + clean + '@meti.ai';
+    h.textContent = '→ It will turn into: me' + clean + '@meti.ai';
     h.style.color = 'var(--blue)';
     toggleCheck('yubikey', true);
   }
@@ -1191,7 +1191,7 @@ function formatYubikey(el) {
   }
   if (clean.length !== 6) {
     el.value = clean;
-    h.textContent = `⚠️ لازم 6 أرقام بالظبط (${clean.length}/6)`;
+    h.textContent = `⚠️ It must be exactly 6 digits (${clean.length}/6)`;
     h.style.color = 'var(--red)';
     state.yubikey = ''; toggleCheck('yubikey', false);
     return;
@@ -1201,7 +1201,7 @@ function formatYubikey(el) {
   const formatted = 'me' + clean + '@meti.ai';
   el.value = formatted;
   state.yubikey = formatted;
-  h.textContent = '✓ اتحول تلقائياً!';
+  h.textContent = '✓transform automatically!';
   h.style.color = 'var(--green)';
   setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
   toggleCheck('yubikey', true);
