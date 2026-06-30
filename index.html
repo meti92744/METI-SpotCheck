@@ -60,7 +60,7 @@ body {
 
 .fade-in { animation: fadeInUp .4s ease both; }
 
-/* ── HEADER ── */
+/* HEADER */
 header {
   background: var(--navy);
   padding: 0 16px;
@@ -115,7 +115,7 @@ body.edit-mode .lock-btn {
 .clock-cluster .ct-lane .mini-car { position:absolute; top:-3px; left:-10%; width:14px; height:16px; animation:driveLoop 2.6s linear infinite; }
 .clock-cluster .ct-lane .mini-car .rot { width:100%; height:100%; transform:rotate(90deg); }
 
-/* ── EDIT MODE BANNER ── */
+/* EDIT MODE BANNER */
 .edit-banner {
   background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
   color: #fff;
@@ -139,7 +139,7 @@ body.edit-mode .lock-btn {
 }
 .edit-exit-btn:hover { background: rgba(255,255,255,.28); }
 
-/* ── LAYOUT ── */
+/* LAYOUT */
 .container { max-width:760px; margin:28px auto 30px; padding:0 20px; animation:fadeInUp .4s ease both; }
 .card { background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); border:1.5px solid rgba(0,180,166,.13); padding:20px 22px; margin-bottom:16px; }
 .card-title { font-size:12px; color:var(--blue); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:14px; padding-bottom:9px; border-bottom:2px solid var(--blue-pale); display:flex; align-items:center; gap:7px; }
@@ -148,16 +148,20 @@ body.edit-mode .lock-btn {
 .check-dot.show { display:flex; }
 
 label { display:block; font-size:14px; font-weight:700; color:var(--text-dark); margin-bottom:7px; }
-input[type="text"], input[type="url"], select {
+input[type="text"], input[type="url"], input[type="number"], select {
   width:100%; padding:11px 14px;
   font-family:var(--font); font-size:15px; font-weight:600;
   border:2px solid var(--gray-border); border-radius:var(--radius);
   outline:none; transition:border-color var(--trans),box-shadow var(--trans);
   background:#f6fffe; color:var(--text-dark);
 }
-input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-glow); }
+input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, select:focus { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-glow); }
+/* hide number spin arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 
-/* ── TILES ── */
+/* TILES */
 .tile-group { display:flex; flex-wrap:wrap; gap:10px; }
 .tile-wrap { position:relative; flex:1 1 90px; min-width:88px; }
 .tile-wrap > .tile { width:100%; flex:none; }
@@ -174,10 +178,8 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color:v
 .tile:hover { transform:translateY(-3px); box-shadow:var(--shadow-lift); border-color:var(--blue); color:var(--blue); }
 .tile.active { background:var(--navy); color:#fff; border-color:var(--navy); animation:pulseTeal .5s ease; }
 
-/* ── DRAG & DROP ── */
-.tile-wrap.dragging, .name-card-wrap.dragging, .queue-manage-row.dragging, .vio-type-chip-wrap.dragging {
-  opacity: 0.4;
-}
+/* DRAG AND DROP */
+.tile-wrap.dragging, .name-card-wrap.dragging, .queue-manage-row.dragging, .vio-type-chip-wrap.dragging { opacity: 0.4; }
 .tile-wrap.drag-over > .tile,
 .name-card-wrap.drag-over > .name-card,
 .queue-manage-row.drag-over,
@@ -194,43 +196,20 @@ body.edit-mode .name-card-wrap:active,
 body.edit-mode .queue-manage-row:active,
 body.edit-mode .vio-type-chip-wrap:active { cursor: grabbing; }
 
-/* drag handle icon */
-.drag-handle {
-  display: none;
-  position: absolute;
-  top: 50%; left: -18px;
-  transform: translateY(-50%);
-  font-size: 13px;
-  color: var(--purple);
-  cursor: grab;
-  user-select: none;
-  line-height: 1;
-}
+.drag-handle { display:none; position:absolute; top:50%; left:-18px; transform:translateY(-50%); font-size:13px; color:var(--purple); cursor:grab; user-select:none; line-height:1; }
 body.edit-mode .drag-handle { display: block; }
 
-/* ── RENAME hint ── */
 body.edit-mode .tile-wrap > .tile::after,
-body.edit-mode .name-card-wrap > .name-card::after {
-  content: '✏️';
-  font-size: 9px;
-  position: absolute;
-  bottom: 3px; right: 4px;
-  opacity: .55;
-}
+body.edit-mode .name-card-wrap > .name-card::after { content:'✏️'; font-size:9px; position:absolute; bottom:3px; right:4px; opacity:.55; }
 .tile-wrap, .name-card-wrap { position: relative; }
 
-/* ── DELETE BUTTON ── */
+/* DELETE BUTTON */
 .del-btn {
-  position: absolute;
-  top: -7px; right: -7px;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--red); color: #fff;
-  border: 2px solid #fff;
-  font-size: 10px; line-height: 1;
-  cursor: pointer; font-weight: 900;
-  display: none;
-  align-items: center; justify-content: center;
+  position: absolute; top: -7px; right: -7px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--red); color: #fff; border: 2px solid #fff;
+  font-size: 10px; line-height: 1; cursor: pointer; font-weight: 900;
+  display: none; align-items: center; justify-content: center;
   z-index: 10; padding: 0;
   transition: transform var(--trans), box-shadow var(--trans);
   box-shadow: 0 2px 6px rgba(224,56,56,.4);
@@ -238,7 +217,7 @@ body.edit-mode .name-card-wrap > .name-card::after {
 .del-btn:hover { transform: scale(1.2); box-shadow: 0 3px 10px rgba(224,56,56,.6); }
 body.edit-mode .del-btn { display: flex; }
 
-/* ── ADD ITEM BUTTON ── */
+/* ADD ITEM BUTTON */
 .add-item-btn {
   display: none;
   width: 100%; padding: 9px 16px; margin-top: 8px;
@@ -250,7 +229,7 @@ body.edit-mode .del-btn { display: flex; }
 .add-item-btn:hover { background: rgba(92,45,145,.06); border-color: var(--purple-light); }
 body.edit-mode .add-item-btn { display: block; }
 
-/* ── ATTENDANCE ── */
+/* ATTENDANCE */
 .attend-group { display:flex; gap:10px; flex-wrap:wrap; }
 .attend-btn { flex:1 1 130px; padding:13px; border:2px solid var(--gray-border); border-radius:var(--radius); background:var(--blue-pale); text-align:center; cursor:pointer; font-family:var(--font); font-size:14px; font-weight:700; color:var(--navy); transition:all var(--trans); user-select:none; }
 .attend-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-lift); }
@@ -258,28 +237,27 @@ body.edit-mode .add-item-btn { display: block; }
 .attend-btn.active-notpresent { background:var(--orange); color:#fff; border-color:var(--orange); animation:pulseOrange .5s ease; }
 .attend-btn.active-absent     { background:var(--red); color:#fff; border-color:var(--red); animation:pulseRed .5s ease; }
 
-/* ── NAME CARDS ── */
+/* NAME CARDS */
 .name-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
 .name-card-wrap { position: relative; }
 .name-card-wrap .del-btn { top:-6px; right:-6px; }
-
 .name-card { padding:10px 8px; background:var(--blue-pale); border:2px solid var(--gray-border); border-radius:var(--radius); text-align:center; cursor:pointer; font-family:var(--font); font-size:13.5px; font-weight:700; color:var(--navy); line-height:1.3; transition:transform var(--trans),box-shadow var(--trans),border-color var(--trans),background var(--trans),color var(--trans); user-select:none; width:100%; }
 .name-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lift); border-color:var(--blue); }
 .name-card.active { background:var(--green); color:#fff; border-color:var(--green); animation:pulseGreen .5s ease; }
 
-/* ── MODALITY ── */
+/* MODALITY */
 .modality-tile { flex:1 1 120px; min-width:120px; padding:12px 16px; background:var(--blue-pale); border:2px solid var(--gray-border); border-radius:var(--radius); text-align:center; cursor:pointer; font-family:var(--font); font-size:15px; font-weight:700; color:var(--navy); transition:transform var(--trans),box-shadow var(--trans),border-color var(--trans),background var(--trans),color var(--trans); user-select:none; }
 .modality-tile .ico { display:block; font-size:17px; margin-bottom:2px; }
 .modality-tile:hover { transform:translateY(-3px); box-shadow:var(--shadow-lift); border-color:var(--purple); }
 .modality-tile.active { background:var(--purple); color:#fff; border-color:var(--purple); }
 
-/* ── STAGE ── */
+/* STAGE */
 .stage-group { display:flex; gap:10px; }
 .stage-tile { flex:1; padding:12px; background:var(--blue-pale); border:2px solid var(--gray-border); border-radius:var(--radius); text-align:center; cursor:pointer; font-family:var(--font); font-size:15px; font-weight:700; color:var(--navy); transition:all var(--trans); }
 .stage-tile:hover { transform:translateY(-2px); box-shadow:var(--shadow-lift); border-color:var(--blue); }
 .stage-tile.active { background:var(--blue); color:#fff; border-color:var(--blue); animation:pulseTeal .45s ease; }
 
-/* ── VIOLATION ── */
+/* VIOLATION */
 .violation-group { display:flex; gap:10px; flex-wrap:wrap; }
 .vio-btn { flex:1 1 130px; padding:13px; border:2px solid var(--gray-border); border-radius:var(--radius); background:var(--blue-pale); text-align:center; cursor:pointer; font-family:var(--font); font-size:14px; font-weight:700; color:var(--navy); transition:all var(--trans); }
 .vio-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-lift); }
@@ -289,25 +267,13 @@ body.edit-mode .add-item-btn { display: block; }
 .vio-category { margin-bottom:14px; }
 .vio-category:last-child { margin-bottom:0; }
 .vio-category-label { font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-
-.vio-cat-del-btn {
-  display: none; background: none; border: none; color: var(--red);
-  font-size: 13px; cursor: pointer; font-weight: 900; padding: 0 4px; line-height: 1; margin-left: auto;
-}
+.vio-cat-del-btn { display:none; background:none; border:none; color:var(--red); font-size:13px; cursor:pointer; font-weight:900; padding:0 4px; line-height:1; margin-left:auto; }
 body.edit-mode .vio-cat-del-btn { display: inline-flex; align-items: center; }
-
-/* ── rename button for categories ── */
-.vio-cat-rename-btn {
-  display: none; background: none; border: none; color: var(--purple);
-  font-size: 13px; cursor: pointer; font-weight: 900; padding: 0 4px; line-height: 1;
-}
+.vio-cat-rename-btn { display:none; background:none; border:none; color:var(--purple); font-size:13px; cursor:pointer; font-weight:900; padding:0 4px; line-height:1; }
 body.edit-mode .vio-cat-rename-btn { display: inline-flex; align-items: center; }
-
 .vio-types-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px; }
-
 .vio-type-chip-wrap { position: relative; }
 .vio-type-chip-wrap .del-btn { top:-6px; right:-6px; width:18px; height:18px; font-size:9px; }
-
 .vio-type-chip { padding:10px 12px; border:2px solid var(--gray-border); border-radius:var(--radius); background:#f0fffe; cursor:pointer; font-family:var(--font); font-size:13px; font-weight:600; color:var(--text-dark); transition:all var(--trans); display:flex; align-items:flex-start; gap:8px; line-height:1.3; width:100%; }
 .vio-type-chip:hover { border-color:var(--red); transform:translateY(-1px); }
 .vio-type-chip.active { background:var(--red); color:#fff; border-color:var(--red); }
@@ -316,31 +282,14 @@ body.edit-mode .vio-cat-rename-btn { display: inline-flex; align-items: center; 
 /* Queue management */
 .queue-manage { display: none; margin-top: 10px; }
 body.edit-mode .queue-manage { display: block; }
-.queue-manage-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 12px;
-  background: var(--blue-pale); border: 1.5px solid var(--gray-border);
-  border-radius: var(--radius); margin-bottom: 6px; position: relative;
-}
-.queue-manage-name { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-mid); line-height: 1.3; }
-.queue-edit-btn {
-  background: var(--purple); color: #fff; border: none;
-  border-radius: 50%; width: 22px; height: 22px; min-width: 22px;
-  cursor: pointer; font-size: 11px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform var(--trans);
-}
+.queue-manage-row { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--blue-pale); border:1.5px solid var(--gray-border); border-radius:var(--radius); margin-bottom:6px; position:relative; }
+.queue-manage-name { flex:1; font-size:12.5px; font-weight:600; color:var(--text-mid); line-height:1.3; }
+.queue-edit-btn { background:var(--purple); color:#fff; border:none; border-radius:50%; width:22px; height:22px; min-width:22px; cursor:pointer; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; transition:transform var(--trans); }
 .queue-edit-btn:hover { transform: scale(1.1); }
-.queue-del-btn {
-  background: var(--red); color: #fff; border: none;
-  border-radius: 50%; width: 22px; height: 22px; min-width: 22px;
-  cursor: pointer; font-size: 11px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform var(--trans);
-}
+.queue-del-btn { background:var(--red); color:#fff; border:none; border-radius:50%; width:22px; height:22px; min-width:22px; cursor:pointer; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; transition:transform var(--trans); }
 .queue-del-btn:hover { transform: scale(1.1); }
 
-/* ── MISC ── */
+/* MISC */
 .task-id-badge { display:inline-block; background:var(--blue-pale); border:2px solid var(--gray-border); border-radius:var(--radius); padding:11px 16px; font-size:15px; font-weight:700; color:var(--text-mid); min-width:160px; letter-spacing:.3px; }
 .task-id-badge.found { background:#e6f9ee; border-color:var(--green); color:var(--green); }
 .smart-hint { font-size:12.5px; color:var(--blue); font-weight:700; margin-top:6px; min-height:17px; }
@@ -350,7 +299,7 @@ body.edit-mode .queue-manage { display: block; }
 .field-wrap:last-child { margin-bottom:0; }
 .no-shift-msg { color:#9fb3c8; font-size:14px; padding:10px 0; font-style:italic; font-weight:500; }
 
-/* ── FLASH DRIVE HISTORY ── */
+/* HISTORY */
 .history-box { display:flex; gap:10px; margin-top:12px; }
 .history-stat { flex:1; padding:12px 10px; border-radius:var(--radius); text-align:center; font-size:12.5px; font-weight:700; line-height:1.3; }
 .history-stat .num { display:block; font-size:24px; font-weight:800; margin-bottom:2px; }
@@ -361,55 +310,26 @@ body.edit-mode .queue-manage { display: block; }
 .history-loading .mini-spinner { width:14px; height:14px; border:2px solid var(--gray-border); border-top-color:var(--blue); border-radius:50%; animation:spinner .7s linear infinite; }
 .history-empty { font-size:13px; color:var(--text-soft); font-style:italic; margin-top:10px; }
 
-/* ── MODAL OVERLAY ── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(13,27,75,.55); backdrop-filter: blur(3px);
-  z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px;
-}
+/* MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(13,27,75,.55); backdrop-filter:blur(3px); z-index:500; display:flex; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.hidden { display: none; }
-.modal-box {
-  background: #fff; border-radius: var(--radius);
-  padding: 28px 28px 24px; width: 100%; max-width: 360px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.28);
-  animation: modalIn .25s ease both; text-align: center;
-}
-.modal-box h3 { font-size: 19px; color: var(--navy); margin-bottom: 6px; }
-.modal-box .modal-sub { font-size: 13px; color: var(--text-soft); margin-bottom: 20px; font-weight: 500; line-height: 1.4; }
-.modal-pin-input {
-  width: 100%; padding: 13px; text-align: center;
-  font-size: 20px; letter-spacing: 5px; font-weight: 800;
-  border: 2px solid var(--gray-border); border-radius: var(--radius);
-  outline: none; font-family: 'Courier New', monospace;
-  margin-bottom: 10px; background: #f6fffe; color: var(--navy);
-  transition: border-color var(--trans), box-shadow var(--trans);
-}
-.modal-pin-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
-.modal-error { color: var(--red); font-size: 13px; font-weight: 700; min-height: 20px; margin-bottom: 12px; }
-.modal-btn {
-  width: 100%; padding: 13px;
-  background: linear-gradient(135deg, var(--navy), var(--blue));
-  color: #fff; border: none; border-radius: var(--radius);
-  font-family: var(--font); font-size: 15px; font-weight: 800;
-  cursor: pointer; margin-bottom: 10px; transition: filter var(--trans);
-}
+.modal-box { background:#fff; border-radius:var(--radius); padding:28px 28px 24px; width:100%; max-width:360px; box-shadow:0 24px 60px rgba(0,0,0,.28); animation:modalIn .25s ease both; text-align:center; }
+.modal-box h3 { font-size:19px; color:var(--navy); margin-bottom:6px; }
+.modal-box .modal-sub { font-size:13px; color:var(--text-soft); margin-bottom:20px; font-weight:500; line-height:1.4; }
+.modal-pin-input { width:100%; padding:13px; text-align:center; font-size:20px; letter-spacing:5px; font-weight:800; border:2px solid var(--gray-border); border-radius:var(--radius); outline:none; font-family:'Courier New',monospace; margin-bottom:10px; background:#f6fffe; color:var(--navy); transition:border-color var(--trans),box-shadow var(--trans); }
+.modal-pin-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-glow); }
+.modal-error { color:var(--red); font-size:13px; font-weight:700; min-height:20px; margin-bottom:12px; }
+.modal-btn { width:100%; padding:13px; background:linear-gradient(135deg,var(--navy),var(--blue)); color:#fff; border:none; border-radius:var(--radius); font-family:var(--font); font-size:15px; font-weight:800; cursor:pointer; margin-bottom:10px; transition:filter var(--trans); }
 .modal-btn:hover { filter: brightness(1.08); }
-.modal-btn:disabled { background: #9fb3c8; cursor: not-allowed; filter: none; }
+.modal-btn:disabled { background:#9fb3c8; cursor:not-allowed; filter:none; }
 .modal-cancel-btn { background:none; border:none; color:var(--text-soft); font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font); transition:color var(--trans); }
 .modal-cancel-btn:hover { color: var(--text-dark); }
-
 .add-modal-box { text-align: left; }
 .add-modal-box h3 { text-align: left; }
-.add-modal-input {
-  width: 100%; padding: 11px 14px;
-  font-family: var(--font); font-size: 14px; font-weight: 600;
-  border: 2px solid var(--gray-border); border-radius: var(--radius);
-  outline: none; margin-bottom: 14px; background: #f6fffe;
-  transition: border-color var(--trans), box-shadow var(--trans);
-}
-.add-modal-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(92,45,145,.12); }
+.add-modal-input { width:100%; padding:11px 14px; font-family:var(--font); font-size:14px; font-weight:600; border:2px solid var(--gray-border); border-radius:var(--radius); outline:none; margin-bottom:14px; background:#f6fffe; transition:border-color var(--trans),box-shadow var(--trans); }
+.add-modal-input:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(92,45,145,.12); }
 
-/* ── SUBMIT AREA ── */
+/* SUBMIT */
 .bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:250; background:#fff; border-top:1.5px solid var(--gray-border); box-shadow:0 -6px 24px rgba(13,27,75,.10); padding:12px 20px; }
 .bottom-nav-inner { max-width:760px; margin:0 auto; width:100%; }
 .submit-road { position:relative; height:50px; background:var(--navy); border-radius:var(--radius) var(--radius) 0 0; overflow:hidden; margin-bottom:-1px; }
@@ -579,12 +499,16 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
+  <!-- ═══ YUBIKEY — أرقام بس ═══ -->
   <div class="card fade-in">
     <div class="card-title">Yubikey <span class="check-dot" id="chk-yubikey">✓</span></div>
     <div class="field-wrap">
-      <label for="yubikey">Yubikey / Email</label>
-      <input type="text" id="yubikey" placeholder="Type 6-digit number or full email…"
-             onblur="formatYubikey(this)" oninput="previewYubikey(this)"/>
+      <label for="yubikey">Yubikey Number (6 Numbers)</label>
+      <input type="number" id="yubikey"
+             placeholder="Enter 6 digits…"
+             oninput="previewYubikey(this)"
+             onblur="formatYubikey(this)"
+             min="0" max="999999"/>
       <div class="smart-hint" id="yubikeyHint"></div>
     </div>
     <div id="historyLoading" class="history-loading hidden"><span class="mini-spinner"></span> Checking history…</div>
@@ -765,7 +689,6 @@ let CONFIG = null;
 let editMode = false;
 let sessionPin = '';
 let pendingAdd = null;
-// pendingAdd can be { type, ctx } for add OR { type:'rename', ctx, oldVal } for rename
 
 const state = {
   shift:'', unit:'', pcNo:'', labelerName:'',
@@ -775,7 +698,7 @@ const state = {
   violation:'', violationTypes:[]
 };
 
-// ─── Load Config ──────────────────────────────────────────────────────────────
+// Load Config
 async function loadConfig() {
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=getConfig');
@@ -788,9 +711,7 @@ async function loadConfig() {
 }
 loadConfig();
 
-// ═══════════════════════════════════════════════════════════
-// ── DRAG & DROP helpers
-// ═══════════════════════════════════════════════════════════
+// DRAG AND DROP
 let dragSrc = null;
 
 function makeDraggable(el) {
@@ -822,124 +743,78 @@ function makeDraggable(el) {
   });
 }
 
-// ─── Render: Units ────────────────────────────────────────────────────────────
+// Render: Units
 function renderUnits() {
   const group = document.getElementById('unitGroup');
   const currentVal = state.unit;
   group.innerHTML = '';
-
-  (CONFIG.units || []).forEach((unit, idx) => {
+  (CONFIG.units || []).forEach((unit) => {
     const wrap = document.createElement('div');
     wrap.className = 'tile-wrap';
-
     const tile = document.createElement('div');
     tile.className = 'tile' + (unit === currentVal ? ' active' : '');
     tile.dataset.val = unit;
     tile.textContent = unit;
-    tile.onclick = function () {
-      if (editMode) return; // single click does nothing in edit mode — use dblclick
-      selectTile('unitGroup', 'unit', this);
-    };
-    tile.ondblclick = function (e) {
-      if (!editMode) return;
-      e.stopPropagation();
-      showRenameModal('unit', unit, {});
-    };
-
+    tile.onclick = function () { if (editMode) return; selectTile('unitGroup', 'unit', this); };
+    tile.ondblclick = function (e) { if (!editMode) return; e.stopPropagation(); showRenameModal('unit', unit, {}); };
     const delBtn = document.createElement('button');
-    delBtn.className = 'del-btn';
-    delBtn.innerHTML = '✕';
+    delBtn.className = 'del-btn'; delBtn.innerHTML = '✕';
     delBtn.onclick = e => { e.stopPropagation(); removeItem('unit', unit, {}); };
-
-    wrap.appendChild(tile);
-    wrap.appendChild(delBtn);
-    group.appendChild(wrap);
-
-    // drag & drop reorder
+    wrap.appendChild(tile); wrap.appendChild(delBtn); group.appendChild(wrap);
     makeDraggable(wrap);
-    wrap._dropCallback = (src, target) => {
-      const srcIdx = CONFIG.units.indexOf(src.querySelector('.tile').dataset.val);
-      const tgtIdx = CONFIG.units.indexOf(target.querySelector('.tile').dataset.val);
-      if (srcIdx < 0 || tgtIdx < 0) return;
-      CONFIG.units.splice(srcIdx, 1);
-      CONFIG.units.splice(tgtIdx, 0, unit === CONFIG.units[tgtIdx] ? unit : CONFIG.units[srcIdx] || unit);
-      // simpler: just re-read from DOM order after drop
-      reorderFromDom('unitGroup', 'units');
-    };
+    wrap._dropCallback = () => { reorderFromDom('unitGroup', 'units'); };
   });
-
   const addBtn = document.createElement('button');
-  addBtn.className = 'add-item-btn';
-  addBtn.textContent = '+ Add Unit';
+  addBtn.className = 'add-item-btn'; addBtn.textContent = '+ Add Unit';
   addBtn.onclick = () => showAddModal('unit', {});
   group.appendChild(addBtn);
-
-  // attach drop reorder properly using DOM
   attachDomReorder(group, '.tile-wrap', (newOrder) => {
     CONFIG.units = newOrder.map(w => w.querySelector('.tile').dataset.val);
     saveConfigToServer();
   });
 }
 
-// ─── Render: Queues ───────────────────────────────────────────────────────────
+// Render: Queues
 function renderQueues() {
   const select = document.getElementById('queueName');
   const currentVal = state.queueName;
   select.innerHTML = '<option value="">— Select —</option>';
   (CONFIG.queues || []).forEach(q => {
     const opt = document.createElement('option');
-    opt.value = q; opt.textContent = q;
-    select.appendChild(opt);
+    opt.value = q; opt.textContent = q; select.appendChild(opt);
   });
   if (currentVal && (CONFIG.queues || []).includes(currentVal)) select.value = currentVal;
-
   const mgmt = document.getElementById('queueManage');
   mgmt.innerHTML = '';
   (CONFIG.queues || []).forEach(q => {
     const row = document.createElement('div');
     row.className = 'queue-manage-row';
     row.setAttribute('draggable', 'true');
-
     const nameSpan = document.createElement('span');
-    nameSpan.className = 'queue-manage-name';
-    nameSpan.textContent = q;
-
+    nameSpan.className = 'queue-manage-name'; nameSpan.textContent = q;
     const editBtn = document.createElement('button');
-    editBtn.className = 'queue-edit-btn';
-    editBtn.title = 'Rename';
-    editBtn.textContent = '✏️';
+    editBtn.className = 'queue-edit-btn'; editBtn.title = 'Rename'; editBtn.textContent = '✏️';
     editBtn.onclick = () => showRenameModal('queue', q, {});
-
     const delBtn = document.createElement('button');
-    delBtn.className = 'queue-del-btn';
-    delBtn.textContent = '✕';
+    delBtn.className = 'queue-del-btn'; delBtn.textContent = '✕';
     delBtn.onclick = () => removeItem('queue', q, {});
-
-    row.appendChild(nameSpan);
-    row.appendChild(editBtn);
-    row.appendChild(delBtn);
-    mgmt.appendChild(row);
+    row.appendChild(nameSpan); row.appendChild(editBtn); row.appendChild(delBtn); mgmt.appendChild(row);
   });
-
   const addBtn = document.createElement('button');
-  addBtn.className = 'add-item-btn';
-  addBtn.textContent = '+ Add Queue';
+  addBtn.className = 'add-item-btn'; addBtn.textContent = '+ Add Queue';
   addBtn.onclick = () => showAddModal('queue', {});
   mgmt.appendChild(addBtn);
-
   attachDomReorder(mgmt, '.queue-manage-row', (newOrder) => {
     CONFIG.queues = newOrder.map(r => r.querySelector('.queue-manage-name').textContent);
-    renderQueues();
-    saveConfigToServer();
+    renderQueues(); saveConfigToServer();
   });
 }
 
-// ─── Render: Name Grid ────────────────────────────────────────────────────────
+// Render: Name Grid
 function renderNameGrid(gridId, shift, role, stateKey) {
   const grid = document.getElementById(gridId);
   const currentSelected = state[stateKey];
   grid.innerHTML = '';
-
   const people = CONFIG.personnel?.[shift]?.[role];
   if (!people || people.length === 0) {
     grid.innerHTML = '<div class="no-shift-msg">No names for this shift yet.</div>';
@@ -947,86 +822,57 @@ function renderNameGrid(gridId, shift, role, stateKey) {
     people.forEach(name => {
       const wrap = document.createElement('div');
       wrap.className = 'name-card-wrap';
-
       const card = document.createElement('div');
       card.className = 'name-card' + (name === currentSelected ? ' active' : '');
       card.textContent = name;
       card.onclick = function () {
         if (editMode) return;
         grid.querySelectorAll('.name-card').forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
-        state[stateKey] = name;
-        toggleCheck(stateKey, true);
+        card.classList.add('active'); state[stateKey] = name; toggleCheck(stateKey, true);
       };
       card.ondblclick = function (e) {
-        if (!editMode) return;
-        e.stopPropagation();
+        if (!editMode) return; e.stopPropagation();
         showRenameModal('personnel', name, { shift, role, gridId, stateKey });
       };
-
       const delBtn = document.createElement('button');
-      delBtn.className = 'del-btn';
-      delBtn.innerHTML = '✕';
+      delBtn.className = 'del-btn'; delBtn.innerHTML = '✕';
       delBtn.onclick = e => { e.stopPropagation(); removeItem('personnel', name, { shift, role, gridId, stateKey }); };
-
-      wrap.appendChild(card);
-      wrap.appendChild(delBtn);
-      grid.appendChild(wrap);
+      wrap.appendChild(card); wrap.appendChild(delBtn); grid.appendChild(wrap);
     });
   }
-
   const addBtn = document.createElement('button');
   addBtn.className = 'add-item-btn';
   addBtn.textContent = `+ Add Name (${role.toUpperCase()} – Shift ${shift})`;
   addBtn.onclick = () => showAddModal('personnel', { shift, role, gridId, stateKey });
   grid.appendChild(addBtn);
-
   attachDomReorder(grid, '.name-card-wrap', (newOrder) => {
     CONFIG.personnel[shift][role] = newOrder.map(w => w.querySelector('.name-card').textContent);
     saveConfigToServer();
   });
 }
 
-// ─── Render: Violation Types ──────────────────────────────────────────────────
+// Render: Violation Types
 function buildVioTypes() {
   const container = document.getElementById('vioTypesContainer');
   container.innerHTML = '';
-
   Object.entries(CONFIG.violationCategories || {}).forEach(([cat, items]) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'vio-category';
-
-    const labelRow = document.createElement('div');
-    labelRow.className = 'vio-category-label';
-    labelRow.textContent = cat;
-
+    const wrap = document.createElement('div'); wrap.className = 'vio-category';
+    const labelRow = document.createElement('div'); labelRow.className = 'vio-category-label'; labelRow.textContent = cat;
     if (cat !== 'Other') {
       const catRenameBtn = document.createElement('button');
-      catRenameBtn.className = 'vio-cat-rename-btn';
-      catRenameBtn.innerHTML = '✏️';
-      catRenameBtn.title = 'Rename category';
+      catRenameBtn.className = 'vio-cat-rename-btn'; catRenameBtn.innerHTML = '✏️'; catRenameBtn.title = 'Rename category';
       catRenameBtn.onclick = () => showRenameModal('vioCategory', cat, {});
       labelRow.appendChild(catRenameBtn);
-
       const catDelBtn = document.createElement('button');
-      catDelBtn.className = 'vio-cat-del-btn';
-      catDelBtn.innerHTML = '🗑️ Delete';
+      catDelBtn.className = 'vio-cat-del-btn'; catDelBtn.innerHTML = '🗑️ Delete';
       catDelBtn.onclick = () => removeItem('vioCategory', cat, {});
       labelRow.appendChild(catDelBtn);
     }
     wrap.appendChild(labelRow);
-
-    const grid = document.createElement('div');
-    grid.className = 'vio-types-grid';
-
+    const grid = document.createElement('div'); grid.className = 'vio-types-grid';
     items.forEach(vt => {
-      const chipWrap = document.createElement('div');
-      chipWrap.className = 'vio-type-chip-wrap';
-
-      const chip = document.createElement('div');
-      chip.className = 'vio-type-chip';
-      chip.dataset.val = vt;
-
+      const chipWrap = document.createElement('div'); chipWrap.className = 'vio-type-chip-wrap';
+      const chip = document.createElement('div'); chip.className = 'vio-type-chip'; chip.dataset.val = vt;
       if (vt === 'Other') {
         chip.innerHTML = '<span class="chk">✓</span>Other';
         chip.onclick = function () {
@@ -1044,31 +890,19 @@ function buildVioTypes() {
         chip.onclick = function () {
           if (editMode) return;
           this.classList.toggle('active');
-          if (this.classList.contains('active')) {
-            if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt);
-          } else {
-            state.violationTypes = state.violationTypes.filter(v => v !== vt);
-          }
+          if (this.classList.contains('active')) { if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt); }
+          else { state.violationTypes = state.violationTypes.filter(v => v !== vt); }
           toggleCheck('violation', state.violationTypes.length > 0);
         };
-        chip.ondblclick = function (e) {
-          if (!editMode) return;
-          e.stopPropagation();
-          showRenameModal('vioType', vt, { category: cat });
-        };
-
+        chip.ondblclick = function (e) { if (!editMode) return; e.stopPropagation(); showRenameModal('vioType', vt, { category: cat }); };
         const vtDelBtn = document.createElement('button');
-        vtDelBtn.className = 'del-btn';
-        vtDelBtn.innerHTML = '✕';
+        vtDelBtn.className = 'del-btn'; vtDelBtn.innerHTML = '✕';
         vtDelBtn.onclick = e => { e.stopPropagation(); removeItem('vioType', vt, { category: cat }); };
-        chipWrap.appendChild(chip);
-        chipWrap.appendChild(vtDelBtn);
+        chipWrap.appendChild(chip); chipWrap.appendChild(vtDelBtn);
       }
       grid.appendChild(chipWrap);
     });
-
     wrap.appendChild(grid);
-
     if (cat !== 'Other') {
       const addVioBtn = document.createElement('button');
       addVioBtn.className = 'add-item-btn';
@@ -1076,96 +910,59 @@ function buildVioTypes() {
       addVioBtn.style.marginTop = '8px';
       addVioBtn.onclick = () => showAddModal('vioType', { category: cat });
       wrap.appendChild(addVioBtn);
-
       attachDomReorder(grid, '.vio-type-chip-wrap', (newOrder) => {
         const reordered = newOrder.map(w => w.querySelector('.vio-type-chip').dataset.val);
-        CONFIG.violationCategories[cat] = reordered;
-        saveConfigToServer();
+        CONFIG.violationCategories[cat] = reordered; saveConfigToServer();
       });
     }
-
     container.appendChild(wrap);
   });
-
   const addCatBtn = document.createElement('button');
-  addCatBtn.className = 'add-item-btn';
-  addCatBtn.textContent = '+ Add New Category';
+  addCatBtn.className = 'add-item-btn'; addCatBtn.textContent = '+ Add New Category';
   addCatBtn.onclick = () => showAddModal('vioCategory', {});
   container.appendChild(addCatBtn);
-
   const ow = document.createElement('div');
-  ow.id = 'otherReasonWrap';
-  ow.className = 'hidden field-wrap';
-  ow.style.marginTop = '14px';
+  ow.id = 'otherReasonWrap'; ow.className = 'hidden field-wrap'; ow.style.marginTop = '14px';
   ow.innerHTML = `<label for="otherReasonInput" style="color:var(--red);">Describe the violation:</label>
     <input type="text" id="otherReasonInput" placeholder="Type the reason here…"
            oninput="updateOtherReason(this.value)" style="border-color:var(--red);"/>`;
   container.appendChild(ow);
 }
 
-// ═══════════════════════════════════════════════════════════
-// ── DOM REORDER helper (attaches drag events to children)
-// ═══════════════════════════════════════════════════════════
+// DOM REORDER helper
 function attachDomReorder(container, childSelector, onReorder) {
   let localDragSrc = null;
-
-  function getItems() {
-    return Array.from(container.querySelectorAll(':scope > ' + childSelector.replace('.', '')));
-  }
-
-  // Use MutationObserver-free approach: re-attach after each render
   container.querySelectorAll(childSelector).forEach(item => {
     item.setAttribute('draggable', 'true');
-
     item.addEventListener('dragstart', e => {
       if (!editMode) { e.preventDefault(); return; }
-      localDragSrc = item;
-      setTimeout(() => item.classList.add('dragging'), 0);
-      e.dataTransfer.effectAllowed = 'move';
-      e.stopPropagation();
+      localDragSrc = item; setTimeout(() => item.classList.add('dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move'; e.stopPropagation();
     });
     item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-      localDragSrc = null;
+      item.classList.remove('dragging'); localDragSrc = null;
       container.querySelectorAll(childSelector).forEach(x => x.classList.remove('drag-over'));
     });
     item.addEventListener('dragover', e => {
       if (!editMode || !localDragSrc || localDragSrc === item) return;
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       container.querySelectorAll(childSelector).forEach(x => x.classList.remove('drag-over'));
       item.classList.add('drag-over');
     });
-    item.addEventListener('dragleave', e => {
-      item.classList.remove('drag-over');
-    });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
     item.addEventListener('drop', e => {
       if (!editMode || !localDragSrc || localDragSrc === item) return;
-      e.preventDefault();
-      e.stopPropagation();
-      item.classList.remove('drag-over');
-
-      // Insert before or after based on mouse position
+      e.preventDefault(); e.stopPropagation(); item.classList.remove('drag-over');
       const rect = item.getBoundingClientRect();
-      const midY = rect.top + rect.height / 2;
-      const midX = rect.left + rect.width / 2;
       const useY = rect.height > rect.width * 0.5;
-      const before = useY ? e.clientY < midY : e.clientX < midX;
-
-      if (before) {
-        container.insertBefore(localDragSrc, item);
-      } else {
-        container.insertBefore(localDragSrc, item.nextSibling);
-      }
-
-      const newOrder = Array.from(container.querySelectorAll(childSelector));
-      onReorder(newOrder);
+      const before = useY ? e.clientY < rect.top + rect.height / 2 : e.clientX < rect.left + rect.width / 2;
+      container.insertBefore(localDragSrc, before ? item : item.nextSibling);
+      onReorder(Array.from(container.querySelectorAll(childSelector)));
     });
   });
 }
 
-// ═══════════════════════════════ EDIT MODE ═══════════════════════════════════
-
+// EDIT MODE
 function openPinModal() {
   if (editMode) { exitEditMode(); return; }
   document.getElementById('pinInput').value = '';
@@ -1180,25 +977,18 @@ async function submitPin() {
   const pin = document.getElementById('pinInput').value;
   if (!pin) return;
   const errEl = document.getElementById('pinError');
-  const btn   = document.getElementById('pinSubmitBtn');
-  errEl.textContent = 'Checking…'; errEl.style.color = 'var(--text-soft)';
-  btn.disabled = true;
+  const btn = document.getElementById('pinSubmitBtn');
+  errEl.textContent = 'Checking…'; errEl.style.color = 'var(--text-soft)'; btn.disabled = true;
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=verifyPin&pin=' + encodeURIComponent(pin));
     const data = await res.json();
-    if (data.success) {
-      sessionPin = pin; editMode = true; closePinModal(); enterEditMode();
-    } else if (data.locked) {
-      errEl.textContent = `🔒 Locked — wait ${data.wait} minute(s)`; errEl.style.color = 'var(--red)'; btn.disabled = false;
-    } else if (data.remaining !== undefined) {
+    if (data.success) { sessionPin = pin; editMode = true; closePinModal(); enterEditMode(); }
+    else if (data.locked) { errEl.textContent = `🔒 Locked — wait ${data.wait} minute(s)`; errEl.style.color = 'var(--red)'; btn.disabled = false; }
+    else if (data.remaining !== undefined) {
       errEl.textContent = `❌ Wrong password — ${data.remaining} attempt(s) left`; errEl.style.color = 'var(--red)';
       btn.disabled = false; document.getElementById('pinInput').value = ''; document.getElementById('pinInput').focus();
-    } else {
-      errEl.textContent = data.message || '❌ Error'; errEl.style.color = 'var(--red)'; btn.disabled = false;
-    }
-  } catch (e) {
-    errEl.textContent = '❌ Connection error'; errEl.style.color = 'var(--red)'; btn.disabled = false;
-  }
+    } else { errEl.textContent = data.message || '❌ Error'; errEl.style.color = 'var(--red)'; btn.disabled = false; }
+  } catch (e) { errEl.textContent = '❌ Connection error'; errEl.style.color = 'var(--red)'; btn.disabled = false; }
 }
 
 function enterEditMode() {
@@ -1224,18 +1014,12 @@ function exitEditMode() {
   if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
 }
 
-// ── Add Modal ─────────────────────────────────────────────────────────────────
+// Add / Rename Modal
 function showAddModal(type, ctx) {
   if (!editMode) return;
   pendingAdd = { type, ctx, isRename: false };
-  const titles = {
-    unit: 'Add New Unit', personnel: `Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`,
-    queue: 'Add Queue Name', vioType: `Add Violation Type → "${ctx.category}"`, vioCategory: 'Add New Violation Category'
-  };
-  const hints = {
-    unit: 'مثال: NC Room 110', personnel: 'الاسم كامل كما سيظهر في الفورم',
-    queue: 'اسم الـ queue كامل', vioType: 'وصف نوع المخالفة', vioCategory: 'اسم التصنيف الجديد'
-  };
+  const titles = { unit:'Add New Unit', personnel:`Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`, queue:'Add Queue Name', vioType:`Add Violation Type → "${ctx.category}"`, vioCategory:'Add New Violation Category' };
+  const hints  = { unit:'مثال: NC Room 110', personnel:'الاسم كامل كما سيظهر في الفورم', queue:'اسم الـ queue كامل', vioType:'وصف نوع المخالفة', vioCategory:'اسم التصنيف الجديد' };
   document.getElementById('addModalTitle').textContent = titles[type] || 'Add Item';
   document.getElementById('addModalHint').textContent  = hints[type]  || '';
   document.getElementById('addModalInput').value = '';
@@ -1244,23 +1028,16 @@ function showAddModal(type, ctx) {
   setTimeout(() => document.getElementById('addModalInput').focus(), 100);
 }
 
-// ── Rename Modal ──────────────────────────────────────────────────────────────
 function showRenameModal(type, oldVal, ctx) {
   if (!editMode) return;
   pendingAdd = { type, ctx, isRename: true, oldVal };
-  const titles = {
-    unit: 'Rename Unit', personnel: 'Rename Person',
-    queue: 'Rename Queue', vioType: 'Rename Violation Type', vioCategory: 'Rename Category'
-  };
+  const titles = { unit:'Rename Unit', personnel:'Rename Person', queue:'Rename Queue', vioType:'Rename Violation Type', vioCategory:'Rename Category' };
   document.getElementById('addModalTitle').textContent = titles[type] || 'Rename';
   document.getElementById('addModalHint').textContent  = `Current: "${oldVal}"`;
   document.getElementById('addModalInput').value = oldVal;
   document.getElementById('addModalSubmitBtn').textContent = 'Save ✓';
   document.getElementById('addModal').classList.remove('hidden');
-  setTimeout(() => {
-    const inp = document.getElementById('addModalInput');
-    inp.focus(); inp.select();
-  }, 100);
+  setTimeout(() => { const inp = document.getElementById('addModalInput'); inp.focus(); inp.select(); }, 100);
 }
 
 function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); pendingAdd = null; }
@@ -1269,100 +1046,47 @@ async function submitAddItem() {
   const val = document.getElementById('addModalInput').value.trim();
   if (!val || !pendingAdd) return;
   const { type, ctx, isRename, oldVal } = pendingAdd;
-
-  if (isRename) {
-    await doRename(type, oldVal, val, ctx);
-  } else {
-    await doAdd(type, val, ctx);
-  }
+  if (isRename) { await doRename(type, oldVal, val, ctx); } else { await doAdd(type, val, ctx); }
   closeAddModal();
 }
 
 async function doAdd(type, val, ctx) {
   switch (type) {
-    case 'unit':
-      if (!CONFIG.units.includes(val)) CONFIG.units.push(val); break;
+    case 'unit': if (!CONFIG.units.includes(val)) CONFIG.units.push(val); break;
     case 'personnel':
-      if (!CONFIG.personnel[ctx.shift]) CONFIG.personnel[ctx.shift] = { qtc: [], qt: [] };
+      if (!CONFIG.personnel[ctx.shift]) CONFIG.personnel[ctx.shift] = { qtc:[], qt:[] };
       if (!CONFIG.personnel[ctx.shift][ctx.role]) CONFIG.personnel[ctx.shift][ctx.role] = [];
       if (!CONFIG.personnel[ctx.shift][ctx.role].includes(val)) CONFIG.personnel[ctx.shift][ctx.role].push(val); break;
-    case 'queue':
-      if (!CONFIG.queues.includes(val)) CONFIG.queues.push(val); break;
-    case 'vioType': {
-      const cat = CONFIG.violationCategories[ctx.category];
-      if (cat && !cat.includes(val)) { const oi = cat.indexOf('Other'); oi >= 0 ? cat.splice(oi, 0, val) : cat.push(val); } break;
-    }
-    case 'vioCategory':
-      if (!CONFIG.violationCategories[val]) CONFIG.violationCategories[val] = ['Other']; break;
+    case 'queue': if (!CONFIG.queues.includes(val)) CONFIG.queues.push(val); break;
+    case 'vioType': { const cat = CONFIG.violationCategories[ctx.category]; if (cat && !cat.includes(val)) { const oi = cat.indexOf('Other'); oi >= 0 ? cat.splice(oi,0,val) : cat.push(val); } break; }
+    case 'vioCategory': if (!CONFIG.violationCategories[val]) CONFIG.violationCategories[val] = ['Other']; break;
   }
-  rerenderSection(type, ctx);
-  await saveConfigToServer();
+  rerenderSection(type, ctx); await saveConfigToServer();
 }
 
 async function doRename(type, oldVal, newVal, ctx) {
   if (oldVal === newVal) return;
   switch (type) {
-    case 'unit': {
-      const i = CONFIG.units.indexOf(oldVal);
-      if (i >= 0) CONFIG.units[i] = newVal;
-      if (state.unit === oldVal) state.unit = newVal;
-      break;
-    }
-    case 'personnel': {
-      const arr = CONFIG.personnel[ctx.shift][ctx.role];
-      const i = arr.indexOf(oldVal);
-      if (i >= 0) arr[i] = newVal;
-      if (state[ctx.stateKey] === oldVal) state[ctx.stateKey] = newVal;
-      break;
-    }
-    case 'queue': {
-      const i = CONFIG.queues.indexOf(oldVal);
-      if (i >= 0) CONFIG.queues[i] = newVal;
-      if (state.queueName === oldVal) state.queueName = newVal;
-      break;
-    }
-    case 'vioType': {
-      const arr = CONFIG.violationCategories[ctx.category];
-      const i = arr ? arr.indexOf(oldVal) : -1;
-      if (i >= 0) arr[i] = newVal;
-      const vti = state.violationTypes.indexOf(oldVal);
-      if (vti >= 0) state.violationTypes[vti] = newVal;
-      break;
-    }
-    case 'vioCategory': {
-      if (CONFIG.violationCategories[oldVal] !== undefined) {
-        const items = CONFIG.violationCategories[oldVal];
-        delete CONFIG.violationCategories[oldVal];
-        // Re-insert at same position using ordered keys
-        const newCats = {};
-        Object.keys(CONFIG.violationCategories).forEach(k => { newCats[k] = CONFIG.violationCategories[k]; });
-        // Actually rebuild preserving order
-        const rebuilt = {};
-        Object.entries(CONFIG.violationCategories).forEach(([k,v]) => {
-          rebuilt[k === oldVal ? newVal : k] = v;
-        });
-        CONFIG.violationCategories = rebuilt;
-      }
-      break;
-    }
+    case 'unit': { const i=CONFIG.units.indexOf(oldVal); if(i>=0) CONFIG.units[i]=newVal; if(state.unit===oldVal) state.unit=newVal; break; }
+    case 'personnel': { const arr=CONFIG.personnel[ctx.shift][ctx.role]; const i=arr.indexOf(oldVal); if(i>=0) arr[i]=newVal; if(state[ctx.stateKey]===oldVal) state[ctx.stateKey]=newVal; break; }
+    case 'queue': { const i=CONFIG.queues.indexOf(oldVal); if(i>=0) CONFIG.queues[i]=newVal; if(state.queueName===oldVal) state.queueName=newVal; break; }
+    case 'vioType': { const arr=CONFIG.violationCategories[ctx.category]; const i=arr?arr.indexOf(oldVal):-1; if(i>=0) arr[i]=newVal; const vti=state.violationTypes.indexOf(oldVal); if(vti>=0) state.violationTypes[vti]=newVal; break; }
+    case 'vioCategory': { const rebuilt={}; Object.entries(CONFIG.violationCategories).forEach(([k,v]) => { rebuilt[k===oldVal?newVal:k]=v; }); CONFIG.violationCategories=rebuilt; break; }
   }
-  rerenderSection(type, ctx);
-  await saveConfigToServer();
+  rerenderSection(type, ctx); await saveConfigToServer();
 }
 
-// ── Remove Item ───────────────────────────────────────────────────────────────
 async function removeItem(type, val, ctx) {
   if (!editMode) return;
   if (!confirm(`Remove "${val}"?`)) return;
   switch (type) {
-    case 'unit': CONFIG.units = CONFIG.units.filter(u => u !== val); if (state.unit === val) { state.unit = ''; toggleCheck('unit', false); } break;
-    case 'personnel': CONFIG.personnel[ctx.shift][ctx.role] = CONFIG.personnel[ctx.shift][ctx.role].filter(n => n !== val); if (state[ctx.stateKey] === val) { state[ctx.stateKey] = ''; toggleCheck(ctx.stateKey, false); } break;
-    case 'queue': CONFIG.queues = CONFIG.queues.filter(q => q !== val); if (state.queueName === val) { state.queueName = ''; setField('queueName', ''); } break;
-    case 'vioType': CONFIG.violationCategories[ctx.category] = CONFIG.violationCategories[ctx.category].filter(v => v !== val); state.violationTypes = state.violationTypes.filter(v => v !== val); break;
-    case 'vioCategory': delete CONFIG.violationCategories[val]; state.violationTypes = state.violationTypes.filter(v => !((DEFAULT_CONFIG.violationCategories[val] || []).includes(v))); break;
+    case 'unit': CONFIG.units=CONFIG.units.filter(u=>u!==val); if(state.unit===val){state.unit='';toggleCheck('unit',false);} break;
+    case 'personnel': CONFIG.personnel[ctx.shift][ctx.role]=CONFIG.personnel[ctx.shift][ctx.role].filter(n=>n!==val); if(state[ctx.stateKey]===val){state[ctx.stateKey]='';toggleCheck(ctx.stateKey,false);} break;
+    case 'queue': CONFIG.queues=CONFIG.queues.filter(q=>q!==val); if(state.queueName===val){state.queueName='';setField('queueName','');} break;
+    case 'vioType': CONFIG.violationCategories[ctx.category]=CONFIG.violationCategories[ctx.category].filter(v=>v!==val); state.violationTypes=state.violationTypes.filter(v=>v!==val); break;
+    case 'vioCategory': delete CONFIG.violationCategories[val]; state.violationTypes=state.violationTypes.filter(v=>!((DEFAULT_CONFIG.violationCategories[val]||[]).includes(v))); break;
   }
-  rerenderSection(type, ctx);
-  await saveConfigToServer();
+  rerenderSection(type, ctx); await saveConfigToServer();
 }
 
 function rerenderSection(type, ctx) {
@@ -1370,227 +1094,255 @@ function rerenderSection(type, ctx) {
     case 'unit': renderUnits(); break;
     case 'personnel': renderNameGrid(ctx.gridId, ctx.shift, ctx.role, ctx.stateKey); break;
     case 'queue': renderQueues(); break;
-    case 'vioType': case 'vioCategory':
-      document.getElementById('vioTypesContainer').innerHTML = '';
-      if (state.violation === 'Violation') buildVioTypes(); break;
+    case 'vioType': case 'vioCategory': document.getElementById('vioTypesContainer').innerHTML=''; if(state.violation==='Violation') buildVioTypes(); break;
   }
 }
 
-// ── Save Config ───────────────────────────────────────────────────────────────
 async function saveConfigToServer() {
   showSaveStatus('Saving…', false, true);
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'saveConfig', pin: sessionPin, config: CONFIG })
-    });
+    const res = await fetch(APPS_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action:'saveConfig',pin:sessionPin,config:CONFIG}) });
     const data = await res.json();
-    if (data.success) showSaveStatus('✓ Saved');
-    else showSaveStatus('❌ Save failed', true);
+    if (data.success) showSaveStatus('✓ Saved'); else showSaveStatus('❌ Save failed', true);
   } catch (e) { showSaveStatus('❌ Network error', true); }
 }
 
-function showSaveStatus(msg, isErr = false, loading = false) {
+function showSaveStatus(msg, isErr=false, loading=false) {
   const el = document.getElementById('saveStatusText');
   el.textContent = msg;
-  el.className = 'save-status-text' + (isErr ? ' err' : loading ? '' : ' ok');
-  if (!loading) { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(() => { el.textContent = ''; el.className = 'save-status-text'; }, 2800); }
+  el.className = 'save-status-text' + (isErr?' err':loading?'':' ok');
+  if (!loading) { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(()=>{el.textContent='';el.className='save-status-text';}, 2800); }
 }
 
-// ═══════════════════════════════ FORM LOGIC ═══════════════════════════════════
+// FORM LOGIC
 function setField(k, v) { state[k] = v; }
-function toggleCheck(id, ok) { const el = document.getElementById('chk-' + id); if (el) el.classList.toggle('show', !!ok); }
+function toggleCheck(id, ok) { const el=document.getElementById('chk-'+id); if(el) el.classList.toggle('show',!!ok); }
 
 function selectTile(groupId, stateKey, el, refreshGrid) {
-  document.querySelectorAll('#' + groupId + ' .tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active'); state[stateKey] = el.dataset.val; toggleCheck(stateKey, true);
-  if (refreshGrid === 'qtcNames') renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
-  if (refreshGrid === 'qtNames')  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
+  document.querySelectorAll('#'+groupId+' .tile').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); state[stateKey]=el.dataset.val; toggleCheck(stateKey,true);
+  if (refreshGrid==='qtcNames') renderNameGrid('qtcNames',state.qtcShift,'qtc','qtcName');
+  if (refreshGrid==='qtNames')  renderNameGrid('qtNames', state.qtShift, 'qt', 'qtName');
 }
 
 function selectModality(el) {
-  document.querySelectorAll('#modalityGroup .modality-tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active'); state.modality = el.dataset.val; toggleCheck('modality', true);
+  document.querySelectorAll('#modalityGroup .modality-tile').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); state.modality=el.dataset.val; toggleCheck('modality',true);
 }
 
-function onLabelerInput(v) { state.labelerName = v; toggleCheck('labelerName', v.trim().length > 0); }
+function onLabelerInput(v) { state.labelerName=v; toggleCheck('labelerName',v.trim().length>0); }
 
 function previewPcNo(el) {
-  const v = el.value.trim();
-  document.getElementById('pcNoHint').textContent = (/^\d+$/.test(v) && v.length > 0) ? '→ Will format to: C-' + v : '';
-  toggleCheck('pcNo', v.length > 0);
+  const v=el.value.trim();
+  document.getElementById('pcNoHint').textContent=(/^\d+$/.test(v)&&v.length>0)?'→ Will format to: C-'+v:'';
+  toggleCheck('pcNo',v.length>0);
 }
 function formatPcNo(el) {
-  const v = el.value.trim();
-  if (/^\d+$/.test(v) && v.length > 0) { el.value = 'C-' + v; const h = document.getElementById('pcNoHint'); h.textContent = '✓ Formatted!'; setTimeout(() => h.textContent = '', 2200); }
-  state.pcNo = el.value; toggleCheck('pcNo', state.pcNo.length > 0);
+  const v=el.value.trim();
+  if(/^\d+$/.test(v)&&v.length>0){el.value='C-'+v;const h=document.getElementById('pcNoHint');h.textContent='✓ Formatted!';setTimeout(()=>h.textContent='',2200);}
+  state.pcNo=el.value; toggleCheck('pcNo',state.pcNo.length>0);
 }
 
 function setAttendance(val) {
-  state.qtcAttendance = val;
-  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id => document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
-  if (val === 'Present')     document.getElementById('attendPresent').classList.add('active-present');
-  if (val === 'Not Present') document.getElementById('attendNotPresent').classList.add('active-notpresent');
-  if (val === 'Absent')      document.getElementById('attendAbsent').classList.add('active-absent');
-  toggleCheck('qtcAttendance', true);
+  state.qtcAttendance=val;
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id=>document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
+  if(val==='Present')     document.getElementById('attendPresent').classList.add('active-present');
+  if(val==='Not Present') document.getElementById('attendNotPresent').classList.add('active-notpresent');
+  if(val==='Absent')      document.getElementById('attendAbsent').classList.add('active-absent');
+  toggleCheck('qtcAttendance',true);
 }
 
+// ════════════════════════════════════════════════════
+// YUBIKEY — أرقام بس، format تلقائي لما تخرج
+// ════════════════════════════════════════════════════
 function previewYubikey(el) {
-  const v = el.value.trim(); const h = document.getElementById('yubikeyHint'); hideHistory();
-  if (v.includes('@')) { h.textContent = ''; h.style.color = ''; toggleCheck('yubikey', v.length > 0); return; }
-  if (/^\d+$/.test(v) && v.length > 0) {
-    if (v.length < 6)      { h.textContent = `⚠️ Must be 6 digits (${v.length}/6)`; h.style.color='var(--red)'; }
-    else if (v.length===6) { h.textContent = '→ Will format to: me'+v+'@meti.ai'; h.style.color='var(--blue)'; }
-    else                   { h.textContent = `⚠️ Must be exactly 6 digits (${v.length}/6)`; h.style.color='var(--red)'; }
-  } else { h.textContent=''; h.style.color=''; }
-  toggleCheck('yubikey', false);
-}
-function formatYubikey(el) {
-  const v = el.value.trim(); const h = document.getElementById('yubikeyHint'); let finalValue = v;
-  if (/^\d+$/.test(v) && v.length > 0) {
-    if (v.length !== 6) { h.textContent=`⚠️ Must be exactly 6 digits (${v.length}/6)`; h.style.color='var(--red)'; state.yubikey=''; toggleCheck('yubikey',false); return; }
-    finalValue = 'me'+v+'@meti.ai'; el.value = finalValue;
-    h.textContent='✓ Formatted!'; h.style.color='var(--green)'; setTimeout(()=>{ h.textContent=''; h.style.color=''; }, 2200);
+  // شيل أي حاجة مش رقم وحدد بـ 6 أرقام بس
+  const clean = el.value.replace(/\D/g, '').slice(0, 6);
+  el.value = clean;
+
+  const h = document.getElementById('yubikeyHint');
+  hideHistory();
+
+  if (clean.length === 0) {
+    h.textContent = ''; h.style.color = '';
+    toggleCheck('yubikey', false);
+    return;
   }
-  state.yubikey = el.value; toggleCheck('yubikey', state.yubikey.length > 0);
-  if (finalValue.includes('@')) fetchYubikeyHistory(finalValue);
+  if (clean.length < 6) {
+    h.textContent = `⚠️ لازم يكون 6 أرقام (${clean.length}/6)`;
+    h.style.color = 'var(--red)';
+    toggleCheck('yubikey', false);
+  } else {
+    // 6 أرقام تمام
+    h.textContent = '→ هيتحول لـ: me' + clean + '@meti.ai';
+    h.style.color = 'var(--blue)';
+    toggleCheck('yubikey', true);
+  }
 }
 
-function hideHistory() { ['historyLoading','historyEmpty','historyBox'].forEach(id => document.getElementById(id).classList.add('hidden')); }
+function formatYubikey(el) {
+  const clean = el.value.replace(/\D/g, '').slice(0, 6);
+  const h = document.getElementById('yubikeyHint');
+
+  if (clean.length === 0) {
+    el.value = ''; h.textContent = ''; h.style.color = '';
+    state.yubikey = ''; toggleCheck('yubikey', false);
+    return;
+  }
+  if (clean.length !== 6) {
+    el.value = clean;
+    h.textContent = `⚠️ لازم 6 أرقام بالظبط (${clean.length}/6)`;
+    h.style.color = 'var(--red)';
+    state.yubikey = ''; toggleCheck('yubikey', false);
+    return;
+  }
+
+  // 6 أرقام: حوله تلقائياً
+  const formatted = 'me' + clean + '@meti.ai';
+  el.value = formatted;
+  state.yubikey = formatted;
+  h.textContent = '✓ اتحول تلقائياً!';
+  h.style.color = 'var(--green)';
+  setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
+  toggleCheck('yubikey', true);
+  fetchYubikeyHistory(formatted);
+}
+// ════════════════════════════════════════════════════
+
+function hideHistory() { ['historyLoading','historyEmpty','historyBox'].forEach(id=>document.getElementById(id).classList.add('hidden')); }
+
 function fetchYubikeyHistory(yubikeyValue) {
   hideHistory(); document.getElementById('historyLoading').classList.remove('hidden');
-  fetch(APPS_SCRIPT_URL + '?action=stats&yubikey=' + encodeURIComponent(yubikeyValue))
-    .then(r => r.json()).then(res => {
+  fetch(APPS_SCRIPT_URL+'?action=stats&yubikey='+encodeURIComponent(yubikeyValue))
+    .then(r=>r.json()).then(res=>{
       document.getElementById('historyLoading').classList.add('hidden');
-      if (!res.success || res.total === 0) { document.getElementById('historyEmpty').classList.remove('hidden'); return; }
-      document.getElementById('histTotal').textContent = res.total;
-      document.getElementById('histNoViolation').textContent = res.noViolation;
-      document.getElementById('histViolation').textContent = res.violation;
+      if(!res.success||res.total===0){document.getElementById('historyEmpty').classList.remove('hidden');return;}
+      document.getElementById('histTotal').textContent=res.total;
+      document.getElementById('histNoViolation').textContent=res.noViolation;
+      document.getElementById('histViolation').textContent=res.violation;
       document.getElementById('historyBox').classList.remove('hidden');
-    }).catch(() => {
+    }).catch(()=>{
       document.getElementById('historyLoading').classList.add('hidden');
-      document.getElementById('historyEmpty').textContent = "Couldn't load history.";
+      document.getElementById('historyEmpty').textContent="Couldn't load history.";
       document.getElementById('historyEmpty').classList.remove('hidden');
     });
 }
 
 function parseTaskLink(url) {
-  state.taskLink = url; const badge = document.getElementById('taskIdBadge'); let taskId = '';
-  const patterns = [/\/id\/(\d+)/i,/task[_-]?id[=\/]([A-Za-z0-9_-]+)/i,/[?&]id=(\d+)/i,/\/(\d{6,})(?:[/?#]|$)/];
-  for (const re of patterns) { const m = url.match(re); if (m) { taskId = m[1]; break; } }
-  state.taskId = taskId; badge.textContent = taskId || '—'; badge.classList.toggle('found', !!taskId);
-  if (url.toUpperCase().includes('QA')) autoSelectStage('QA');
-  else if (url.length > 8) autoSelectStage('FP');
-  const qm = url.match(/\/queue\/([^\/?#]+)/i);
-  if (qm) autoSelectQueue(decodeURIComponent(qm[1]));
-  toggleCheck('taskLink', url.trim().length > 0);
+  state.taskLink=url; const badge=document.getElementById('taskIdBadge'); let taskId='';
+  const patterns=[/\/id\/(\d+)/i,/task[_-]?id[=\/]([A-Za-z0-9_-]+)/i,/[?&]id=(\d+)/i,/\/(\d{6,})(?:[/?#]|$)/];
+  for(const re of patterns){const m=url.match(re);if(m){taskId=m[1];break;}}
+  state.taskId=taskId; badge.textContent=taskId||'—'; badge.classList.toggle('found',!!taskId);
+  if(url.toUpperCase().includes('QA')) autoSelectStage('QA');
+  else if(url.length>8) autoSelectStage('FP');
+  const qm=url.match(/\/queue\/([^\/?#]+)/i);
+  if(qm) autoSelectQueue(decodeURIComponent(qm[1]));
+  toggleCheck('taskLink',url.trim().length>0);
 }
 
 function autoSelectStage(val) {
-  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.toggle('active', t.dataset.val === val));
-  state.stage = val;
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t=>t.classList.toggle('active',t.dataset.val===val));
+  state.stage=val;
 }
 function selectStage(el) {
-  document.querySelectorAll('#stageGroup .stage-tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active'); state.stage = el.dataset.val;
+  document.querySelectorAll('#stageGroup .stage-tile').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); state.stage=el.dataset.val;
 }
 
 function autoSelectQueue(queueName) {
-  const select = document.getElementById('queueName'); const hint = document.getElementById('queueHint');
-  let opt = Array.from(select.options).find(o => o.value === queueName);
-  if (!opt) { opt = document.createElement('option'); opt.value = queueName; opt.textContent = queueName; select.appendChild(opt); }
-  select.value = queueName; state.queueName = queueName;
-  hint.textContent = '✓ Auto-detected: ' + queueName; hint.style.color = 'var(--green)';
+  const select=document.getElementById('queueName'); const hint=document.getElementById('queueHint');
+  let opt=Array.from(select.options).find(o=>o.value===queueName);
+  if(!opt){opt=document.createElement('option');opt.value=queueName;opt.textContent=queueName;select.appendChild(opt);}
+  select.value=queueName; state.queueName=queueName;
+  hint.textContent='✓ Auto-detected: '+queueName; hint.style.color='var(--green)';
 }
-function clearQueueAutoHint() { document.getElementById('queueHint').textContent = ''; }
+function clearQueueAutoHint() { document.getElementById('queueHint').textContent=''; }
 
 function setViolation(val) {
-  state.violation = val;
+  state.violation=val;
   document.getElementById('vioNoBtn').classList.remove('active-ok','active-vio');
   document.getElementById('vioYesBtn').classList.remove('active-ok','active-vio');
-  if (val === 'No Violation') {
+  if(val==='No Violation'){
     document.getElementById('vioNoBtn').classList.add('active-ok');
     document.getElementById('vioTypesWrap').classList.add('hidden');
-    state.violationTypes = []; toggleCheck('violation', true);
+    state.violationTypes=[]; toggleCheck('violation',true);
   } else {
     document.getElementById('vioYesBtn').classList.add('active-vio');
     document.getElementById('vioTypesWrap').classList.remove('hidden');
-    document.getElementById('vioTypesContainer').innerHTML = '';
-    buildVioTypes(); toggleCheck('violation', state.violationTypes.length > 0);
+    document.getElementById('vioTypesContainer').innerHTML='';
+    buildVioTypes(); toggleCheck('violation',state.violationTypes.length>0);
   }
 }
 
 function updateOtherReason(val) {
-  state.violationTypes = state.violationTypes.filter(v => !v.startsWith('Other'));
-  state.violationTypes.push(val ? 'Other: ' + val : 'Other');
+  state.violationTypes=state.violationTypes.filter(v=>!v.startsWith('Other'));
+  state.violationTypes.push(val?'Other: '+val:'Other');
 }
 
-// ── Live Clock ────────────────────────────────────────────────────────────────
-(function () {
-  const el = document.getElementById('live-time');
-  const tick = () => { el.textContent = new Date().toLocaleTimeString('en-GB', { timeZone:'Africa/Cairo', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }); };
-  tick(); setInterval(tick, 1000);
+// Live Clock
+(function(){
+  const el=document.getElementById('live-time');
+  const tick=()=>{el.textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Africa/Cairo',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});};
+  tick(); setInterval(tick,1000);
 })();
 
-// ── Validate & Submit ─────────────────────────────────────────────────────────
+// Validate and Submit
 function validate() {
-  const yubikeyVal = document.getElementById('yubikey').value.trim();
-  if (/^\d+$/.test(yubikeyVal) && yubikeyVal.length !== 6) { showToast('⚠️ Yubikey must be exactly 6 digits', 'error'); return false; }
-  const fields = [
+  const fields=[
     ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],
     ['qtcShift','QTC Shift'],['qtcName','QTC Name'],['qtcAttendance','QTC Attendance'],
     ['yubikey','Yubikey'],['taskLink','Task Link'],['stage','Stage'],
     ['queueName','Queue Name'],['modality','Modality'],['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
   ];
-  for (const [k, label] of fields) { if (!state[k]) { showToast('Please complete: ' + label, 'error'); return false; } }
-  if (state.violation === 'Violation' && state.violationTypes.length === 0) { showToast('Please select at least one violation type.', 'error'); return false; }
+  for(const[k,label]of fields){if(!state[k]){showToast('Please complete: '+label,'error');return false;}}
+  if(state.violation==='Violation'&&state.violationTypes.length===0){showToast('Please select at least one violation type.','error');return false;}
   return true;
 }
 
 function submitForm() {
-  if (!validate()) return;
-  const btn = document.getElementById('submitBtn'); const road = document.getElementById('submitRoad');
-  btn.disabled = true; btn.textContent = 'Submitting…'; road.classList.remove('hidden');
-  state.labelerName = document.getElementById('labelerName').value.trim();
-  state.yubikey     = document.getElementById('yubikey').value.trim();
-  state.taskLink    = document.getElementById('taskLink').value.trim();
-  state.queueName   = document.getElementById('queueName').value;
+  if(!validate()) return;
+  const btn=document.getElementById('submitBtn'); const road=document.getElementById('submitRoad');
+  btn.disabled=true; btn.textContent='Submitting…'; road.classList.remove('hidden');
+  state.labelerName=document.getElementById('labelerName').value.trim();
+  state.yubikey=document.getElementById('yubikey').value.trim();
+  state.taskLink=document.getElementById('taskLink').value.trim();
+  state.queueName=document.getElementById('queueName').value;
   formatPcNo(document.getElementById('pcNoInput'));
-  fetch(APPS_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(state) })
-    .then(r => r.json()).then(res => {
-      btn.disabled = false; btn.textContent = 'Submit Spot Check'; road.classList.add('hidden');
-      if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 1800); }
-      else showToast('❌ ' + res.message, 'error');
-    }).catch(err => {
-      btn.disabled = false; btn.textContent = 'Submit Spot Check'; road.classList.add('hidden');
-      showToast('❌ Error: ' + err.message, 'error');
+  fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(state)})
+    .then(r=>r.json()).then(res=>{
+      btn.disabled=false; btn.textContent='Submit Spot Check'; road.classList.add('hidden');
+      if(res.success){showToast('✅ '+res.message,'success');setTimeout(resetForm,1800);}
+      else showToast('❌ '+res.message,'error');
+    }).catch(err=>{
+      btn.disabled=false; btn.textContent='Submit Spot Check'; road.classList.add('hidden');
+      showToast('❌ Error: '+err.message,'error');
     });
 }
 
 function resetForm() {
-  Object.keys(state).forEach(k => { state[k] = k === 'violationTypes' ? [] : ''; });
-  document.querySelectorAll('.tile.active,.name-card.active,.stage-tile.active,.modality-tile.active').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.vio-btn').forEach(el => el.classList.remove('active-ok','active-vio'));
-  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id => document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
-  document.getElementById('qtcNames').innerHTML = '<div class="no-shift-msg">← Select a QTC Shift first</div>';
-  document.getElementById('qtNames').innerHTML  = '<div class="no-shift-msg">← Select a QT Shift first</div>';
-  document.getElementById('vioTypesContainer').innerHTML = '';
+  Object.keys(state).forEach(k=>{state[k]=k==='violationTypes'?[]:'';});
+  document.querySelectorAll('.tile.active,.name-card.active,.stage-tile.active,.modality-tile.active').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.vio-btn').forEach(el=>el.classList.remove('active-ok','active-vio'));
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id=>document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
+  document.getElementById('qtcNames').innerHTML='<div class="no-shift-msg">← Select a QTC Shift first</div>';
+  document.getElementById('qtNames').innerHTML='<div class="no-shift-msg">← Select a QT Shift first</div>';
+  document.getElementById('vioTypesContainer').innerHTML='';
   document.getElementById('vioTypesWrap').classList.add('hidden');
-  ['labelerName','yubikey','taskLink','pcNoInput'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('yubikeyHint').textContent = '';
-  document.getElementById('pcNoHint').textContent = '';
-  document.getElementById('queueName').value = '';
-  document.getElementById('queueHint').textContent = '';
-  const badge = document.getElementById('taskIdBadge'); badge.textContent='—'; badge.classList.remove('found');
-  document.querySelectorAll('.check-dot').forEach(c => c.classList.remove('show'));
-  hideHistory(); window.scrollTo({ top:0, behavior:'smooth' });
+  ['labelerName','taskLink','pcNoInput'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('yubikey').value='';
+  document.getElementById('yubikeyHint').textContent='';
+  document.getElementById('pcNoHint').textContent='';
+  document.getElementById('queueName').value='';
+  document.getElementById('queueHint').textContent='';
+  const badge=document.getElementById('taskIdBadge'); badge.textContent='—'; badge.classList.remove('found');
+  document.querySelectorAll('.check-dot').forEach(c=>c.classList.remove('show'));
+  hideHistory(); window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type + ' show';
-  clearTimeout(window._tt); window._tt = setTimeout(() => t.classList.remove('show'), 3600);
+function showToast(msg,type) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),3600);
 }
 </script>
 </body>
