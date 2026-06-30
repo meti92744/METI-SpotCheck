@@ -75,7 +75,6 @@ header {
 .header-text h1 { color:var(--white); font-size:17px; font-weight:800; letter-spacing:.3px; line-height:1.1; }
 .header-text .sub { color:var(--blue-light); font-size:11px; font-weight:500; letter-spacing:.4px; margin-top:1px; }
 
-/* Lock button */
 .lock-btn {
   margin-left: auto;
   background: rgba(255,255,255,.1);
@@ -100,7 +99,6 @@ body.edit-mode .lock-btn {
   animation: editPulse 2s ease infinite;
 }
 
-/* Clock */
 .clock-cluster {
   background: #061224;
   border-top: 2px solid var(--blue-light);
@@ -129,25 +127,15 @@ body.edit-mode .lock-btn {
 }
 .edit-banner.hidden { display: none; }
 .edit-banner-text { flex: 1; }
-.save-status-text {
-  font-size: 12px; font-weight: 700;
-  min-width: 90px; text-align: right;
-  transition: color .3s;
-}
+.save-status-text { font-size: 12px; font-weight: 700; min-width: 90px; text-align: right; transition: color .3s; }
 .save-status-text.ok  { color: #aaffdd; }
 .save-status-text.err { color: #ffaaaa; }
 .edit-exit-btn {
   background: rgba(255,255,255,.18);
   border: 1.5px solid rgba(255,255,255,.35);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 12px;
-  font-family: var(--font);
-  font-weight: 700;
-  transition: background var(--trans);
-  flex-shrink: 0;
+  color: #fff; padding: 4px 12px; border-radius: 20px;
+  cursor: pointer; font-size: 12px; font-family: var(--font); font-weight: 700;
+  transition: background var(--trans); flex-shrink: 0;
 }
 .edit-exit-btn:hover { background: rgba(255,255,255,.28); }
 
@@ -171,8 +159,6 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color:v
 
 /* ── TILES ── */
 .tile-group { display:flex; flex-wrap:wrap; gap:10px; }
-
-/* wrapper for edit-mode delete button */
 .tile-wrap { position:relative; flex:1 1 90px; min-width:88px; }
 .tile-wrap > .tile { width:100%; flex:none; }
 
@@ -188,22 +174,64 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus { border-color:v
 .tile:hover { transform:translateY(-3px); box-shadow:var(--shadow-lift); border-color:var(--blue); color:var(--blue); }
 .tile.active { background:var(--navy); color:#fff; border-color:var(--navy); animation:pulseTeal .5s ease; }
 
-/* ── DELETE BUTTON (edit mode) ── */
+/* ── DRAG & DROP ── */
+.tile-wrap.dragging, .name-card-wrap.dragging, .queue-manage-row.dragging, .vio-type-chip-wrap.dragging {
+  opacity: 0.4;
+}
+.tile-wrap.drag-over > .tile,
+.name-card-wrap.drag-over > .name-card,
+.queue-manage-row.drag-over,
+.vio-type-chip-wrap.drag-over > .vio-type-chip {
+  border: 2px dashed var(--purple) !important;
+  background: rgba(92,45,145,.08) !important;
+}
+body.edit-mode .tile-wrap,
+body.edit-mode .name-card-wrap,
+body.edit-mode .queue-manage-row,
+body.edit-mode .vio-type-chip-wrap { cursor: grab; }
+body.edit-mode .tile-wrap:active,
+body.edit-mode .name-card-wrap:active,
+body.edit-mode .queue-manage-row:active,
+body.edit-mode .vio-type-chip-wrap:active { cursor: grabbing; }
+
+/* drag handle icon */
+.drag-handle {
+  display: none;
+  position: absolute;
+  top: 50%; left: -18px;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--purple);
+  cursor: grab;
+  user-select: none;
+  line-height: 1;
+}
+body.edit-mode .drag-handle { display: block; }
+
+/* ── RENAME hint ── */
+body.edit-mode .tile-wrap > .tile::after,
+body.edit-mode .name-card-wrap > .name-card::after {
+  content: '✏️';
+  font-size: 9px;
+  position: absolute;
+  bottom: 3px; right: 4px;
+  opacity: .55;
+}
+.tile-wrap, .name-card-wrap { position: relative; }
+
+/* ── DELETE BUTTON ── */
 .del-btn {
   position: absolute;
   top: -7px; right: -7px;
   width: 20px; height: 20px;
   border-radius: 50%;
-  background: var(--red);
-  color: #fff;
+  background: var(--red); color: #fff;
   border: 2px solid #fff;
   font-size: 10px; line-height: 1;
-  cursor: pointer;
-  font-weight: 900;
+  cursor: pointer; font-weight: 900;
   display: none;
   align-items: center; justify-content: center;
-  z-index: 10;
-  padding: 0;
+  z-index: 10; padding: 0;
   transition: transform var(--trans), box-shadow var(--trans);
   box-shadow: 0 2px 6px rgba(224,56,56,.4);
 }
@@ -213,18 +241,11 @@ body.edit-mode .del-btn { display: flex; }
 /* ── ADD ITEM BUTTON ── */
 .add-item-btn {
   display: none;
-  width: 100%;
-  padding: 9px 16px;
-  margin-top: 8px;
-  background: transparent;
-  border: 2px dashed var(--purple);
-  border-radius: var(--radius);
-  color: var(--purple);
-  font-family: var(--font);
-  font-size: 13px; font-weight: 700;
-  cursor: pointer;
-  transition: all var(--trans);
-  text-align: center;
+  width: 100%; padding: 9px 16px; margin-top: 8px;
+  background: transparent; border: 2px dashed var(--purple);
+  border-radius: var(--radius); color: var(--purple);
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all var(--trans); text-align: center;
 }
 .add-item-btn:hover { background: rgba(92,45,145,.06); border-color: var(--purple-light); }
 body.edit-mode .add-item-btn { display: block; }
@@ -269,20 +290,18 @@ body.edit-mode .add-item-btn { display: block; }
 .vio-category:last-child { margin-bottom:0; }
 .vio-category-label { font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
 
-/* Edit mode: category label gets delete button */
 .vio-cat-del-btn {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--red);
-  font-size: 13px;
-  cursor: pointer;
-  font-weight: 900;
-  padding: 0 4px;
-  line-height: 1;
-  margin-left: auto;
+  display: none; background: none; border: none; color: var(--red);
+  font-size: 13px; cursor: pointer; font-weight: 900; padding: 0 4px; line-height: 1; margin-left: auto;
 }
 body.edit-mode .vio-cat-del-btn { display: inline-flex; align-items: center; }
+
+/* ── rename button for categories ── */
+.vio-cat-rename-btn {
+  display: none; background: none; border: none; color: var(--purple);
+  font-size: 13px; cursor: pointer; font-weight: 900; padding: 0 4px; line-height: 1;
+}
+body.edit-mode .vio-cat-rename-btn { display: inline-flex; align-items: center; }
 
 .vio-types-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px; }
 
@@ -294,18 +313,24 @@ body.edit-mode .vio-cat-del-btn { display: inline-flex; align-items: center; }
 .vio-type-chip.active { background:var(--red); color:#fff; border-color:var(--red); }
 .vio-type-chip .chk { width:17px; height:17px; border:2px solid currentColor; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:11px; margin-top:1px; }
 
-/* Queue management (edit mode) */
+/* Queue management */
 .queue-manage { display: none; margin-top: 10px; }
 body.edit-mode .queue-manage { display: block; }
 .queue-manage-row {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 12px;
-  background: var(--blue-pale);
-  border: 1.5px solid var(--gray-border);
-  border-radius: var(--radius);
-  margin-bottom: 6px;
+  background: var(--blue-pale); border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius); margin-bottom: 6px; position: relative;
 }
 .queue-manage-name { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-mid); line-height: 1.3; }
+.queue-edit-btn {
+  background: var(--purple); color: #fff; border: none;
+  border-radius: 50%; width: 22px; height: 22px; min-width: 22px;
+  cursor: pointer; font-size: 11px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--trans);
+}
+.queue-edit-btn:hover { transform: scale(1.1); }
 .queue-del-btn {
   background: var(--red); color: #fff; border: none;
   border-radius: 50%; width: 22px; height: 22px; min-width: 22px;
@@ -339,27 +364,20 @@ body.edit-mode .queue-manage { display: block; }
 /* ── MODAL OVERLAY ── */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(13,27,75,.55);
-  backdrop-filter: blur(3px);
-  z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
+  background: rgba(13,27,75,.55); backdrop-filter: blur(3px);
+  z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .modal-overlay.hidden { display: none; }
 .modal-box {
-  background: #fff;
-  border-radius: var(--radius);
-  padding: 28px 28px 24px;
-  width: 100%; max-width: 360px;
+  background: #fff; border-radius: var(--radius);
+  padding: 28px 28px 24px; width: 100%; max-width: 360px;
   box-shadow: 0 24px 60px rgba(0,0,0,.28);
-  animation: modalIn .25s ease both;
-  text-align: center;
+  animation: modalIn .25s ease both; text-align: center;
 }
 .modal-box h3 { font-size: 19px; color: var(--navy); margin-bottom: 6px; }
 .modal-box .modal-sub { font-size: 13px; color: var(--text-soft); margin-bottom: 20px; font-weight: 500; line-height: 1.4; }
 .modal-pin-input {
-  width: 100%; padding: 13px;
-  text-align: center;
+  width: 100%; padding: 13px; text-align: center;
   font-size: 20px; letter-spacing: 5px; font-weight: 800;
   border: 2px solid var(--gray-border); border-radius: var(--radius);
   outline: none; font-family: 'Courier New', monospace;
@@ -373,15 +391,13 @@ body.edit-mode .queue-manage { display: block; }
   background: linear-gradient(135deg, var(--navy), var(--blue));
   color: #fff; border: none; border-radius: var(--radius);
   font-family: var(--font); font-size: 15px; font-weight: 800;
-  cursor: pointer; margin-bottom: 10px;
-  transition: filter var(--trans);
+  cursor: pointer; margin-bottom: 10px; transition: filter var(--trans);
 }
 .modal-btn:hover { filter: brightness(1.08); }
 .modal-btn:disabled { background: #9fb3c8; cursor: not-allowed; filter: none; }
 .modal-cancel-btn { background:none; border:none; color:var(--text-soft); font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font); transition:color var(--trans); }
 .modal-cancel-btn:hover { color: var(--text-dark); }
 
-/* Add item modal text alignment */
 .add-modal-box { text-align: left; }
 .add-modal-box h3 { text-align: left; }
 .add-modal-input {
@@ -412,7 +428,6 @@ body.edit-mode .queue-manage { display: block; }
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
 <header>
   <div class="logo-wrap">
     <svg class="logo-svg" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg">
@@ -441,14 +456,10 @@ body.edit-mode .queue-manage { display: block; }
     <h1>Spot Check</h1>
     <div class="sub">Quality Control Form</div>
   </div>
-
-  <!-- Edit Mode Lock Button -->
   <button class="lock-btn" id="lockBtn" onclick="openPinModal()">
     <span id="lockIcon">🔒</span>
     <span id="lockLabel">Edit</span>
   </button>
-
-  <!-- Instrument-cluster clock -->
   <div class="clock-cluster">
     <div class="ct-row">
       <span class="ico">🛣️</span>
@@ -474,46 +485,41 @@ body.edit-mode .queue-manage { display: block; }
   </div>
 </header>
 
-<!-- Edit Mode Banner -->
 <div class="edit-banner hidden" id="editBanner">
-  <span class="edit-banner-text">✏️ Edit Mode — التعديلات بتتحفظ تلقائياً</span>
+  <span class="edit-banner-text">✏️ Edit Mode — دبل-كليك للتعديل، سحب للترتيب</span>
   <span class="save-status-text" id="saveStatusText"></span>
   <button class="edit-exit-btn" onclick="exitEditMode()">✕ Exit</button>
 </div>
 
-<!-- ══════════════════════════════════════ PIN MODAL ══════════════════════════════════════ -->
+<!-- PIN MODAL -->
 <div class="modal-overlay hidden" id="pinModal">
   <div class="modal-box">
     <h3>🔒 Edit Mode</h3>
     <p class="modal-sub">ادخل الـ Password عشان تعدل<br/>الأسماء والـ Queues والـ Units</p>
-    <input type="password" class="modal-pin-input" id="pinInput"
-           placeholder="••••••••"
-           autocomplete="current-password"
-           onkeydown="if(event.key==='Enter') submitPin()"/>
+    <input type="password" class="modal-pin-input" id="pinInput" placeholder="••••••••"
+           autocomplete="current-password" onkeydown="if(event.key==='Enter') submitPin()"/>
     <div class="modal-error" id="pinError"></div>
     <button class="modal-btn" id="pinSubmitBtn" onclick="submitPin()">Unlock ✓</button>
     <button class="modal-cancel-btn" onclick="closePinModal()">Cancel</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════ ADD ITEM MODAL ══════════════════════════════════ -->
+<!-- ADD / RENAME MODAL -->
 <div class="modal-overlay hidden" id="addModal">
   <div class="modal-box add-modal-box">
     <h3 id="addModalTitle">Add Item</h3>
     <p class="modal-sub" id="addModalHint" style="text-align:left;"></p>
     <input type="text" class="add-modal-input" id="addModalInput"
-           placeholder="اكتب هنا…"
-           onkeydown="if(event.key==='Enter') submitAddItem()"/>
-    <button class="modal-btn" onclick="submitAddItem()">Add ✓</button>
+           placeholder="اكتب هنا…" onkeydown="if(event.key==='Enter') submitAddItem()"/>
+    <button class="modal-btn" id="addModalSubmitBtn" onclick="submitAddItem()">Add ✓</button>
     <button class="modal-cancel-btn" onclick="closeAddModal()">Cancel</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════ FORM ══════════════════════════════════════════ -->
+<!-- FORM -->
 <div class="container">
 <form id="spotForm" onsubmit="return false;">
 
-  <!-- Shift (fixed — not editable) -->
   <div class="card fade-in">
     <div class="card-title">Shift <span class="check-dot" id="chk-shift">✓</span></div>
     <div class="tile-group" id="shiftGroup">
@@ -523,16 +529,13 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- Unit (dynamic — editable) -->
   <div class="card fade-in">
     <div class="card-title">Unit <span class="check-dot" id="chk-unit">✓</span></div>
     <div class="tile-group" id="unitGroup">
-      <!-- rendered by renderUnits() -->
       <div class="no-shift-msg" id="unitLoading">Loading…</div>
     </div>
   </div>
 
-  <!-- PC No. -->
   <div class="card fade-in">
     <div class="card-title">PC No. <span class="check-dot" id="chk-pcNo">✓</span></div>
     <div class="field-wrap">
@@ -543,7 +546,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- Labeler Name -->
   <div class="card fade-in">
     <div class="card-title">Labeler Name <span class="check-dot" id="chk-labelerName">✓</span></div>
     <div class="field-wrap">
@@ -552,7 +554,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- QTC Shift -->
   <div class="card fade-in">
     <div class="card-title">QTC Shift <span class="check-dot" id="chk-qtcShift">✓</span></div>
     <div class="tile-group" id="qtcShiftGroup">
@@ -562,7 +563,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- QTC Name (dynamic — editable) -->
   <div class="card fade-in">
     <div class="card-title">QTC Name <span class="check-dot" id="chk-qtcName">✓</span></div>
     <div class="name-grid" id="qtcNames">
@@ -570,7 +570,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- QTC Attendance -->
   <div class="card fade-in">
     <div class="card-title">QTC Attendance <span class="check-dot" id="chk-qtcAttendance">✓</span></div>
     <div class="attend-group">
@@ -580,7 +579,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- Yubikey -->
   <div class="card fade-in">
     <div class="card-title">Yubikey <span class="check-dot" id="chk-yubikey">✓</span></div>
     <div class="field-wrap">
@@ -598,7 +596,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- Task Link -->
   <div class="card fade-in">
     <div class="card-title">Task Link <span class="check-dot" id="chk-taskLink">✓</span></div>
     <div class="field-wrap">
@@ -623,15 +620,12 @@ body.edit-mode .queue-manage { display: block; }
       <label for="queueName">Queue Name</label>
       <select id="queueName" onchange="setField('queueName',this.value); clearQueueAutoHint();">
         <option value="">— Select —</option>
-        <!-- populated by renderQueues() -->
       </select>
       <div class="smart-hint" id="queueHint"></div>
-      <!-- Edit mode: queue management list -->
       <div id="queueManage" class="queue-manage"></div>
     </div>
   </div>
 
-  <!-- Modality -->
   <div class="card fade-in">
     <div class="card-title">Modality <span class="check-dot" id="chk-modality">✓</span></div>
     <div class="tile-group" id="modalityGroup">
@@ -640,7 +634,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- QT Shift -->
   <div class="card fade-in">
     <div class="card-title">QT Shift <span class="check-dot" id="chk-qtShift">✓</span></div>
     <div class="tile-group" id="qtShiftGroup">
@@ -650,7 +643,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- QT Name (dynamic — editable) -->
   <div class="card fade-in">
     <div class="card-title">QT Name <span class="check-dot" id="chk-qtName">✓</span></div>
     <div class="name-grid" id="qtNames">
@@ -658,7 +650,6 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- Violation -->
   <div class="card fade-in">
     <div class="card-title">Violation <span class="check-dot" id="chk-violation">✓</span></div>
     <div class="violation-group">
@@ -673,7 +664,6 @@ body.edit-mode .queue-manage { display: block; }
 </form>
 </div>
 
-<!-- ══════════════════════════════════════ BOTTOM NAV ════════════════════════════════════ -->
 <div class="bottom-nav">
   <div class="bottom-nav-inner">
     <div class="submit-road hidden" id="submitRoad">
@@ -699,12 +689,9 @@ body.edit-mode .queue-manage { display: block; }
 
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════════════ SCRIPT ════════════════════════════════════════ -->
 <script>
-// ⚠️ غيّر ده بعد ما تعمل Deploy
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7VgZ1IuiRvx5cNDCMNZggRlNuz2lD1sYWKC05IXBulXhyEbOm9mn9CKDWXDOj8tDXzg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOScbh-93XKHp3eHCz5lJbUNSN9S6HWnxQoZ6FnudmZncZ4AofwuRuuwkODiPjq4dpVA/exec";
 
-// ─── Default CONFIG (fallback لو Apps Script مش متاح) ────────────────────────
 const DEFAULT_CONFIG = {
   personnel: {
     M: {
@@ -774,11 +761,11 @@ const DEFAULT_CONFIG = {
   }
 };
 
-// ─── State ────────────────────────────────────────────────────────────────────
 let CONFIG = null;
 let editMode = false;
 let sessionPin = '';
 let pendingAdd = null;
+// pendingAdd can be { type, ctx } for add OR { type:'rename', ctx, oldVal } for rename
 
 const state = {
   shift:'', unit:'', pcNo:'', labelerName:'',
@@ -788,21 +775,52 @@ const state = {
   violation:'', violationTypes:[]
 };
 
-// ─── Load Config on startup ───────────────────────────────────────────────────
+// ─── Load Config ──────────────────────────────────────────────────────────────
 async function loadConfig() {
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=getConfig');
     const data = await res.json();
     CONFIG = data.success ? data.config : DEFAULT_CONFIG;
-  } catch (e) {
-    CONFIG = DEFAULT_CONFIG;
-  }
+  } catch (e) { CONFIG = DEFAULT_CONFIG; }
   renderUnits();
   renderQueues();
   document.getElementById('unitLoading') && document.getElementById('unitLoading').remove();
 }
-
 loadConfig();
+
+// ═══════════════════════════════════════════════════════════
+// ── DRAG & DROP helpers
+// ═══════════════════════════════════════════════════════════
+let dragSrc = null;
+
+function makeDraggable(el) {
+  el.setAttribute('draggable', 'true');
+  el.addEventListener('dragstart', e => {
+    if (!editMode) { e.preventDefault(); return; }
+    dragSrc = el;
+    setTimeout(() => el.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    dragSrc = null;
+    document.querySelectorAll('.drag-over').forEach(x => x.classList.remove('drag-over'));
+  });
+  el.addEventListener('dragover', e => {
+    if (!editMode || !dragSrc || dragSrc === el) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    document.querySelectorAll('.drag-over').forEach(x => x.classList.remove('drag-over'));
+    el.classList.add('drag-over');
+  });
+  el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    if (!editMode || !dragSrc || dragSrc === el) return;
+    e.preventDefault();
+    el.classList.remove('drag-over');
+    el._dropCallback && el._dropCallback(dragSrc, el);
+  });
+}
 
 // ─── Render: Units ────────────────────────────────────────────────────────────
 function renderUnits() {
@@ -810,7 +828,7 @@ function renderUnits() {
   const currentVal = state.unit;
   group.innerHTML = '';
 
-  (CONFIG.units || []).forEach(unit => {
+  (CONFIG.units || []).forEach((unit, idx) => {
     const wrap = document.createElement('div');
     wrap.className = 'tile-wrap';
 
@@ -818,17 +836,36 @@ function renderUnits() {
     tile.className = 'tile' + (unit === currentVal ? ' active' : '');
     tile.dataset.val = unit;
     tile.textContent = unit;
-    tile.onclick = function () { selectTile('unitGroup', 'unit', this); };
+    tile.onclick = function () {
+      if (editMode) return; // single click does nothing in edit mode — use dblclick
+      selectTile('unitGroup', 'unit', this);
+    };
+    tile.ondblclick = function (e) {
+      if (!editMode) return;
+      e.stopPropagation();
+      showRenameModal('unit', unit, {});
+    };
 
     const delBtn = document.createElement('button');
     delBtn.className = 'del-btn';
     delBtn.innerHTML = '✕';
-    delBtn.title = 'Remove unit';
     delBtn.onclick = e => { e.stopPropagation(); removeItem('unit', unit, {}); };
 
     wrap.appendChild(tile);
     wrap.appendChild(delBtn);
     group.appendChild(wrap);
+
+    // drag & drop reorder
+    makeDraggable(wrap);
+    wrap._dropCallback = (src, target) => {
+      const srcIdx = CONFIG.units.indexOf(src.querySelector('.tile').dataset.val);
+      const tgtIdx = CONFIG.units.indexOf(target.querySelector('.tile').dataset.val);
+      if (srcIdx < 0 || tgtIdx < 0) return;
+      CONFIG.units.splice(srcIdx, 1);
+      CONFIG.units.splice(tgtIdx, 0, unit === CONFIG.units[tgtIdx] ? unit : CONFIG.units[srcIdx] || unit);
+      // simpler: just re-read from DOM order after drop
+      reorderFromDom('unitGroup', 'units');
+    };
   });
 
   const addBtn = document.createElement('button');
@@ -836,6 +873,12 @@ function renderUnits() {
   addBtn.textContent = '+ Add Unit';
   addBtn.onclick = () => showAddModal('unit', {});
   group.appendChild(addBtn);
+
+  // attach drop reorder properly using DOM
+  attachDomReorder(group, '.tile-wrap', (newOrder) => {
+    CONFIG.units = newOrder.map(w => w.querySelector('.tile').dataset.val);
+    saveConfigToServer();
+  });
 }
 
 // ─── Render: Queues ───────────────────────────────────────────────────────────
@@ -843,7 +886,6 @@ function renderQueues() {
   const select = document.getElementById('queueName');
   const currentVal = state.queueName;
   select.innerHTML = '<option value="">— Select —</option>';
-
   (CONFIG.queues || []).forEach(q => {
     const opt = document.createElement('option');
     opt.value = q; opt.textContent = q;
@@ -851,21 +893,30 @@ function renderQueues() {
   });
   if (currentVal && (CONFIG.queues || []).includes(currentVal)) select.value = currentVal;
 
-  // Edit mode management list
   const mgmt = document.getElementById('queueManage');
   mgmt.innerHTML = '';
   (CONFIG.queues || []).forEach(q => {
     const row = document.createElement('div');
     row.className = 'queue-manage-row';
+    row.setAttribute('draggable', 'true');
+
     const nameSpan = document.createElement('span');
     nameSpan.className = 'queue-manage-name';
     nameSpan.textContent = q;
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'queue-edit-btn';
+    editBtn.title = 'Rename';
+    editBtn.textContent = '✏️';
+    editBtn.onclick = () => showRenameModal('queue', q, {});
+
     const delBtn = document.createElement('button');
     delBtn.className = 'queue-del-btn';
     delBtn.textContent = '✕';
-    delBtn.title = 'Remove queue';
     delBtn.onclick = () => removeItem('queue', q, {});
+
     row.appendChild(nameSpan);
+    row.appendChild(editBtn);
     row.appendChild(delBtn);
     mgmt.appendChild(row);
   });
@@ -875,6 +926,12 @@ function renderQueues() {
   addBtn.textContent = '+ Add Queue';
   addBtn.onclick = () => showAddModal('queue', {});
   mgmt.appendChild(addBtn);
+
+  attachDomReorder(mgmt, '.queue-manage-row', (newOrder) => {
+    CONFIG.queues = newOrder.map(r => r.querySelector('.queue-manage-name').textContent);
+    renderQueues();
+    saveConfigToServer();
+  });
 }
 
 // ─── Render: Name Grid ────────────────────────────────────────────────────────
@@ -895,16 +952,21 @@ function renderNameGrid(gridId, shift, role, stateKey) {
       card.className = 'name-card' + (name === currentSelected ? ' active' : '');
       card.textContent = name;
       card.onclick = function () {
+        if (editMode) return;
         grid.querySelectorAll('.name-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         state[stateKey] = name;
         toggleCheck(stateKey, true);
       };
+      card.ondblclick = function (e) {
+        if (!editMode) return;
+        e.stopPropagation();
+        showRenameModal('personnel', name, { shift, role, gridId, stateKey });
+      };
 
       const delBtn = document.createElement('button');
       delBtn.className = 'del-btn';
       delBtn.innerHTML = '✕';
-      delBtn.title = 'Remove';
       delBtn.onclick = e => { e.stopPropagation(); removeItem('personnel', name, { shift, role, gridId, stateKey }); };
 
       wrap.appendChild(card);
@@ -918,9 +980,14 @@ function renderNameGrid(gridId, shift, role, stateKey) {
   addBtn.textContent = `+ Add Name (${role.toUpperCase()} – Shift ${shift})`;
   addBtn.onclick = () => showAddModal('personnel', { shift, role, gridId, stateKey });
   grid.appendChild(addBtn);
+
+  attachDomReorder(grid, '.name-card-wrap', (newOrder) => {
+    CONFIG.personnel[shift][role] = newOrder.map(w => w.querySelector('.name-card').textContent);
+    saveConfigToServer();
+  });
 }
 
-// ─── Render: Violation Types (edit-mode-aware) ────────────────────────────────
+// ─── Render: Violation Types ──────────────────────────────────────────────────
 function buildVioTypes() {
   const container = document.getElementById('vioTypesContainer');
   container.innerHTML = '';
@@ -929,22 +996,26 @@ function buildVioTypes() {
     const wrap = document.createElement('div');
     wrap.className = 'vio-category';
 
-    // Category label row
     const labelRow = document.createElement('div');
     labelRow.className = 'vio-category-label';
     labelRow.textContent = cat;
 
-    // Delete category button (edit mode, skip "Other")
     if (cat !== 'Other') {
+      const catRenameBtn = document.createElement('button');
+      catRenameBtn.className = 'vio-cat-rename-btn';
+      catRenameBtn.innerHTML = '✏️';
+      catRenameBtn.title = 'Rename category';
+      catRenameBtn.onclick = () => showRenameModal('vioCategory', cat, {});
+      labelRow.appendChild(catRenameBtn);
+
       const catDelBtn = document.createElement('button');
       catDelBtn.className = 'vio-cat-del-btn';
-      catDelBtn.innerHTML = '🗑️ Delete Category';
+      catDelBtn.innerHTML = '🗑️ Delete';
       catDelBtn.onclick = () => removeItem('vioCategory', cat, {});
       labelRow.appendChild(catDelBtn);
     }
     wrap.appendChild(labelRow);
 
-    // Items grid
     const grid = document.createElement('div');
     grid.className = 'vio-types-grid';
 
@@ -967,9 +1038,11 @@ function buildVioTypes() {
           else { ow.classList.add('hidden'); document.getElementById('otherReasonInput').value = ''; }
           toggleCheck('violation', state.violationTypes.length > 0);
         };
+        chipWrap.appendChild(chip);
       } else {
         chip.innerHTML = `<span class="chk">✓</span>${vt}`;
         chip.onclick = function () {
+          if (editMode) return;
           this.classList.toggle('active');
           if (this.classList.contains('active')) {
             if (!state.violationTypes.includes(vt)) state.violationTypes.push(vt);
@@ -978,26 +1051,24 @@ function buildVioTypes() {
           }
           toggleCheck('violation', state.violationTypes.length > 0);
         };
-      }
+        chip.ondblclick = function (e) {
+          if (!editMode) return;
+          e.stopPropagation();
+          showRenameModal('vioType', vt, { category: cat });
+        };
 
-      // Delete vio type button (skip "Other")
-      if (vt !== 'Other') {
         const vtDelBtn = document.createElement('button');
         vtDelBtn.className = 'del-btn';
         vtDelBtn.innerHTML = '✕';
-        vtDelBtn.title = 'Remove';
         vtDelBtn.onclick = e => { e.stopPropagation(); removeItem('vioType', vt, { category: cat }); };
         chipWrap.appendChild(chip);
         chipWrap.appendChild(vtDelBtn);
-      } else {
-        chipWrap.appendChild(chip);
       }
       grid.appendChild(chipWrap);
     });
 
     wrap.appendChild(grid);
 
-    // Add violation type button
     if (cat !== 'Other') {
       const addVioBtn = document.createElement('button');
       addVioBtn.className = 'add-item-btn';
@@ -1005,19 +1076,23 @@ function buildVioTypes() {
       addVioBtn.style.marginTop = '8px';
       addVioBtn.onclick = () => showAddModal('vioType', { category: cat });
       wrap.appendChild(addVioBtn);
+
+      attachDomReorder(grid, '.vio-type-chip-wrap', (newOrder) => {
+        const reordered = newOrder.map(w => w.querySelector('.vio-type-chip').dataset.val);
+        CONFIG.violationCategories[cat] = reordered;
+        saveConfigToServer();
+      });
     }
 
     container.appendChild(wrap);
   });
 
-  // Add new category button (edit mode)
   const addCatBtn = document.createElement('button');
   addCatBtn.className = 'add-item-btn';
   addCatBtn.textContent = '+ Add New Category';
   addCatBtn.onclick = () => showAddModal('vioCategory', {});
   container.appendChild(addCatBtn);
 
-  // Other reason input
   const ow = document.createElement('div');
   ow.id = 'otherReasonWrap';
   ow.className = 'hidden field-wrap';
@@ -1028,9 +1103,69 @@ function buildVioTypes() {
   container.appendChild(ow);
 }
 
+// ═══════════════════════════════════════════════════════════
+// ── DOM REORDER helper (attaches drag events to children)
+// ═══════════════════════════════════════════════════════════
+function attachDomReorder(container, childSelector, onReorder) {
+  let localDragSrc = null;
+
+  function getItems() {
+    return Array.from(container.querySelectorAll(':scope > ' + childSelector.replace('.', '')));
+  }
+
+  // Use MutationObserver-free approach: re-attach after each render
+  container.querySelectorAll(childSelector).forEach(item => {
+    item.setAttribute('draggable', 'true');
+
+    item.addEventListener('dragstart', e => {
+      if (!editMode) { e.preventDefault(); return; }
+      localDragSrc = item;
+      setTimeout(() => item.classList.add('dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+      e.stopPropagation();
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      localDragSrc = null;
+      container.querySelectorAll(childSelector).forEach(x => x.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      if (!editMode || !localDragSrc || localDragSrc === item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      container.querySelectorAll(childSelector).forEach(x => x.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+    item.addEventListener('dragleave', e => {
+      item.classList.remove('drag-over');
+    });
+    item.addEventListener('drop', e => {
+      if (!editMode || !localDragSrc || localDragSrc === item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      item.classList.remove('drag-over');
+
+      // Insert before or after based on mouse position
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const midX = rect.left + rect.width / 2;
+      const useY = rect.height > rect.width * 0.5;
+      const before = useY ? e.clientY < midY : e.clientX < midX;
+
+      if (before) {
+        container.insertBefore(localDragSrc, item);
+      } else {
+        container.insertBefore(localDragSrc, item.nextSibling);
+      }
+
+      const newOrder = Array.from(container.querySelectorAll(childSelector));
+      onReorder(newOrder);
+    });
+  });
+}
+
 // ═══════════════════════════════ EDIT MODE ═══════════════════════════════════
 
-// ── PIN Modal ─────────────────────────────────────────────────────────────────
 function openPinModal() {
   if (editMode) { exitEditMode(); return; }
   document.getElementById('pinInput').value = '';
@@ -1039,156 +1174,178 @@ function openPinModal() {
   document.getElementById('pinModal').classList.remove('hidden');
   setTimeout(() => document.getElementById('pinInput').focus(), 100);
 }
-function closePinModal() {
-  document.getElementById('pinModal').classList.add('hidden');
-}
+function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); }
 
 async function submitPin() {
   const pin = document.getElementById('pinInput').value;
   if (!pin) return;
-
   const errEl = document.getElementById('pinError');
   const btn   = document.getElementById('pinSubmitBtn');
-
-  errEl.textContent = 'Checking…';
-  errEl.style.color = 'var(--text-soft)';
+  errEl.textContent = 'Checking…'; errEl.style.color = 'var(--text-soft)';
   btn.disabled = true;
-
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'verifyPin', pin })
-    });
+    const res = await fetch(APPS_SCRIPT_URL + '?action=verifyPin&pin=' + encodeURIComponent(pin));
     const data = await res.json();
-
     if (data.success) {
-      sessionPin = pin;
-      editMode = true;
-      closePinModal();
-      enterEditMode();
+      sessionPin = pin; editMode = true; closePinModal(); enterEditMode();
     } else if (data.locked) {
-      errEl.textContent = `🔒 Locked — wait ${data.wait} minute(s)`;
-      errEl.style.color = 'var(--red)';
-      btn.disabled = false;
+      errEl.textContent = `🔒 Locked — wait ${data.wait} minute(s)`; errEl.style.color = 'var(--red)'; btn.disabled = false;
     } else if (data.remaining !== undefined) {
-      errEl.textContent = `❌ Wrong password — ${data.remaining} attempt(s) left`;
-      errEl.style.color = 'var(--red)';
-      btn.disabled = false;
-      document.getElementById('pinInput').value = '';
-      document.getElementById('pinInput').focus();
+      errEl.textContent = `❌ Wrong password — ${data.remaining} attempt(s) left`; errEl.style.color = 'var(--red)';
+      btn.disabled = false; document.getElementById('pinInput').value = ''; document.getElementById('pinInput').focus();
     } else {
-      errEl.textContent = data.message || '❌ Error';
-      errEl.style.color = 'var(--red)';
-      btn.disabled = false;
+      errEl.textContent = data.message || '❌ Error'; errEl.style.color = 'var(--red)'; btn.disabled = false;
     }
   } catch (e) {
-    errEl.textContent = '❌ Connection error';
-    errEl.style.color = 'var(--red)';
-    btn.disabled = false;
+    errEl.textContent = '❌ Connection error'; errEl.style.color = 'var(--red)'; btn.disabled = false;
   }
 }
 
-// ── Enter / Exit Edit Mode ────────────────────────────────────────────────────
 function enterEditMode() {
   document.body.classList.add('edit-mode');
   document.getElementById('editBanner').classList.remove('hidden');
   document.getElementById('lockIcon').textContent = '✏️';
   document.getElementById('lockLabel').textContent = 'Editing';
-  // Re-render all dynamic sections so delete buttons appear
-  renderUnits();
-  renderQueues();
+  renderUnits(); renderQueues();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
-  if (state.violation === 'Violation') {
-    document.getElementById('vioTypesContainer').innerHTML = '';
-    buildVioTypes();
-  }
+  if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
 }
 
 function exitEditMode() {
-  editMode = false;
-  sessionPin = '';
+  editMode = false; sessionPin = '';
   document.body.classList.remove('edit-mode');
   document.getElementById('editBanner').classList.add('hidden');
   document.getElementById('lockIcon').textContent = '🔒';
   document.getElementById('lockLabel').textContent = 'Edit';
-  // Re-render to remove edit controls
-  renderUnits();
-  renderQueues();
+  renderUnits(); renderQueues();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
-  if (state.violation === 'Violation') {
-    document.getElementById('vioTypesContainer').innerHTML = '';
-    buildVioTypes();
-  }
+  if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
 }
 
-// ── Add Item Modal ────────────────────────────────────────────────────────────
+// ── Add Modal ─────────────────────────────────────────────────────────────────
 function showAddModal(type, ctx) {
   if (!editMode) return;
-  pendingAdd = { type, ctx };
-
+  pendingAdd = { type, ctx, isRename: false };
   const titles = {
-    unit:        'Add New Unit',
-    personnel:   `Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`,
-    queue:       'Add Queue Name',
-    vioType:     `Add Violation Type → "${ctx.category}"`,
-    vioCategory: 'Add New Violation Category'
+    unit: 'Add New Unit', personnel: `Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`,
+    queue: 'Add Queue Name', vioType: `Add Violation Type → "${ctx.category}"`, vioCategory: 'Add New Violation Category'
   };
   const hints = {
-    unit:        'مثال: NC Room 110',
-    personnel:   'الاسم كامل كما سيظهر في الفورم',
-    queue:       'اسم الـ queue كامل',
-    vioType:     'وصف نوع المخالفة',
-    vioCategory: 'اسم التصنيف الجديد'
+    unit: 'مثال: NC Room 110', personnel: 'الاسم كامل كما سيظهر في الفورم',
+    queue: 'اسم الـ queue كامل', vioType: 'وصف نوع المخالفة', vioCategory: 'اسم التصنيف الجديد'
   };
-
   document.getElementById('addModalTitle').textContent = titles[type] || 'Add Item';
   document.getElementById('addModalHint').textContent  = hints[type]  || '';
   document.getElementById('addModalInput').value = '';
+  document.getElementById('addModalSubmitBtn').textContent = 'Add ✓';
   document.getElementById('addModal').classList.remove('hidden');
   setTimeout(() => document.getElementById('addModalInput').focus(), 100);
 }
-function closeAddModal() {
-  document.getElementById('addModal').classList.add('hidden');
-  pendingAdd = null;
+
+// ── Rename Modal ──────────────────────────────────────────────────────────────
+function showRenameModal(type, oldVal, ctx) {
+  if (!editMode) return;
+  pendingAdd = { type, ctx, isRename: true, oldVal };
+  const titles = {
+    unit: 'Rename Unit', personnel: 'Rename Person',
+    queue: 'Rename Queue', vioType: 'Rename Violation Type', vioCategory: 'Rename Category'
+  };
+  document.getElementById('addModalTitle').textContent = titles[type] || 'Rename';
+  document.getElementById('addModalHint').textContent  = `Current: "${oldVal}"`;
+  document.getElementById('addModalInput').value = oldVal;
+  document.getElementById('addModalSubmitBtn').textContent = 'Save ✓';
+  document.getElementById('addModal').classList.remove('hidden');
+  setTimeout(() => {
+    const inp = document.getElementById('addModalInput');
+    inp.focus(); inp.select();
+  }, 100);
 }
+
+function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); pendingAdd = null; }
 
 async function submitAddItem() {
   const val = document.getElementById('addModalInput').value.trim();
   if (!val || !pendingAdd) return;
+  const { type, ctx, isRename, oldVal } = pendingAdd;
 
-  const { type, ctx } = pendingAdd;
+  if (isRename) {
+    await doRename(type, oldVal, val, ctx);
+  } else {
+    await doAdd(type, val, ctx);
+  }
+  closeAddModal();
+}
 
+async function doAdd(type, val, ctx) {
   switch (type) {
     case 'unit':
-      if (!CONFIG.units.includes(val)) CONFIG.units.push(val);
-      break;
+      if (!CONFIG.units.includes(val)) CONFIG.units.push(val); break;
     case 'personnel':
       if (!CONFIG.personnel[ctx.shift]) CONFIG.personnel[ctx.shift] = { qtc: [], qt: [] };
       if (!CONFIG.personnel[ctx.shift][ctx.role]) CONFIG.personnel[ctx.shift][ctx.role] = [];
-      if (!CONFIG.personnel[ctx.shift][ctx.role].includes(val))
-        CONFIG.personnel[ctx.shift][ctx.role].push(val);
-      break;
+      if (!CONFIG.personnel[ctx.shift][ctx.role].includes(val)) CONFIG.personnel[ctx.shift][ctx.role].push(val); break;
     case 'queue':
-      if (!CONFIG.queues.includes(val)) CONFIG.queues.push(val);
-      break;
+      if (!CONFIG.queues.includes(val)) CONFIG.queues.push(val); break;
     case 'vioType': {
       const cat = CONFIG.violationCategories[ctx.category];
-      if (cat && !cat.includes(val)) {
-        const otherIdx = cat.indexOf('Other');
-        if (otherIdx >= 0) cat.splice(otherIdx, 0, val);
-        else cat.push(val);
+      if (cat && !cat.includes(val)) { const oi = cat.indexOf('Other'); oi >= 0 ? cat.splice(oi, 0, val) : cat.push(val); } break;
+    }
+    case 'vioCategory':
+      if (!CONFIG.violationCategories[val]) CONFIG.violationCategories[val] = ['Other']; break;
+  }
+  rerenderSection(type, ctx);
+  await saveConfigToServer();
+}
+
+async function doRename(type, oldVal, newVal, ctx) {
+  if (oldVal === newVal) return;
+  switch (type) {
+    case 'unit': {
+      const i = CONFIG.units.indexOf(oldVal);
+      if (i >= 0) CONFIG.units[i] = newVal;
+      if (state.unit === oldVal) state.unit = newVal;
+      break;
+    }
+    case 'personnel': {
+      const arr = CONFIG.personnel[ctx.shift][ctx.role];
+      const i = arr.indexOf(oldVal);
+      if (i >= 0) arr[i] = newVal;
+      if (state[ctx.stateKey] === oldVal) state[ctx.stateKey] = newVal;
+      break;
+    }
+    case 'queue': {
+      const i = CONFIG.queues.indexOf(oldVal);
+      if (i >= 0) CONFIG.queues[i] = newVal;
+      if (state.queueName === oldVal) state.queueName = newVal;
+      break;
+    }
+    case 'vioType': {
+      const arr = CONFIG.violationCategories[ctx.category];
+      const i = arr ? arr.indexOf(oldVal) : -1;
+      if (i >= 0) arr[i] = newVal;
+      const vti = state.violationTypes.indexOf(oldVal);
+      if (vti >= 0) state.violationTypes[vti] = newVal;
+      break;
+    }
+    case 'vioCategory': {
+      if (CONFIG.violationCategories[oldVal] !== undefined) {
+        const items = CONFIG.violationCategories[oldVal];
+        delete CONFIG.violationCategories[oldVal];
+        // Re-insert at same position using ordered keys
+        const newCats = {};
+        Object.keys(CONFIG.violationCategories).forEach(k => { newCats[k] = CONFIG.violationCategories[k]; });
+        // Actually rebuild preserving order
+        const rebuilt = {};
+        Object.entries(CONFIG.violationCategories).forEach(([k,v]) => {
+          rebuilt[k === oldVal ? newVal : k] = v;
+        });
+        CONFIG.violationCategories = rebuilt;
       }
       break;
     }
-    case 'vioCategory':
-      if (!CONFIG.violationCategories[val]) CONFIG.violationCategories[val] = ['Other'];
-      break;
   }
-
-  closeAddModal();
   rerenderSection(type, ctx);
   await saveConfigToServer();
 }
@@ -1197,32 +1354,13 @@ async function submitAddItem() {
 async function removeItem(type, val, ctx) {
   if (!editMode) return;
   if (!confirm(`Remove "${val}"?`)) return;
-
   switch (type) {
-    case 'unit':
-      CONFIG.units = CONFIG.units.filter(u => u !== val);
-      if (state.unit === val) { state.unit = ''; toggleCheck('unit', false); }
-      break;
-    case 'personnel':
-      CONFIG.personnel[ctx.shift][ctx.role] = CONFIG.personnel[ctx.shift][ctx.role].filter(n => n !== val);
-      if (state[ctx.stateKey] === val) { state[ctx.stateKey] = ''; toggleCheck(ctx.stateKey, false); }
-      break;
-    case 'queue':
-      CONFIG.queues = CONFIG.queues.filter(q => q !== val);
-      if (state.queueName === val) { state.queueName = ''; setField('queueName', ''); }
-      break;
-    case 'vioType':
-      CONFIG.violationCategories[ctx.category] = CONFIG.violationCategories[ctx.category].filter(v => v !== val);
-      state.violationTypes = state.violationTypes.filter(v => v !== val);
-      break;
-    case 'vioCategory':
-      delete CONFIG.violationCategories[val];
-      state.violationTypes = state.violationTypes.filter(v =>
-        !((DEFAULT_CONFIG.violationCategories[val] || []).includes(v))
-      );
-      break;
+    case 'unit': CONFIG.units = CONFIG.units.filter(u => u !== val); if (state.unit === val) { state.unit = ''; toggleCheck('unit', false); } break;
+    case 'personnel': CONFIG.personnel[ctx.shift][ctx.role] = CONFIG.personnel[ctx.shift][ctx.role].filter(n => n !== val); if (state[ctx.stateKey] === val) { state[ctx.stateKey] = ''; toggleCheck(ctx.stateKey, false); } break;
+    case 'queue': CONFIG.queues = CONFIG.queues.filter(q => q !== val); if (state.queueName === val) { state.queueName = ''; setField('queueName', ''); } break;
+    case 'vioType': CONFIG.violationCategories[ctx.category] = CONFIG.violationCategories[ctx.category].filter(v => v !== val); state.violationTypes = state.violationTypes.filter(v => v !== val); break;
+    case 'vioCategory': delete CONFIG.violationCategories[val]; state.violationTypes = state.violationTypes.filter(v => !((DEFAULT_CONFIG.violationCategories[val] || []).includes(v))); break;
   }
-
   rerenderSection(type, ctx);
   await saveConfigToServer();
 }
@@ -1232,15 +1370,13 @@ function rerenderSection(type, ctx) {
     case 'unit': renderUnits(); break;
     case 'personnel': renderNameGrid(ctx.gridId, ctx.shift, ctx.role, ctx.stateKey); break;
     case 'queue': renderQueues(); break;
-    case 'vioType':
-    case 'vioCategory':
+    case 'vioType': case 'vioCategory':
       document.getElementById('vioTypesContainer').innerHTML = '';
-      if (state.violation === 'Violation') buildVioTypes();
-      break;
+      if (state.violation === 'Violation') buildVioTypes(); break;
   }
 }
 
-// ── Save Config to Apps Script ────────────────────────────────────────────────
+// ── Save Config ───────────────────────────────────────────────────────────────
 async function saveConfigToServer() {
   showSaveStatus('Saving…', false, true);
   try {
@@ -1252,44 +1388,30 @@ async function saveConfigToServer() {
     const data = await res.json();
     if (data.success) showSaveStatus('✓ Saved');
     else showSaveStatus('❌ Save failed', true);
-  } catch (e) {
-    showSaveStatus('❌ Network error', true);
-  }
+  } catch (e) { showSaveStatus('❌ Network error', true); }
 }
 
 function showSaveStatus(msg, isErr = false, loading = false) {
   const el = document.getElementById('saveStatusText');
   el.textContent = msg;
   el.className = 'save-status-text' + (isErr ? ' err' : loading ? '' : ' ok');
-  if (!loading) {
-    clearTimeout(window._saveTimer);
-    window._saveTimer = setTimeout(() => { el.textContent = ''; el.className = 'save-status-text'; }, 2800);
-  }
+  if (!loading) { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(() => { el.textContent = ''; el.className = 'save-status-text'; }, 2800); }
 }
 
 // ═══════════════════════════════ FORM LOGIC ═══════════════════════════════════
-
 function setField(k, v) { state[k] = v; }
-
-function toggleCheck(id, ok) {
-  const el = document.getElementById('chk-' + id);
-  if (el) el.classList.toggle('show', !!ok);
-}
+function toggleCheck(id, ok) { const el = document.getElementById('chk-' + id); if (el) el.classList.toggle('show', !!ok); }
 
 function selectTile(groupId, stateKey, el, refreshGrid) {
   document.querySelectorAll('#' + groupId + ' .tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  state[stateKey] = el.dataset.val;
-  toggleCheck(stateKey, true);
+  el.classList.add('active'); state[stateKey] = el.dataset.val; toggleCheck(stateKey, true);
   if (refreshGrid === 'qtcNames') renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (refreshGrid === 'qtNames')  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
 }
 
 function selectModality(el) {
   document.querySelectorAll('#modalityGroup .modality-tile').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  state.modality = el.dataset.val;
-  toggleCheck('modality', true);
+  el.classList.add('active'); state.modality = el.dataset.val; toggleCheck('modality', true);
 }
 
 function onLabelerInput(v) { state.labelerName = v; toggleCheck('labelerName', v.trim().length > 0); }
@@ -1301,20 +1423,13 @@ function previewPcNo(el) {
 }
 function formatPcNo(el) {
   const v = el.value.trim();
-  if (/^\d+$/.test(v) && v.length > 0) {
-    el.value = 'C-' + v;
-    const h = document.getElementById('pcNoHint');
-    h.textContent = '✓ Formatted!';
-    setTimeout(() => h.textContent = '', 2200);
-  }
-  state.pcNo = el.value;
-  toggleCheck('pcNo', state.pcNo.length > 0);
+  if (/^\d+$/.test(v) && v.length > 0) { el.value = 'C-' + v; const h = document.getElementById('pcNoHint'); h.textContent = '✓ Formatted!'; setTimeout(() => h.textContent = '', 2200); }
+  state.pcNo = el.value; toggleCheck('pcNo', state.pcNo.length > 0);
 }
 
 function setAttendance(val) {
   state.qtcAttendance = val;
-  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id =>
-    document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id => document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
   if (val === 'Present')     document.getElementById('attendPresent').classList.add('active-present');
   if (val === 'Not Present') document.getElementById('attendNotPresent').classList.add('active-notpresent');
   if (val === 'Absent')      document.getElementById('attendAbsent').classList.add('active-absent');
@@ -1322,9 +1437,7 @@ function setAttendance(val) {
 }
 
 function previewYubikey(el) {
-  const v = el.value.trim();
-  const h = document.getElementById('yubikeyHint');
-  hideHistory();
+  const v = el.value.trim(); const h = document.getElementById('yubikeyHint'); hideHistory();
   if (v.includes('@')) { h.textContent = ''; h.style.color = ''; toggleCheck('yubikey', v.length > 0); return; }
   if (/^\d+$/.test(v) && v.length > 0) {
     if (v.length < 6)      { h.textContent = `⚠️ Must be 6 digits (${v.length}/6)`; h.style.color='var(--red)'; }
@@ -1334,38 +1447,28 @@ function previewYubikey(el) {
   toggleCheck('yubikey', false);
 }
 function formatYubikey(el) {
-  const v = el.value.trim();
-  const h = document.getElementById('yubikeyHint');
-  let finalValue = v;
+  const v = el.value.trim(); const h = document.getElementById('yubikeyHint'); let finalValue = v;
   if (/^\d+$/.test(v) && v.length > 0) {
     if (v.length !== 6) { h.textContent=`⚠️ Must be exactly 6 digits (${v.length}/6)`; h.style.color='var(--red)'; state.yubikey=''; toggleCheck('yubikey',false); return; }
-    finalValue = 'me'+v+'@meti.ai';
-    el.value = finalValue;
-    h.textContent='✓ Formatted!'; h.style.color='var(--green)';
-    setTimeout(()=>{ h.textContent=''; h.style.color=''; }, 2200);
+    finalValue = 'me'+v+'@meti.ai'; el.value = finalValue;
+    h.textContent='✓ Formatted!'; h.style.color='var(--green)'; setTimeout(()=>{ h.textContent=''; h.style.color=''; }, 2200);
   }
-  state.yubikey = el.value;
-  toggleCheck('yubikey', state.yubikey.length > 0);
+  state.yubikey = el.value; toggleCheck('yubikey', state.yubikey.length > 0);
   if (finalValue.includes('@')) fetchYubikeyHistory(finalValue);
 }
 
-function hideHistory() {
-  ['historyLoading','historyEmpty','historyBox'].forEach(id => document.getElementById(id).classList.add('hidden'));
-}
+function hideHistory() { ['historyLoading','historyEmpty','historyBox'].forEach(id => document.getElementById(id).classList.add('hidden')); }
 function fetchYubikeyHistory(yubikeyValue) {
-  hideHistory();
-  document.getElementById('historyLoading').classList.remove('hidden');
+  hideHistory(); document.getElementById('historyLoading').classList.remove('hidden');
   fetch(APPS_SCRIPT_URL + '?action=stats&yubikey=' + encodeURIComponent(yubikeyValue))
-    .then(r => r.json())
-    .then(res => {
+    .then(r => r.json()).then(res => {
       document.getElementById('historyLoading').classList.add('hidden');
       if (!res.success || res.total === 0) { document.getElementById('historyEmpty').classList.remove('hidden'); return; }
       document.getElementById('histTotal').textContent = res.total;
       document.getElementById('histNoViolation').textContent = res.noViolation;
       document.getElementById('histViolation').textContent = res.violation;
       document.getElementById('historyBox').classList.remove('hidden');
-    })
-    .catch(() => {
+    }).catch(() => {
       document.getElementById('historyLoading').classList.add('hidden');
       document.getElementById('historyEmpty').textContent = "Couldn't load history.";
       document.getElementById('historyEmpty').classList.remove('hidden');
@@ -1373,14 +1476,10 @@ function fetchYubikeyHistory(yubikeyValue) {
 }
 
 function parseTaskLink(url) {
-  state.taskLink = url;
-  const badge = document.getElementById('taskIdBadge');
-  let taskId = '';
+  state.taskLink = url; const badge = document.getElementById('taskIdBadge'); let taskId = '';
   const patterns = [/\/id\/(\d+)/i,/task[_-]?id[=\/]([A-Za-z0-9_-]+)/i,/[?&]id=(\d+)/i,/\/(\d{6,})(?:[/?#]|$)/];
   for (const re of patterns) { const m = url.match(re); if (m) { taskId = m[1]; break; } }
-  state.taskId = taskId;
-  badge.textContent = taskId || '—';
-  badge.classList.toggle('found', !!taskId);
+  state.taskId = taskId; badge.textContent = taskId || '—'; badge.classList.toggle('found', !!taskId);
   if (url.toUpperCase().includes('QA')) autoSelectStage('QA');
   else if (url.length > 8) autoSelectStage('FP');
   const qm = url.match(/\/queue\/([^\/?#]+)/i);
@@ -1398,18 +1497,11 @@ function selectStage(el) {
 }
 
 function autoSelectQueue(queueName) {
-  const select = document.getElementById('queueName');
-  const hint   = document.getElementById('queueHint');
+  const select = document.getElementById('queueName'); const hint = document.getElementById('queueHint');
   let opt = Array.from(select.options).find(o => o.value === queueName);
-  if (!opt) {
-    opt = document.createElement('option');
-    opt.value = queueName; opt.textContent = queueName;
-    select.appendChild(opt);
-  }
-  select.value = queueName;
-  state.queueName = queueName;
-  hint.textContent = '✓ Auto-detected: ' + queueName;
-  hint.style.color = 'var(--green)';
+  if (!opt) { opt = document.createElement('option'); opt.value = queueName; opt.textContent = queueName; select.appendChild(opt); }
+  select.value = queueName; state.queueName = queueName;
+  hint.textContent = '✓ Auto-detected: ' + queueName; hint.style.color = 'var(--green)';
 }
 function clearQueueAutoHint() { document.getElementById('queueHint').textContent = ''; }
 
@@ -1420,14 +1512,12 @@ function setViolation(val) {
   if (val === 'No Violation') {
     document.getElementById('vioNoBtn').classList.add('active-ok');
     document.getElementById('vioTypesWrap').classList.add('hidden');
-    state.violationTypes = [];
-    toggleCheck('violation', true);
+    state.violationTypes = []; toggleCheck('violation', true);
   } else {
     document.getElementById('vioYesBtn').classList.add('active-vio');
     document.getElementById('vioTypesWrap').classList.remove('hidden');
     document.getElementById('vioTypesContainer').innerHTML = '';
-    buildVioTypes();
-    toggleCheck('violation', state.violationTypes.length > 0);
+    buildVioTypes(); toggleCheck('violation', state.violationTypes.length > 0);
   }
 }
 
@@ -1439,60 +1529,40 @@ function updateOtherReason(val) {
 // ── Live Clock ────────────────────────────────────────────────────────────────
 (function () {
   const el = document.getElementById('live-time');
-  const tick = () => {
-    el.textContent = new Date().toLocaleTimeString('en-GB', {
-      timeZone:'Africa/Cairo', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
-    });
-  };
+  const tick = () => { el.textContent = new Date().toLocaleTimeString('en-GB', { timeZone:'Africa/Cairo', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }); };
   tick(); setInterval(tick, 1000);
 })();
 
 // ── Validate & Submit ─────────────────────────────────────────────────────────
 function validate() {
   const yubikeyVal = document.getElementById('yubikey').value.trim();
-  if (/^\d+$/.test(yubikeyVal) && yubikeyVal.length !== 6) {
-    showToast('⚠️ Yubikey must be exactly 6 digits', 'error'); return false;
-  }
+  if (/^\d+$/.test(yubikeyVal) && yubikeyVal.length !== 6) { showToast('⚠️ Yubikey must be exactly 6 digits', 'error'); return false; }
   const fields = [
     ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],
     ['qtcShift','QTC Shift'],['qtcName','QTC Name'],['qtcAttendance','QTC Attendance'],
     ['yubikey','Yubikey'],['taskLink','Task Link'],['stage','Stage'],
-    ['queueName','Queue Name'],['modality','Modality'],
-    ['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
+    ['queueName','Queue Name'],['modality','Modality'],['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
   ];
-  for (const [k, label] of fields) {
-    if (!state[k]) { showToast('Please complete: ' + label, 'error'); return false; }
-  }
-  if (state.violation === 'Violation' && state.violationTypes.length === 0) {
-    showToast('Please select at least one violation type.', 'error'); return false;
-  }
+  for (const [k, label] of fields) { if (!state[k]) { showToast('Please complete: ' + label, 'error'); return false; } }
+  if (state.violation === 'Violation' && state.violationTypes.length === 0) { showToast('Please select at least one violation type.', 'error'); return false; }
   return true;
 }
 
 function submitForm() {
   if (!validate()) return;
-  const btn  = document.getElementById('submitBtn');
-  const road = document.getElementById('submitRoad');
-  btn.disabled = true; btn.textContent = 'Submitting…';
-  road.classList.remove('hidden');
+  const btn = document.getElementById('submitBtn'); const road = document.getElementById('submitRoad');
+  btn.disabled = true; btn.textContent = 'Submitting…'; road.classList.remove('hidden');
   state.labelerName = document.getElementById('labelerName').value.trim();
   state.yubikey     = document.getElementById('yubikey').value.trim();
   state.taskLink    = document.getElementById('taskLink').value.trim();
   state.queueName   = document.getElementById('queueName').value;
   formatPcNo(document.getElementById('pcNoInput'));
-
-  fetch(APPS_SCRIPT_URL, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify(state)
-  })
-    .then(r => r.json())
-    .then(res => {
+  fetch(APPS_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(state) })
+    .then(r => r.json()).then(res => {
       btn.disabled = false; btn.textContent = 'Submit Spot Check'; road.classList.add('hidden');
       if (res.success) { showToast('✅ ' + res.message, 'success'); setTimeout(resetForm, 1800); }
       else showToast('❌ ' + res.message, 'error');
-    })
-    .catch(err => {
+    }).catch(err => {
       btn.disabled = false; btn.textContent = 'Submit Spot Check'; road.classList.add('hidden');
       showToast('❌ Error: ' + err.message, 'error');
     });
@@ -1500,11 +1570,9 @@ function submitForm() {
 
 function resetForm() {
   Object.keys(state).forEach(k => { state[k] = k === 'violationTypes' ? [] : ''; });
-  document.querySelectorAll('.tile.active,.name-card.active,.stage-tile.active,.modality-tile.active')
-    .forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tile.active,.name-card.active,.stage-tile.active,.modality-tile.active').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.vio-btn').forEach(el => el.classList.remove('active-ok','active-vio'));
-  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id =>
-    document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
+  ['attendPresent','attendNotPresent','attendAbsent'].forEach(id => document.getElementById(id).classList.remove('active-present','active-notpresent','active-absent'));
   document.getElementById('qtcNames').innerHTML = '<div class="no-shift-msg">← Select a QTC Shift first</div>';
   document.getElementById('qtNames').innerHTML  = '<div class="no-shift-msg">← Select a QT Shift first</div>';
   document.getElementById('vioTypesContainer').innerHTML = '';
@@ -1514,18 +1582,15 @@ function resetForm() {
   document.getElementById('pcNoHint').textContent = '';
   document.getElementById('queueName').value = '';
   document.getElementById('queueHint').textContent = '';
-  const badge = document.getElementById('taskIdBadge');
-  badge.textContent='—'; badge.classList.remove('found');
+  const badge = document.getElementById('taskIdBadge'); badge.textContent='—'; badge.classList.remove('found');
   document.querySelectorAll('.check-dot').forEach(c => c.classList.remove('show'));
-  hideHistory();
-  window.scrollTo({ top:0, behavior:'smooth' });
+  hideHistory(); window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + type + ' show';
-  clearTimeout(window._tt);
-  window._tt = setTimeout(() => t.classList.remove('show'), 3600);
+  clearTimeout(window._tt); window._tt = setTimeout(() => t.classList.remove('show'), 3600);
 }
 </script>
 </body>
