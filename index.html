@@ -289,6 +289,42 @@ body.edit-mode .queue-manage { display: block; }
 .queue-del-btn { background:var(--red); color:#fff; border:none; border-radius:50%; width:22px; height:22px; min-width:22px; cursor:pointer; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; transition:transform var(--trans); }
 .queue-del-btn:hover { transform: scale(1.1); }
 
+/* YUBIKEY INPUT GROUP */
+.yubikey-input-group {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--gray-border);
+  border-radius: var(--radius);
+  background: #f6fffe;
+  overflow: hidden;
+  transition: border-color var(--trans), box-shadow var(--trans);
+}
+.yubikey-input-group:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-glow);
+}
+.yk-prefix, .yk-suffix {
+  padding: 11px 10px;
+  font-family: var(--font);
+  font-weight: 700;
+  color: var(--text-soft);
+  background: var(--blue-pale);
+  white-space: nowrap;
+  user-select: none;
+}
+.yk-prefix { border-right: 2px solid var(--gray-border); }
+.yk-suffix { border-left: 2px solid var(--gray-border); }
+#yubikey {
+  flex: 1;
+  min-width: 60px;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  text-align: center;
+  letter-spacing: 2px;
+}
+#yubikey:focus { box-shadow: none !important; }
+
 /* MISC */
 .task-id-badge { display:inline-block; background:var(--blue-pale); border:2px solid var(--gray-border); border-radius:var(--radius); padding:11px 16px; font-size:15px; font-weight:700; color:var(--text-mid); min-width:160px; letter-spacing:.3px; }
 .task-id-badge.found { background:#e6f9ee; border-color:var(--green); color:var(--green); }
@@ -499,16 +535,21 @@ body.edit-mode .queue-manage { display: block; }
     </div>
   </div>
 
-  <!-- ═══ YUBIKEY — أرقام بس ═══ -->
+  <!-- ═══ YUBIKEY — أرقام بس في النص، الإيميل كامل ظاهر ═══ -->
   <div class="card fade-in">
     <div class="card-title">Yubikey <span class="check-dot" id="chk-yubikey">✓</span></div>
     <div class="field-wrap">
       <label for="yubikey">Yubikey Number (6 Numbers)</label>
-      <input type="number" id="yubikey"
-             placeholder="Enter 6 digits…"
-             oninput="previewYubikey(this)"
-             onblur="formatYubikey(this)"
-             min="0" max="999999"/>
+      <div class="yubikey-input-group">
+        <span class="yk-prefix">me</span>
+        <input type="text" id="yubikey"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="000000"
+               oninput="previewYubikey(this)"
+               onblur="formatYubikey(this)"/>
+        <span class="yk-suffix">@meti.ai</span>
+      </div>
       <div class="smart-hint" id="yubikeyHint"></div>
     </div>
     <div id="historyLoading" class="history-loading hidden"><span class="mini-spinner"></span> Checking history…</div>
@@ -1153,7 +1194,7 @@ function setAttendance(val) {
 }
 
 // ════════════════════════════════════════════════════
-// YUBIKEY — أرقام بس، format تلقائي لما تخرج
+// YUBIKEY — أرقام بس جوه الخانة الصغيرة، والـ prefix/suffix ثابتين وبيظهروا دايمًا
 // ════════════════════════════════════════════════════
 function previewYubikey(el) {
   // شيل أي حاجة مش رقم وحدد بـ 6 أرقام بس
@@ -1165,47 +1206,44 @@ function previewYubikey(el) {
 
   if (clean.length === 0) {
     h.textContent = ''; h.style.color = '';
-    toggleCheck('yubikey', false);
+    state.yubikey = ''; toggleCheck('yubikey', false);
     return;
   }
   if (clean.length < 6) {
     h.textContent = `⚠️ It must be 6 digits (${clean.length}/6)`;
     h.style.color = 'var(--red)';
-    toggleCheck('yubikey', false);
+    state.yubikey = ''; toggleCheck('yubikey', false);
   } else {
-    // 6 أرقام تمام
-    h.textContent = '→ It will turn into: me' + clean + '@meti.ai';
-    h.style.color = 'var(--blue)';
+    h.textContent = '✓ Ready';
+    h.style.color = 'var(--green)';
+    state.yubikey = 'me' + clean + '@meti.ai';
     toggleCheck('yubikey', true);
   }
 }
 
 function formatYubikey(el) {
   const clean = el.value.replace(/\D/g, '').slice(0, 6);
+  el.value = clean; // الخانة نفسها فاضلة أرقام بس، الـ prefix/suffix ثابتين جنبها
   const h = document.getElementById('yubikeyHint');
 
   if (clean.length === 0) {
-    el.value = ''; h.textContent = ''; h.style.color = '';
+    h.textContent = ''; h.style.color = '';
     state.yubikey = ''; toggleCheck('yubikey', false);
     return;
   }
   if (clean.length !== 6) {
-    el.value = clean;
     h.textContent = `⚠️ It must be exactly 6 digits (${clean.length}/6)`;
     h.style.color = 'var(--red)';
     state.yubikey = ''; toggleCheck('yubikey', false);
     return;
   }
 
-  // 6 أرقام: حوله تلقائياً
-  const formatted = 'me' + clean + '@meti.ai';
-  el.value = formatted;
-  state.yubikey = formatted;
-  h.textContent = '✓transform automatically!';
+  state.yubikey = 'me' + clean + '@meti.ai';
+  h.textContent = '✓ Saved';
   h.style.color = 'var(--green)';
   setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
   toggleCheck('yubikey', true);
-  fetchYubikeyHistory(formatted);
+  fetchYubikeyHistory(state.yubikey);
 }
 // ════════════════════════════════════════════════════
 
@@ -1304,10 +1342,10 @@ function submitForm() {
   const btn=document.getElementById('submitBtn'); const road=document.getElementById('submitRoad');
   btn.disabled=true; btn.textContent='Submitting…'; road.classList.remove('hidden');
   state.labelerName=document.getElementById('labelerName').value.trim();
-  state.yubikey=document.getElementById('yubikey').value.trim();
   state.taskLink=document.getElementById('taskLink').value.trim();
   state.queueName=document.getElementById('queueName').value;
   formatPcNo(document.getElementById('pcNoInput'));
+  formatYubikey(document.getElementById('yubikey'));
   fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(state)})
     .then(r=>r.json()).then(res=>{
       btn.disabled=false; btn.textContent='Submit Spot Check'; road.classList.add('hidden');
