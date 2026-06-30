@@ -1169,7 +1169,7 @@ function previewYubikey(el) {
     return;
   }
   if (clean.length < 6) {
-    h.textContent = `⚠️ لازم يكون 6 أرقام (${clean.length}/6)`;
+    h.textContent = `⚠️ It must be 6 digits (${clean.length}/6)`;
     h.style.color = 'var(--red)';
     toggleCheck('yubikey', false);
   } else {
