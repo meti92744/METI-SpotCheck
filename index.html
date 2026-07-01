@@ -511,6 +511,13 @@ body.edit-mode .queue-manage { display: block; }
   </div>
 
   <div class="card fade-in">
+    <div class="card-title">Labeler Level <span class="check-dot" id="chk-labelerLevel">✓</span></div>
+    <div class="tile-group" id="labelerLevelGroup">
+      <div class="no-shift-msg" id="labelerLevelLoading">Loading…</div>
+    </div>
+  </div>
+
+  <div class="card fade-in">
     <div class="card-title">QTC Shift <span class="check-dot" id="chk-qtcShift">✓</span></div>
     <div class="tile-group" id="qtcShiftGroup">
       <div class="tile" data-val="M"  onclick="selectTile('qtcShiftGroup','qtcShift',this,'qtcNames')"><span class="ico">☀️</span>M</div>
@@ -566,7 +573,7 @@ body.edit-mode .queue-manage { display: block; }
     <div class="field-wrap">
       <label for="taskLink">Paste Task URL</label>
       <input type="url" id="taskLink" placeholder="https://labeling.robot.car/#/tasks/do/…/id/…"
-             oninput="parseTaskLink(this.value)"/>
+             oninput="parseTaskLink(this.value)" onblur="cleanTaskLink(this)"/>
     </div>
     <div class="row2" style="margin-top:16px;">
       <div>
@@ -589,13 +596,12 @@ body.edit-mode .queue-manage { display: block; }
       <div class="smart-hint" id="queueHint"></div>
       <div id="queueManage" class="queue-manage"></div>
     </div>
-  </div>
-
-  <div class="card fade-in">
-    <div class="card-title">Modality <span class="check-dot" id="chk-modality">✓</span></div>
-    <div class="tile-group" id="modalityGroup">
-      <div class="modality-tile" data-val="Lidar"     onclick="selectModality(this)"><span class="ico">🛰️</span>Lidar</div>
-      <div class="modality-tile" data-val="Lane Line" onclick="selectModality(this)"><span class="ico">🛣️</span>Lane Line</div>
+    <div class="field-wrap" style="margin-top:16px;">
+      <label>Modality (auto-detected)</label>
+      <div class="tile-group" id="modalityGroup">
+        <div class="modality-tile" data-val="Lidar"     onclick="selectModality(this)"><span class="ico">🛰️</span>Lidar</div>
+        <div class="modality-tile" data-val="Lane Line" onclick="selectModality(this)"><span class="ico">🛣️</span>Lane Line</div>
+      </div>
     </div>
   </div>
 
@@ -655,7 +661,7 @@ body.edit-mode .queue-manage { display: block; }
 <div class="toast" id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOScbh-93XKHp3eHCz5lJbUNSN9S6HWnxQoZ6FnudmZncZ4AofwuRuuwkODiPjq4dpVA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFEIQ7lHAeYVOxQXPS1e-HzyRPik1vRvDOf-rRLjE67d6J4AcJiXgaD-zfTogx4m2ASg/exec";
 
 const DEFAULT_CONFIG = {
   personnel: {
@@ -702,6 +708,7 @@ const DEFAULT_CONFIG = {
     "sc3_full_scene_lane_lidar_parallel_labeling",
     "gs_sc3_full_scene_mapless_3d_only"
   ],
+  labelerLevels: ["On training","Within 2 weeks after training","Passed 2 weeks after training"],
   violationCategories: {
     "Object & Attribute Errors": [
       "VRU size attribute","Missed objects","Excessed objects","Posture",
@@ -722,6 +729,7 @@ const DEFAULT_CONFIG = {
       "Wrong Road Edge","Didn't toggle light background (Start and end)",
       "Made the merge lane incorrectly"
     ],
+    "Skip Tasks": ["Working on Skip Task"],
     "Other": ["Other"]
   }
 };
@@ -732,7 +740,7 @@ let sessionPin = '';
 let pendingAdd = null;
 
 const state = {
-  shift:'', unit:'', pcNo:'', labelerName:'',
+  shift:'', unit:'', pcNo:'', labelerName:'', labelerLevel:'',
   qtcShift:'', qtcName:'', qtcAttendance:'',
   yubikey:'', taskLink:'', stage:'', queueName:'', modality:'',
   taskId:'', qtShift:'', qtName:'',
@@ -746,9 +754,18 @@ async function loadConfig() {
     const data = await res.json();
     CONFIG = data.success ? data.config : DEFAULT_CONFIG;
   } catch (e) { CONFIG = DEFAULT_CONFIG; }
+  if (!CONFIG.labelerLevels || !CONFIG.labelerLevels.length) {
+    CONFIG.labelerLevels = DEFAULT_CONFIG.labelerLevels.slice();
+  }
+  if (!CONFIG.violationCategories || !CONFIG.violationCategories['Skip Tasks']) {
+    CONFIG.violationCategories = CONFIG.violationCategories || {};
+    CONFIG.violationCategories['Skip Tasks'] = ['Working on Skip Task'];
+  }
   renderUnits();
   renderQueues();
+  renderLabelerLevels();
   document.getElementById('unitLoading') && document.getElementById('unitLoading').remove();
+  document.getElementById('labelerLevelLoading') && document.getElementById('labelerLevelLoading').remove();
 }
 loadConfig();
 
@@ -811,6 +828,36 @@ function renderUnits() {
   group.appendChild(addBtn);
   attachDomReorder(group, '.tile-wrap', (newOrder) => {
     CONFIG.units = newOrder.map(w => w.querySelector('.tile').dataset.val);
+    saveConfigToServer();
+  });
+}
+
+// Render: Labeler Levels
+function renderLabelerLevels() {
+  const group = document.getElementById('labelerLevelGroup');
+  const currentVal = state.labelerLevel;
+  group.innerHTML = '';
+  (CONFIG.labelerLevels || []).forEach((level) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'tile-wrap';
+    const tile = document.createElement('div');
+    tile.className = 'tile' + (level === currentVal ? ' active' : '');
+    tile.dataset.val = level;
+    tile.textContent = level;
+    tile.onclick = function () { if (editMode) return; selectTile('labelerLevelGroup', 'labelerLevel', this); };
+    tile.ondblclick = function (e) { if (!editMode) return; e.stopPropagation(); showRenameModal('labelerLevel', level, {}); };
+    const delBtn = document.createElement('button');
+    delBtn.className = 'del-btn'; delBtn.innerHTML = '✕';
+    delBtn.onclick = e => { e.stopPropagation(); removeItem('labelerLevel', level, {}); };
+    wrap.appendChild(tile); wrap.appendChild(delBtn); group.appendChild(wrap);
+    makeDraggable(wrap);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-item-btn'; addBtn.textContent = '+ Add Labeler Level';
+  addBtn.onclick = () => showAddModal('labelerLevel', {});
+  group.appendChild(addBtn);
+  attachDomReorder(group, '.tile-wrap', (newOrder) => {
+    CONFIG.labelerLevels = newOrder.map(w => w.querySelector('.tile').dataset.val);
     saveConfigToServer();
   });
 }
@@ -1037,7 +1084,7 @@ function enterEditMode() {
   document.getElementById('editBanner').classList.remove('hidden');
   document.getElementById('lockIcon').textContent = '✏️';
   document.getElementById('lockLabel').textContent = 'Editing';
-  renderUnits(); renderQueues();
+  renderUnits(); renderQueues(); renderLabelerLevels();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
   if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
@@ -1049,7 +1096,7 @@ function exitEditMode() {
   document.getElementById('editBanner').classList.add('hidden');
   document.getElementById('lockIcon').textContent = '🔒';
   document.getElementById('lockLabel').textContent = 'Edit';
-  renderUnits(); renderQueues();
+  renderUnits(); renderQueues(); renderLabelerLevels();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
   if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
@@ -1059,8 +1106,8 @@ function exitEditMode() {
 function showAddModal(type, ctx) {
   if (!editMode) return;
   pendingAdd = { type, ctx, isRename: false };
-  const titles = { unit:'Add New Unit', personnel:`Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`, queue:'Add Queue Name', vioType:`Add Violation Type → "${ctx.category}"`, vioCategory:'Add New Violation Category' };
-  const hints  = { unit:'مثال: NC Room 110', personnel:'الاسم كامل كما سيظهر في الفورم', queue:'اسم الـ queue كامل', vioType:'وصف نوع المخالفة', vioCategory:'اسم التصنيف الجديد' };
+  const titles = { unit:'Add New Unit', personnel:`Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`, queue:'Add Queue Name', vioType:`Add Violation Type → "${ctx.category}"`, vioCategory:'Add New Violation Category', labelerLevel:'Add Labeler Level' };
+  const hints  = { unit:'مثال: NC Room 110', personnel:'الاسم كامل كما سيظهر في الفورم', queue:'اسم الـ queue كامل', vioType:'وصف نوع المخالفة', vioCategory:'اسم التصنيف الجديد', labelerLevel:'مثال: Passed 1 month after training' };
   document.getElementById('addModalTitle').textContent = titles[type] || 'Add Item';
   document.getElementById('addModalHint').textContent  = hints[type]  || '';
   document.getElementById('addModalInput').value = '';
@@ -1072,7 +1119,7 @@ function showAddModal(type, ctx) {
 function showRenameModal(type, oldVal, ctx) {
   if (!editMode) return;
   pendingAdd = { type, ctx, isRename: true, oldVal };
-  const titles = { unit:'Rename Unit', personnel:'Rename Person', queue:'Rename Queue', vioType:'Rename Violation Type', vioCategory:'Rename Category' };
+  const titles = { unit:'Rename Unit', personnel:'Rename Person', queue:'Rename Queue', vioType:'Rename Violation Type', vioCategory:'Rename Category', labelerLevel:'Rename Labeler Level' };
   document.getElementById('addModalTitle').textContent = titles[type] || 'Rename';
   document.getElementById('addModalHint').textContent  = `Current: "${oldVal}"`;
   document.getElementById('addModalInput').value = oldVal;
@@ -1094,6 +1141,7 @@ async function submitAddItem() {
 async function doAdd(type, val, ctx) {
   switch (type) {
     case 'unit': if (!CONFIG.units.includes(val)) CONFIG.units.push(val); break;
+    case 'labelerLevel': if (!CONFIG.labelerLevels.includes(val)) CONFIG.labelerLevels.push(val); break;
     case 'personnel':
       if (!CONFIG.personnel[ctx.shift]) CONFIG.personnel[ctx.shift] = { qtc:[], qt:[] };
       if (!CONFIG.personnel[ctx.shift][ctx.role]) CONFIG.personnel[ctx.shift][ctx.role] = [];
@@ -1109,6 +1157,7 @@ async function doRename(type, oldVal, newVal, ctx) {
   if (oldVal === newVal) return;
   switch (type) {
     case 'unit': { const i=CONFIG.units.indexOf(oldVal); if(i>=0) CONFIG.units[i]=newVal; if(state.unit===oldVal) state.unit=newVal; break; }
+    case 'labelerLevel': { const i=CONFIG.labelerLevels.indexOf(oldVal); if(i>=0) CONFIG.labelerLevels[i]=newVal; if(state.labelerLevel===oldVal) state.labelerLevel=newVal; break; }
     case 'personnel': { const arr=CONFIG.personnel[ctx.shift][ctx.role]; const i=arr.indexOf(oldVal); if(i>=0) arr[i]=newVal; if(state[ctx.stateKey]===oldVal) state[ctx.stateKey]=newVal; break; }
     case 'queue': { const i=CONFIG.queues.indexOf(oldVal); if(i>=0) CONFIG.queues[i]=newVal; if(state.queueName===oldVal) state.queueName=newVal; break; }
     case 'vioType': { const arr=CONFIG.violationCategories[ctx.category]; const i=arr?arr.indexOf(oldVal):-1; if(i>=0) arr[i]=newVal; const vti=state.violationTypes.indexOf(oldVal); if(vti>=0) state.violationTypes[vti]=newVal; break; }
@@ -1122,6 +1171,7 @@ async function removeItem(type, val, ctx) {
   if (!confirm(`Remove "${val}"?`)) return;
   switch (type) {
     case 'unit': CONFIG.units=CONFIG.units.filter(u=>u!==val); if(state.unit===val){state.unit='';toggleCheck('unit',false);} break;
+    case 'labelerLevel': CONFIG.labelerLevels=CONFIG.labelerLevels.filter(l=>l!==val); if(state.labelerLevel===val){state.labelerLevel='';toggleCheck('labelerLevel',false);} break;
     case 'personnel': CONFIG.personnel[ctx.shift][ctx.role]=CONFIG.personnel[ctx.shift][ctx.role].filter(n=>n!==val); if(state[ctx.stateKey]===val){state[ctx.stateKey]='';toggleCheck(ctx.stateKey,false);} break;
     case 'queue': CONFIG.queues=CONFIG.queues.filter(q=>q!==val); if(state.queueName===val){state.queueName='';setField('queueName','');} break;
     case 'vioType': CONFIG.violationCategories[ctx.category]=CONFIG.violationCategories[ctx.category].filter(v=>v!==val); state.violationTypes=state.violationTypes.filter(v=>v!==val); break;
@@ -1133,6 +1183,7 @@ async function removeItem(type, val, ctx) {
 function rerenderSection(type, ctx) {
   switch (type) {
     case 'unit': renderUnits(); break;
+    case 'labelerLevel': renderLabelerLevels(); break;
     case 'personnel': renderNameGrid(ctx.gridId, ctx.shift, ctx.role, ctx.stateKey); break;
     case 'queue': renderQueues(); break;
     case 'vioType': case 'vioCategory': document.getElementById('vioTypesContainer').innerHTML=''; if(state.violation==='Violation') buildVioTypes(); break;
@@ -1171,6 +1222,11 @@ function selectModality(el) {
   el.classList.add('active'); state.modality=el.dataset.val; toggleCheck('modality',true);
 }
 
+function autoSelectModality(val) {
+  document.querySelectorAll('#modalityGroup .modality-tile').forEach(t=>t.classList.toggle('active',t.dataset.val===val));
+  state.modality=val; toggleCheck('modality',true);
+}
+
 function onLabelerInput(v) { state.labelerName=v; toggleCheck('labelerName',v.trim().length>0); }
 
 function previewPcNo(el) {
@@ -1197,7 +1253,7 @@ function setAttendance(val) {
 // YUBIKEY — أرقام بس جوه الخانة الصغيرة، والـ prefix/suffix ثابتين وبيظهروا دايمًا
 // ════════════════════════════════════════════════════
 function previewYubikey(el) {
-  // شيل أي حاجة مش رقم وحدد بـ 6 أرقام بس
+  // شيل أي حاجه مش رقم وحدد بـ 6 أرقام بس
   const clean = el.value.replace(/\D/g, '').slice(0, 6);
   el.value = clean;
 
@@ -1266,16 +1322,53 @@ function fetchYubikeyHistory(yubikeyValue) {
     });
 }
 
+// ════════════════════════════════════════════════════
+// TASK LINK — auto-detect task type → Stage + Modality, and strip /frame/... from the link
+// ════════════════════════════════════════════════════
+const TASK_TYPE_RULES = [
+  { match: /^sellivandar2dqa$/i,   stage:'QA', modality:'Lidar' },
+  { match: /^sellivandar2d$/i,     stage:'FP', modality:'Lidar' },
+  { match: /^sellmslqa$/i,         stage:'QA', modality:'Lane Line' },
+  { match: /^sellmsl$/i,           stage:'FP', modality:'Lane Line' },
+  { match: /^sellmappingqa$/i,     stage:'QA', modality:'Lane Line' },
+  { match: /^sellmapping$/i,       stage:'FP', modality:'Lane Line' },
+  { match: /^sellrelabelingqa$/i,  stage:'QA', modality:null },
+  { match: /^sellrelabeling$/i,    stage:'FP', modality:null }
+];
+
 function parseTaskLink(url) {
   state.taskLink=url; const badge=document.getElementById('taskIdBadge'); let taskId='';
   const patterns=[/\/id\/(\d+)/i,/task[_-]?id[=\/]([A-Za-z0-9_-]+)/i,/[?&]id=(\d+)/i,/\/(\d{6,})(?:[/?#]|$)/];
   for(const re of patterns){const m=url.match(re);if(m){taskId=m[1];break;}}
   state.taskId=taskId; badge.textContent=taskId||'—'; badge.classList.toggle('found',!!taskId);
-  if(url.toUpperCase().includes('QA')) autoSelectStage('QA');
-  else if(url.length>8) autoSelectStage('FP');
+
+  const typeMatch = url.match(/\/tasks\/do\/([^\/?#]+)/i);
+  const taskType = typeMatch ? decodeURIComponent(typeMatch[1]) : '';
+  const rule = TASK_TYPE_RULES.find(r => r.match.test(taskType));
+
+  if (rule) {
+    autoSelectStage(rule.stage);
+    if (rule.modality) autoSelectModality(rule.modality);
+    // لو modality null (SellRelabeling) بتفضل مانيوال زي ما هي
+  } else if (url.toUpperCase().includes('QA')) {
+    autoSelectStage('QA');
+  } else if (url.length > 8) {
+    autoSelectStage('FP');
+  }
+
   const qm=url.match(/\/queue\/([^\/?#]+)/i);
   if(qm) autoSelectQueue(decodeURIComponent(qm[1]));
   toggleCheck('taskLink',url.trim().length>0);
+}
+
+// يشيل /frame/… وأي حاجة بعدها من اللينك لما اليوزر يخرج من الخانة
+function cleanTaskLink(el) {
+  let v = el.value;
+  const idx = v.search(/\/frame(\/|$)/i);
+  if (idx !== -1) v = v.substring(0, idx);
+  el.value = v;
+  state.taskLink = v;
+  parseTaskLink(v);
 }
 
 function autoSelectStage(val) {
@@ -1327,7 +1420,7 @@ function updateOtherReason(val) {
 // Validate and Submit
 function validate() {
   const fields=[
-    ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],
+    ['shift','Shift'],['unit','Unit'],['pcNo','PC No.'],['labelerName','Labeler Name'],['labelerLevel','Labeler Level'],
     ['qtcShift','QTC Shift'],['qtcName','QTC Name'],['qtcAttendance','QTC Attendance'],
     ['yubikey','Yubikey'],['taskLink','Task Link'],['stage','Stage'],
     ['queueName','Queue Name'],['modality','Modality'],['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
@@ -1342,7 +1435,7 @@ function submitForm() {
   const btn=document.getElementById('submitBtn'); const road=document.getElementById('submitRoad');
   btn.disabled=true; btn.textContent='Submitting…'; road.classList.remove('hidden');
   state.labelerName=document.getElementById('labelerName').value.trim();
-  state.taskLink=document.getElementById('taskLink').value.trim();
+  cleanTaskLink(document.getElementById('taskLink'));
   state.queueName=document.getElementById('queueName').value;
   formatPcNo(document.getElementById('pcNoInput'));
   formatYubikey(document.getElementById('yubikey'));
