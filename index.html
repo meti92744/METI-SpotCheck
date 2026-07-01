@@ -573,7 +573,8 @@ body.edit-mode .queue-manage { display: block; }
     <div class="field-wrap">
       <label for="taskLink">Paste Task URL</label>
       <input type="url" id="taskLink" placeholder="https://labeling.robot.car/#/tasks/do/…/id/…"
-             oninput="parseTaskLink(this.value)" onblur="cleanTaskLink(this)"/>
+             oninput="parseTaskLink(this.value)" onblur="cleanTaskLink(this)"
+             onpaste="setTimeout(() => cleanTaskLink(document.getElementById('taskLink')), 0)"/>
     </div>
     <div class="row2" style="margin-top:16px;">
       <div>
@@ -661,7 +662,7 @@ body.edit-mode .queue-manage { display: block; }
 <div class="toast" id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFEIQ7lHAeYVOxQXPS1e-HzyRPik1vRvDOf-rRLjE67d6J4AcJiXgaD-zfTogx4m2ASg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOScbh-93XKHp3eHCz5lJbUNSN9S6HWnxQoZ6FnudmZncZ4AofwuRuuwkODiPjq4dpVA/exec";
 
 const DEFAULT_CONFIG = {
   personnel: {
