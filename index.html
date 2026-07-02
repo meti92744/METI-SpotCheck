@@ -575,6 +575,7 @@ body.edit-mode .queue-manage { display: block; }
       <input type="url" id="taskLink" placeholder="https://labeling.robot.car/#/tasks/do/…/id/…"
              oninput="parseTaskLink(this.value)" onblur="cleanTaskLink(this)"
              onpaste="setTimeout(() => cleanTaskLink(document.getElementById('taskLink')), 0)"/>
+      <div class="smart-hint" id="taskLinkHint"></div>
     </div>
     <div class="row2" style="margin-top:16px;">
       <div>
@@ -1337,8 +1338,45 @@ const TASK_TYPE_RULES = [
   { match: /^sellrelabeling$/i,    stage:'FP', modality:null }
 ];
 
+// ✅ NEW: Task link must come from labeling.robot.car with /tasks/do/{type}/id/{number}
+// Optionally followed by /queue/{queueName} and/or /frame/...
+// Example valid link:
+// https://labeling.robot.car/#/tasks/do/SellMapping/id/1453821994/queue/sc3_full_scene_lane_lidar_parallel_labeling
+const TASK_LINK_PATTERN = /^https:\/\/labeling\.robot\.car\/#\/tasks\/do\/[A-Za-z0-9_]+\/id\/\d+(\/queue\/[^\/?#]+)?(\/frame\/.*)?$/i;
+
+function isValidTaskLink(url) {
+  return TASK_LINK_PATTERN.test((url || '').trim());
+}
+
 function parseTaskLink(url) {
-  state.taskLink=url; const badge=document.getElementById('taskIdBadge'); let taskId='';
+  state.taskLink = url;
+  const badge = document.getElementById('taskIdBadge');
+  const hint  = document.getElementById('taskLinkHint');
+  let taskId = '';
+
+  const trimmed = (url || '').trim();
+
+  // Empty input — clear everything
+  if (trimmed.length === 0) {
+    badge.textContent = '—'; badge.classList.remove('found');
+    hint.textContent = ''; hint.style.color = '';
+    toggleCheck('taskLink', false);
+    return;
+  }
+
+  // ✅ Validate link shape first — must be a labeling.robot.car task link
+  if (!isValidTaskLink(trimmed)) {
+    badge.textContent = '—'; badge.classList.remove('found');
+    hint.textContent = '❌ Invalid link — must be a labeling.robot.car task link';
+    hint.style.color = 'var(--red)';
+    toggleCheck('taskLink', false);
+    state.taskId = ''; state.stage = ''; state.modality = '';
+    return;
+  }
+
+  hint.textContent = '✓ Valid task link';
+  hint.style.color = 'var(--green)';
+
   const patterns=[/\/id\/(\d+)/i,/task[_-]?id[=\/]([A-Za-z0-9_-]+)/i,/[?&]id=(\d+)/i,/\/(\d{6,})(?:[/?#]|$)/];
   for(const re of patterns){const m=url.match(re);if(m){taskId=m[1];break;}}
   state.taskId=taskId; badge.textContent=taskId||'—'; badge.classList.toggle('found',!!taskId);
@@ -1359,7 +1397,7 @@ function parseTaskLink(url) {
 
   const qm=url.match(/\/queue\/([^\/?#]+)/i);
   if(qm) autoSelectQueue(decodeURIComponent(qm[1]));
-  toggleCheck('taskLink',url.trim().length>0);
+  toggleCheck('taskLink', true);
 }
 
 // يشيل /frame/… وأي حاجة بعدها من اللينك لما اليوزر يخرج من الخانة
@@ -1427,6 +1465,13 @@ function validate() {
     ['queueName','Queue Name'],['modality','Modality'],['qtShift','QT Shift'],['qtName','QT Name'],['violation','Violation']
   ];
   for(const[k,label]of fields){if(!state[k]){showToast('Please complete: '+label,'error');return false;}}
+
+  // ✅ NEW: enforce that the task link matches the required labeling.robot.car pattern
+  if (!isValidTaskLink(state.taskLink)) {
+    showToast('❌ Invalid Task Link — must be a labeling.robot.car task link', 'error');
+    return false;
+  }
+
   if(state.violation==='Violation'&&state.violationTypes.length===0){showToast('Please select at least one violation type.','error');return false;}
   return true;
 }
@@ -1466,6 +1511,7 @@ function resetForm() {
   document.getElementById('pcNoHint').textContent='';
   document.getElementById('queueName').value='';
   document.getElementById('queueHint').textContent='';
+  document.getElementById('taskLinkHint').textContent='';
   const badge=document.getElementById('taskIdBadge'); badge.textContent='—'; badge.classList.remove('found');
   document.querySelectorAll('.check-dot').forEach(c=>c.classList.remove('show'));
   hideHistory(); window.scrollTo({top:0,behavior:'smooth'});
