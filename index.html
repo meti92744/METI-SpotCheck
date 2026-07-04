@@ -289,6 +289,14 @@ body.edit-mode .queue-manage { display: block; }
 .queue-del-btn { background:var(--red); color:#fff; border:none; border-radius:50%; width:22px; height:22px; min-width:22px; cursor:pointer; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; transition:transform var(--trans); }
 .queue-del-btn:hover { transform: scale(1.1); }
 
+/* YUBIKEY MANAGEMENT LIST (edit mode) */
+.yk-manage { display: none; margin-top: 12px; max-height: 260px; overflow-y: auto; border-top: 1.5px dashed var(--gray-border); padding-top: 10px; }
+body.edit-mode .yk-manage { display: block; }
+.yk-manage-row { display:flex; align-items:center; gap:8px; padding:6px 12px; background:var(--blue-pale); border:1.5px solid var(--gray-border); border-radius:var(--radius); margin-bottom:6px; }
+.yk-manage-name { flex:1; font-size:12.5px; font-weight:700; color:var(--text-mid); font-family:'Courier New',monospace; }
+.yk-del-btn { background:var(--red); color:#fff; border:none; border-radius:50%; width:20px; height:20px; min-width:20px; cursor:pointer; font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:center; }
+.yk-manage-count { font-size:11.5px; color:var(--text-soft); font-weight:700; margin-bottom:8px; }
+
 /* YUBIKEY INPUT GROUP */
 .yubikey-input-group {
   display: flex;
@@ -379,6 +387,7 @@ body.edit-mode .queue-manage { display: block; }
 .toast.show { opacity:1; transform:translateY(0); }
 .toast.success { background:var(--green); }
 .toast.error   { background:var(--red); }
+.toast.warning { background:var(--orange); }
 .hidden { display:none !important; }
 </style>
 </head>
@@ -566,6 +575,9 @@ body.edit-mode .queue-manage { display: block; }
       <div class="history-stat ok"><span class="num" id="histNoViolation">0</span>No Violation</div>
       <div class="history-stat bad"><span class="num" id="histViolation">0</span>Violation</div>
     </div>
+    <div class="yk-manage" id="ykManage">
+      <div class="yk-manage-count" id="ykManageCount"></div>
+    </div>
   </div>
 
   <div class="card fade-in">
@@ -711,6 +723,7 @@ const DEFAULT_CONFIG = {
     "gs_sc3_full_scene_mapless_3d_only"
   ],
   labelerLevels: ["On training","Within 2 weeks after training","Passed 2 weeks after training"],
+  knownYubikeys: ["105526","107540","111545","112324","112596","113233","113382","114969","115452","117027","118153","118186","120844","121460","121993","122461","122988","123223","123622","124720","125599","126521","126612","126658","127759","127964","131049","131912","133049","133162","133640","134148","134492","135538","136026","136390","136477","136987","137114","139330","139354","140280","140552","141498","141514","141639","142400","144070","144872","145225","146066","146161","146187","149279","149900","151121","151157","151238","151591","152160","153195","153386","156207","156585","157005","157151","157604","158221","160132","163083","163123","165330","166408","167298","168335","168885","170072","170878","171603","173264","174474","175290","175393","175445","176218","176630","176948","177552","178081","178690","179287","180916","181152","182253","182613","183153","185138","185927","185969","188944","188995","189236","190984","194277","195049","195882","196485","196787","198035","198966","199135","199591","199824","200506","201431","201805","203410","203937","204788","209204","211031","211294","212517","213848","214731","216759","218038","219027","220632","223085","228771","229615","230524","231292","234966","236265","240675","240746","241887","242305","243551","244541","244583","245030","245898","246565","246888","249008","249144","250947","251063","251536","252244","253175","253977","254089","254291","254325","254598","255129","256406","256655","257791","258506","261005","261216","261312","268973","269586","271082","272168","272197","273053","274103","274109","276239","277400","278441","278532","278723","280574","281142","282312","282544","284145","284183","284608","286716","288092","288970","291172","293091","293329","293722","294263","298421","300091","300976","301480","302612","302652","302798","303122","303207","303681","305418","306816","307741","308744","309723","312034","315905","317203","318177","320817","321564","321787","321809","322238","323610","323931","324512","325358","325383","326502","327985","331288","333121","333441","334340","334604","334761","336891","338624","338775","339818","340062","340276","341272","341488","342939","343815","344024","344177","348675","351445","351793","351838","352285","353534","354640","356563","356748","361777","363858","366175","367072","367084","367140","367964","371456","376859","377056","377370","377647","377824","380568","382633","383825","384298","386989","387757","392398","392473","395086","395812","396481","398242","399099","399966","400778","400915","401135","402231","403203","403437","403741","404000","406035","407453","408308","408798","409105","409560","413070","413492","414569","414850","416727","417767","417969","419477","419489","419607","420696","423687","424544","425424","426833","429369","430226","430366","433138","433693","435428","437136","437406","437666","437884","438641","438769","438907","440599","441769","441815","448449","449912","450596","453456","453581","454466","455576","458595","458731","459164","459402","459927","461849","462188","463232","464491","464756","465135","465249","466221","468067","468621","469298","469837","470574","471529","472371","475828","476827","478021","479483","481059","481467","482338","484183","488445","488521","488801","489281","489787","489868","490511","490591","490757","490776","490831","491743","493649","494032","495336","495658","496026","497157","497871","498908","499073","500944","500995","501372","507161","508008","509084","512695","513976","514361","515135","516957","518242","518901","520989","522942","523203","523282","523563","523567","523604","526137","526273","530701","530748","531626","531861","532712","532861","533317","534881","535203","536431","536774","537215","537673","538513","538539","538873","543115","543340","543839","546133","547281","547568","549183","549341","550862","551370","551549","552123","552432","552999","554999","556222","556634","557362","557875","558249","558420","561756","564403","566268","566300","566612","567072","568738","569369","569672","572885","573286","573744","574304","575126","575971","576426","579488","580108","580262","580595","580869","581093","583427","584267","584456","584500","585027","585963","587476","587769","589587","590088","590590","590912","590971","594088","595310","595457","597620","598184","598805","598884","602118","602712","606183","606755","609139","609322","610404","611310","612281","612643","614054","617218","617513","621292","622777","623310","623857","624848","625579","629259","631351","632344","634858","635519","635877","636936","637085","637487","638186","641145","641511","643609","644191","644969","645567","647650","647724","650313","651000","652500","653432","654014","654625","655730","656705","656780","657468","657812","658751","658887","661476","661944","661973","665075","667408","667855","669130","670010","670757","672413","674467","679723","683796","684411","685290","685792","689416","689732","690140","691276","692665","693923","694259","696298","696567","696785","696959","697348","698944","700211","701903","702922","703458","704003","704271","704605","704639","705587","705942","706688","706919","706982","707442","707566","708281","708348","709386","709791","710604","710653","713374","714173","714650","718327","719999","721126","721544","721637","722284","722592","723807","726426","727144","727726","728286","729890","734168","734934","736064","736859","737642","738480","739820","744279","746198","746470","746673","748141","750409","754434","755082","756187","757302","759094","760088","760824","761868","762476","764170","765768","766301","767634","768010","768082","769213","773178","773313","773379","774740","775369","775991","776121","778856","780006","780323","783356","783437","784047","784655","784770","787032","787504","788576","789284","790295","791215","791799","792609","793820","794818","795017","798435","799272","800048","800534","801398","803892","804806","805880","805889","806163","806369","807720","807922","817556","817745","817922","819691","822230","823031","826282","826874","828374","829700","830239","831339","831781","832329","834698","838312","838332","838792","839165","843428","844326","847066","847200","847766","847778","848544","849316","850117","850909","851425","852017","853578","853748","854524","855147","855478","856212","857667","858667","859876","860203","860212","860670","860717","860775","862680","863493","863531","863734","864131","866327","866633","870524","871011","873355","873996","874768","875260","875315","876494","876736","877155","878083","879527","883614","883876","884593","884641","885782","886683","886900","886972","887446","887964","888655","888931","890852","893638","894205","894591","895784","896927","897013","897551","900078","900849","901913","903841","904720","905989","907105","908171","910739","911034","911179","912904","913400","914528","915602","915842","916701","917634","918242","919015","919213","919608","919706","919961","920859","921569","924577","925751","927931","928676","928850","932659","936317","937461","937626","938197","938389","941525","942178","942481","947431","947650","947682","948101","948771","949434","950233","950527","950801","951717","953027","955619","955766","955934","956308","956473","957483","958177","964124","964305","966479","969409","972587","972622","973998","974444","975378","975818","976039","976849","977169","977526","979127","979832","982269","982286","982846","983045","983542","984293","984629","987183","990107","990378","991143","991360","993569","995260","995565","996385","996983","997373","997979","998315"],
   violationCategories: {
     "Object & Attribute Errors": [
       "VRU size attribute","Missed objects","Excessed objects","Posture",
@@ -759,6 +772,9 @@ async function loadConfig() {
   if (!CONFIG.labelerLevels || !CONFIG.labelerLevels.length) {
     CONFIG.labelerLevels = DEFAULT_CONFIG.labelerLevels.slice();
   }
+  if (!CONFIG.knownYubikeys || !Array.isArray(CONFIG.knownYubikeys)) {
+    CONFIG.knownYubikeys = DEFAULT_CONFIG.knownYubikeys.slice();
+  }
   if (!CONFIG.violationCategories || !CONFIG.violationCategories['Skip Tasks']) {
     CONFIG.violationCategories = CONFIG.violationCategories || {};
     CONFIG.violationCategories['Skip Tasks'] = ['Working on Skip Task'];
@@ -766,6 +782,7 @@ async function loadConfig() {
   renderUnits();
   renderQueues();
   renderLabelerLevels();
+  renderYubikeyManage();
   document.getElementById('unitLoading') && document.getElementById('unitLoading').remove();
   document.getElementById('labelerLevelLoading') && document.getElementById('labelerLevelLoading').remove();
 }
@@ -898,6 +915,29 @@ function renderQueues() {
     CONFIG.queues = newOrder.map(r => r.querySelector('.queue-manage-name').textContent);
     renderQueues(); saveConfigToServer();
   });
+}
+
+// Render: Yubikey management list (edit mode only)
+function renderYubikeyManage() {
+  const wrap = document.getElementById('ykManage');
+  const countEl = document.getElementById('ykManageCount');
+  const list = (CONFIG.knownYubikeys || []).slice().sort();
+  wrap.querySelectorAll('.yk-manage-row, .add-item-btn').forEach(el => el.remove());
+  countEl.textContent = `📋 ${list.length} known flash drive number(s) registered`;
+  list.forEach(num => {
+    const row = document.createElement('div');
+    row.className = 'yk-manage-row';
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'yk-manage-name'; nameSpan.textContent = 'me' + num + '@meti.ai';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'yk-del-btn'; delBtn.textContent = '✕';
+    delBtn.onclick = () => removeItem('yubikeyNum', num, {});
+    row.appendChild(nameSpan); row.appendChild(delBtn); wrap.appendChild(row);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-item-btn'; addBtn.textContent = '+ Add Known Flash Drive Number';
+  addBtn.onclick = () => showAddModal('yubikeyNum', {});
+  wrap.appendChild(addBtn);
 }
 
 // Render: Name Grid
@@ -1086,7 +1126,7 @@ function enterEditMode() {
   document.getElementById('editBanner').classList.remove('hidden');
   document.getElementById('lockIcon').textContent = '✏️';
   document.getElementById('lockLabel').textContent = 'Editing';
-  renderUnits(); renderQueues(); renderLabelerLevels();
+  renderUnits(); renderQueues(); renderLabelerLevels(); renderYubikeyManage();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
   if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
@@ -1098,7 +1138,7 @@ function exitEditMode() {
   document.getElementById('editBanner').classList.add('hidden');
   document.getElementById('lockIcon').textContent = '🔒';
   document.getElementById('lockLabel').textContent = 'Edit';
-  renderUnits(); renderQueues(); renderLabelerLevels();
+  renderUnits(); renderQueues(); renderLabelerLevels(); renderYubikeyManage();
   if (state.qtcShift) renderNameGrid('qtcNames', state.qtcShift, 'qtc', 'qtcName');
   if (state.qtShift)  renderNameGrid('qtNames',  state.qtShift,  'qt',  'qtName');
   if (state.violation === 'Violation') { document.getElementById('vioTypesContainer').innerHTML = ''; buildVioTypes(); }
@@ -1108,8 +1148,8 @@ function exitEditMode() {
 function showAddModal(type, ctx) {
   if (!editMode) return;
   pendingAdd = { type, ctx, isRename: false };
-  const titles = { unit:'Add New Unit', personnel:`Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`, queue:'Add Queue Name', vioType:`Add Violation Type → "${ctx.category}"`, vioCategory:'Add New Violation Category', labelerLevel:'Add Labeler Level' };
-  const hints  = { unit:'مثال: NC Room 110', personnel:'الاسم كامل كما سيظهر في الفورم', queue:'اسم الـ queue كامل', vioType:'وصف نوع المخالفة', vioCategory:'اسم التصنيف الجديد', labelerLevel:'مثال: Passed 1 month after training' };
+  const titles = { unit:'Add New Unit', personnel:`Add Name — ${ctx.role?.toUpperCase()} · Shift ${ctx.shift}`, queue:'Add Queue Name', vioType:`Add Violation Type → "${ctx.category}"`, vioCategory:'Add New Violation Category', labelerLevel:'Add Labeler Level', yubikeyNum:'Add Known Flash Drive Number' };
+  const hints  = { unit:'مثال: NC Room 110', personnel:'الاسم كامل كما سيظهر في الفورم', queue:'اسم الـ queue كامل', vioType:'وصف نوع المخالفة', vioCategory:'اسم التصنيف الجديد', labelerLevel:'مثال: Passed 1 month after training', yubikeyNum:'6 أرقام بس (مثال: 490776)' };
   document.getElementById('addModalTitle').textContent = titles[type] || 'Add Item';
   document.getElementById('addModalHint').textContent  = hints[type]  || '';
   document.getElementById('addModalInput').value = '';
@@ -1144,6 +1184,11 @@ async function doAdd(type, val, ctx) {
   switch (type) {
     case 'unit': if (!CONFIG.units.includes(val)) CONFIG.units.push(val); break;
     case 'labelerLevel': if (!CONFIG.labelerLevels.includes(val)) CONFIG.labelerLevels.push(val); break;
+    case 'yubikeyNum': {
+      const clean = val.replace(/\D/g, '').slice(0, 6);
+      if (clean.length === 6 && !CONFIG.knownYubikeys.includes(clean)) CONFIG.knownYubikeys.push(clean);
+      break;
+    }
     case 'personnel':
       if (!CONFIG.personnel[ctx.shift]) CONFIG.personnel[ctx.shift] = { qtc:[], qt:[] };
       if (!CONFIG.personnel[ctx.shift][ctx.role]) CONFIG.personnel[ctx.shift][ctx.role] = [];
@@ -1174,6 +1219,7 @@ async function removeItem(type, val, ctx) {
   switch (type) {
     case 'unit': CONFIG.units=CONFIG.units.filter(u=>u!==val); if(state.unit===val){state.unit='';toggleCheck('unit',false);} break;
     case 'labelerLevel': CONFIG.labelerLevels=CONFIG.labelerLevels.filter(l=>l!==val); if(state.labelerLevel===val){state.labelerLevel='';toggleCheck('labelerLevel',false);} break;
+    case 'yubikeyNum': CONFIG.knownYubikeys=CONFIG.knownYubikeys.filter(n=>n!==val); break;
     case 'personnel': CONFIG.personnel[ctx.shift][ctx.role]=CONFIG.personnel[ctx.shift][ctx.role].filter(n=>n!==val); if(state[ctx.stateKey]===val){state[ctx.stateKey]='';toggleCheck(ctx.stateKey,false);} break;
     case 'queue': CONFIG.queues=CONFIG.queues.filter(q=>q!==val); if(state.queueName===val){state.queueName='';setField('queueName','');} break;
     case 'vioType': CONFIG.violationCategories[ctx.category]=CONFIG.violationCategories[ctx.category].filter(v=>v!==val); state.violationTypes=state.violationTypes.filter(v=>v!==val); break;
@@ -1186,6 +1232,7 @@ function rerenderSection(type, ctx) {
   switch (type) {
     case 'unit': renderUnits(); break;
     case 'labelerLevel': renderLabelerLevels(); break;
+    case 'yubikeyNum': renderYubikeyManage(); break;
     case 'personnel': renderNameGrid(ctx.gridId, ctx.shift, ctx.role, ctx.stateKey); break;
     case 'queue': renderQueues(); break;
     case 'vioType': case 'vioCategory': document.getElementById('vioTypesContainer').innerHTML=''; if(state.violation==='Violation') buildVioTypes(); break;
@@ -1254,6 +1301,11 @@ function setAttendance(val) {
 // ════════════════════════════════════════════════════
 // YUBIKEY — أرقام بس جوه الخانة الصغيرة، والـ prefix/suffix ثابتين وبيظهروا دايمًا
 // ════════════════════════════════════════════════════
+function isKnownYubikey(sixDigits) {
+  const list = (CONFIG && CONFIG.knownYubikeys) ? CONFIG.knownYubikeys : DEFAULT_CONFIG.knownYubikeys;
+  return list.includes(sixDigits);
+}
+
 function previewYubikey(el) {
   // شيل أي حاجه مش رقم وحدد بـ 6 أرقام بس
   const clean = el.value.replace(/\D/g, '').slice(0, 6);
@@ -1297,10 +1349,20 @@ function formatYubikey(el) {
   }
 
   state.yubikey = 'me' + clean + '@meti.ai';
-  h.textContent = '✓ Saved';
-  h.style.color = 'var(--green)';
-  setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
   toggleCheck('yubikey', true);
+
+  // ✅ NEW: check against the known list of real flash-drive numbers.
+  // Doesn't block submission — just warns, per team preference.
+  if (!isKnownYubikey(clean)) {
+    h.textContent = '⚠️ This number is not in the known flash drives list — double-check it';
+    h.style.color = 'var(--orange)';
+    showToast('⚠️ Unrecognized flash drive number — please verify it\'s correct', 'warning');
+  } else {
+    h.textContent = '✓ Saved';
+    h.style.color = 'var(--green)';
+    setTimeout(() => { h.textContent = ''; h.style.color = ''; }, 2200);
+  }
+
   fetchYubikeyHistory(state.yubikey);
 }
 // ════════════════════════════════════════════════════
