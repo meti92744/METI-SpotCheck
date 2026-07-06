@@ -501,7 +501,11 @@ body.edit-mode .yk-manage { display: block; }
 
   <div class="card fade-in">
     <div class="card-title">PC No. <span class="check-dot" id="chk-pcNo">✓</span></div>
-    <div class="field-wrap">
+    <div class="tile-group" id="pcModeGroup" style="margin-bottom:14px;">
+      <div class="tile active" data-val="pc" onclick="selectPcMode('pc')"><span class="ico">🖥️</span>PC No.</div>
+      <div class="tile" data-val="buffer" onclick="selectPcMode('buffer')"><span class="ico">🗂️</span>Buffer</div>
+    </div>
+    <div class="field-wrap" id="pcNoFieldWrap">
       <label for="pcNoInput">PC Number</label>
       <input type="text" id="pcNoInput" placeholder="Enter PC number (e.g. 42)…"
              oninput="previewPcNo(this)" onblur="formatPcNo(this)"/>
@@ -1509,6 +1513,29 @@ function updateOtherReason(val) {
   state.violationTypes.push(val?'Other: '+val:'Other');
 }
 
+// ════════════════════════════════════════════════════
+// PC NO. / BUFFER MODE
+// ════════════════════════════════════════════════════
+let pcMode = 'pc';
+function selectPcMode(mode) {
+  pcMode = mode;
+  document.querySelectorAll('#pcModeGroup .tile').forEach(t=>t.classList.toggle('active', t.dataset.val===mode));
+  const fieldWrap = document.getElementById('pcNoFieldWrap');
+  const input = document.getElementById('pcNoInput');
+  const hint = document.getElementById('pcNoHint');
+  if (mode === 'buffer') {
+    fieldWrap.classList.add('hidden');
+    input.value = '';
+    hint.textContent = '';
+    state.pcNo = 'Buffer';
+    toggleCheck('pcNo', true);
+  } else {
+    fieldWrap.classList.remove('hidden');
+    state.pcNo = input.value.trim();
+    toggleCheck('pcNo', state.pcNo.length > 0);
+  }
+}
+
 // Live Clock
 (function(){
   const el=document.getElementById('live-time');
@@ -1543,7 +1570,11 @@ function submitForm() {
   state.labelerName=document.getElementById('labelerName').value.trim();
   cleanTaskLink(document.getElementById('taskLink'));
   state.queueName=document.getElementById('queueName').value;
-  formatPcNo(document.getElementById('pcNoInput'));
+  if (pcMode === 'pc') {
+    formatPcNo(document.getElementById('pcNoInput'));
+  } else {
+    state.pcNo = 'Buffer';
+  }
   formatYubikey(document.getElementById('yubikey'));
   fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(state)})
     .then(r=>r.json()).then(res=>{
@@ -1575,6 +1606,9 @@ function resetForm() {
   const badge=document.getElementById('taskIdBadge'); badge.textContent='—'; badge.classList.remove('found');
   document.querySelectorAll('.check-dot').forEach(c=>c.classList.remove('show'));
   hideHistory(); window.scrollTo({top:0,behavior:'smooth'});
+  pcMode = 'pc';
+  document.querySelectorAll('#pcModeGroup .tile').forEach(t=>t.classList.toggle('active', t.dataset.val==='pc'));
+  document.getElementById('pcNoFieldWrap').classList.remove('hidden');
 }
 
 function showToast(msg,type) {
