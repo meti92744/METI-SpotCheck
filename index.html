@@ -1396,8 +1396,8 @@ function fetchYubikeyHistory(yubikeyValue) {
 const TASK_TYPE_RULES = [
   { match: /^sellivandar2dqa$/i,   stage:'QA', modality:'Lidar' },
   { match: /^sellivandar2d$/i,     stage:'FP', modality:'Lidar' },
-  { match: /^sellmslqa$/i,         stage:'QA', modality:'Lane Line' },
-  { match: /^sellmsl$/i,           stage:'FP', modality:'Lane Line' },
+  { match: /^sellmslqa$/i,         stage:'QA', modality:null },
+  { match: /^sellmsl$/i,           stage:'FP', modality:null },
   { match: /^sellmappingqa$/i,     stage:'QA', modality:'Lane Line' },
   { match: /^sellmapping$/i,       stage:'FP', modality:'Lane Line' },
   { match: /^sellrelabelingqa$/i,  stage:'QA', modality:null },
@@ -1454,7 +1454,7 @@ function parseTaskLink(url) {
   if (rule) {
     autoSelectStage(rule.stage);
     if (rule.modality) autoSelectModality(rule.modality);
-    // لو modality null (SellRelabeling) بتفضل مانيوال زي ما هي
+    // لو modality null (SellMSL / SellRelabeling) بتفضل مانيوال زي ما هي
   } else if (url.toUpperCase().includes('QA')) {
     autoSelectStage('QA');
   } else if (url.length > 8) {
